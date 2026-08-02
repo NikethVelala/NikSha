@@ -6,10 +6,9 @@ import { ArrowDown } from "lucide-react";
 import { wedding } from "@/data/wedding";
 
 export default function Hero() {
-  const bride = wedding.bride || "Sirisha";
-  const groom = wedding.groom || "Niketh";
-  const weddingDate = wedding.weddingDate || "18 November 2026";
-
+const bride = wedding.couple.bride;
+const groom = wedding.couple.groom;
+const weddingDate = wedding.ceremony.date;
   return (
 <section className="relative h-screen w-full overflow-hidden">
 
@@ -29,7 +28,7 @@ export default function Hero() {
       transition={{ duration: 0.8 }}
       className="mb-6 uppercase tracking-[0.5em] text-sm"
     >
-      NikSha
+      {wedding.couple.monogram}
     </motion.p>
 
     <motion.h1
