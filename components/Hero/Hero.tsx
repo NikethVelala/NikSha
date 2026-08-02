@@ -36,7 +36,7 @@ export default function Hero() {
       initial={{ opacity: 0, y: 25 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="font-[family:var(--font-heading)] text-6xl md:text-8xl font-medium tracking-wide"
+      className="font-heading text-6xl md:text-8xl font-medium tracking-wide"
     >
       {groom}
     </motion.h1>
@@ -51,13 +51,13 @@ export default function Hero() {
     </motion.div>
 
     <motion.h1
-      initial={{ opacity: 0, y: 25 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5 }}
-      className="text-5xl md:text-7xl font-light"
-    >
-      {bride}
-    </motion.h1>
+  initial={{ opacity: 0, y: 25 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.5 }}
+  className="font-heading text-6xl md:text-8xl font-medium tracking-wide"
+>
+  {bride}
+</motion.h1>
 
     <motion.p
       initial={{ opacity: 0 }}
@@ -78,6 +78,12 @@ export default function Hero() {
 
     <motion.a
       href="#welcome"
+onClick={(e) => {
+  e.preventDefault();
+  document
+    .getElementById("welcome")
+    ?.scrollIntoView({ behavior: "smooth" });
+}}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.2 }}
