@@ -8,7 +8,7 @@ import { wedding } from "@/data/wedding";
 export default function Hero() {
   const bride = wedding.bride || "Sirisha";
   const groom = wedding.groom || "Niketh";
-  const weddingDate = wedding.weddingDate || "October 18, 2026";
+  const weddingDate = wedding.weddingDate || "18 November 2026";
 
   return (
 <section className="relative h-screen w-full overflow-hidden">
@@ -36,7 +36,7 @@ export default function Hero() {
       initial={{ opacity: 0, y: 25 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="text-5xl md:text-7xl font-light"
+      className="font-[family:var(--font-heading)] text-6xl md:text-8xl font-medium tracking-wide"
     >
       {groom}
     </motion.h1>
@@ -65,7 +65,6 @@ export default function Hero() {
       transition={{ delay: 0.7 }}
       className="mt-10 text-sm uppercase tracking-[0.35em]"
     >
-      Together with our families
     </motion.p>
 
     <motion.p
