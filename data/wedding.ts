@@ -11,12 +11,16 @@ export const wedding = {
     time: "10:30 AM onwards",
 
     venue: {
-      name: "SB Square",
-      address:
-        "Chinna Bazaar, Rushikonda, Visakhapatnam, Andhra Pradesh",
-      maps:
-        "https://maps.google.com/",
-    },
+  name: "SB Square",
+  address: "Chinna Bazaar, Rushikonda, Visakhapatnam, Andhra Pradesh",
+
+  maps:
+  "https://www.google.com/maps/search/?api=1&query=SB+Square+Rushikonda+Visakhapatnam",
+
+  directionsLabel: "Open in Google Maps",
+
+  note: "We can't wait to celebrate this special day with you.",
+},
   },
 
   timeline: [
