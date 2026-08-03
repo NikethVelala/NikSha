@@ -2,6 +2,8 @@ import Hero from "@/components/Hero/Hero";
 import Welcome from "@/components/Welcome/Welcome";
 import Story from "@/components/Story/Story";
 import Celebration from "@/components/Celebration/Celebration";
+import Gallery from "@/components/Gallery/Gallery";
+import Timeline from "@/components/Timeline/Timeline";
 
 export default function Home() {
   return (
@@ -10,6 +12,8 @@ export default function Home() {
       <Welcome />
       <Story />
       <Celebration />
+      <Timeline />
+      <Gallery />
     </>
   );
 }

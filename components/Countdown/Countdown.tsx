@@ -30,14 +30,26 @@ const difference = weddingDate.getTime() - new Date().getTime();
   };
 
   const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft());
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+  // Tell React we're now running in the browser
+  setMounted(true);
 
-    return () => clearInterval(interval);
-  }, []);
+  // Set the initial countdown
+  setTimeLeft(calculateTimeLeft());
+
+  // Update every second
+  const interval = setInterval(() => {
+    setTimeLeft(calculateTimeLeft());
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, []);
+
+if (!mounted) {
+  return null;
+}
 
   return (
     <div className="mt-16 border-y border-stone-200 py-12">
