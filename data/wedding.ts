@@ -7,6 +7,7 @@ export const wedding = {
 
   ceremony: {
     date: "18 November 2026",
+    dateTime: "2026-11-18T10:30:00",
     time: "10:30 AM onwards",
 
     venue: {
@@ -17,6 +18,25 @@ export const wedding = {
         "https://maps.google.com/",
     },
   },
+
+  timeline: [
+  {
+    title: "Wedding Ceremony",
+    icon: "💍",
+    date: "18 November 2026",
+    time: "10:30 AM onwards",
+    venue: "SB Square",
+    address: "Chinna Bazaar, Rushikonda, Visakhapatnam",
+  },
+  {
+    title: "Lunch",
+    icon: "🍽️",
+    date: "18 November 2026",
+    time: "12:00 PM onwards",
+    venue: "SB Square",
+    address: "Chinna Bazaar, Rushikonda, Visakhapatnam",
+  },
+],
 
   story: {
     title: "How It All Began",
@@ -31,5 +51,39 @@ export const wedding = {
 
       "Over time, friendship blossomed into love. Today, with grateful hearts, we begin the most beautiful chapter of our lives together.",
     ],
+  },
+
+    gallery: {
+    title: "Our Journey",
+
+    subtitle:
+      "From classmates to best friends, from friendship to forever—every moment brought us closer to this beautiful day.",
+
+  images: [
+    {
+      src: "/images/gallery/photo1.jpg",
+      caption: "Where blessings and beautiful memories began.",
+    },
+    {
+      src: "/images/gallery/photo2.jpg",
+      caption: "Together, every celebration feels complete.",
+    },
+    {
+      src: "/images/gallery/photo3.jpg",
+      caption: "Finding happiness in the little moments.",
+    },
+    {
+      src: "/images/gallery/photo4.jpg",
+      caption: "Partners in every adventure.",
+    },
+    {
+      src: "/images/gallery/photo5.jpg",
+      caption: "Exploring life, hand in hand.",
+    },
+    {
+      src: "/images/gallery/photo6.jpg",
+      caption: "Forever begins with us.",
+    },
+  ],
   },
 };
