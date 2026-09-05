@@ -7,7 +7,7 @@ import { wedding } from "@/data/wedding";
 
 export default function Timeline() {
   return (
-    <Section id="timeline" className="relative overflow-hidden pb-20 sm:pb-24 lg:pb-28">
+    <Section id="timeline" className="relative overflow-hidden pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pt-24 lg:pb-20">
       <div className="mx-auto max-w-5xl">
         <div className="grid gap-14 lg:grid-cols-[0.75fr_1.25fr] lg:gap-24">
           <motion.div
@@ -41,7 +41,7 @@ export default function Timeline() {
                     transition={{ duration: 0.7, delay: index * 0.12 }}
                     className="relative grid grid-cols-[2.75rem_1fr] gap-6 sm:grid-cols-[3.25rem_1fr] sm:gap-7"
                   >
-                    <div className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-champagne bg-ivory sm:h-13 sm:w-13">
+                    <div className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-champagne bg-ivory sm:h-12 sm:w-12">
                       <Icon className="h-4 w-4 text-rose sm:h-5 sm:w-5" strokeWidth={1.5} />
                     </div>
                     <div className="border-t border-line pt-1 sm:pt-2">
