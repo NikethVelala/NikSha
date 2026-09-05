@@ -32,13 +32,13 @@ export default function Gallery() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <div className="relative h-[500px] overflow-hidden rounded-[2rem] shadow-lg transition-shadow duration-300 hover:shadow-2xl">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-lg transition-shadow duration-300 hover:shadow-2xl md:aspect-[16/9]">
               <Image
                 src={wedding.gallery.images[0].src}
                 alt="Memory 1"
                 fill
-                sizes="100vw"
-                className="object-cover transition duration-700 hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 100vw"
+                className="object-contain bg-stone-100 transition duration-700 hover:scale-105 md:object-cover"
               />
             </div>
 
@@ -58,13 +58,13 @@ export default function Gallery() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: i * 0.1 }}
               >
-                <div className="relative h-[380px] overflow-hidden rounded-[2rem] shadow-lg transition-shadow duration-300 hover:shadow-2xl">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-lg transition-shadow duration-300 hover:shadow-2xl">
                   <Image
                     src={wedding.gallery.images[i].src}
                     alt={`Memory ${i + 1}`}
                     fill
                     sizes="(max-width:768px) 100vw, 50vw"
-                    className="object-cover transition duration-700 hover:scale-105"
+                    className="object-contain bg-stone-100 transition duration-700 hover:scale-105 md:object-cover"
                   />
                 </div>
 
@@ -83,13 +83,13 @@ export default function Gallery() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <div className="relative h-[500px] overflow-hidden rounded-[2rem] shadow-lg transition-shadow duration-300 hover:shadow-2xl">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-lg transition-shadow duration-300 hover:shadow-2xl md:aspect-[16/9]">
               <Image
                 src={wedding.gallery.images[3].src}
                 alt="Memory 4"
                 fill
-                sizes="100vw"
-                className="object-cover transition duration-700 hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 100vw"
+                className="object-contain bg-stone-100 transition duration-700 hover:scale-105 md:object-cover"
               />
             </div>
 
@@ -109,13 +109,13 @@ export default function Gallery() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: (i - 3) * 0.1 }}
               >
-                <div className="relative h-[380px] overflow-hidden rounded-[2rem] shadow-lg transition-shadow duration-300 hover:shadow-2xl">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-lg transition-shadow duration-300 hover:shadow-2xl">
                   <Image
                     src={wedding.gallery.images[i].src}
                     alt={`Memory ${i + 1}`}
                     fill
                     sizes="(max-width:768px) 100vw, 50vw"
-                    className="object-cover transition duration-700 hover:scale-105"
+                    className="object-contain bg-stone-100 transition duration-700 hover:scale-105 md:object-cover"
                   />
                 </div>
 

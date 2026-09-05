@@ -22,16 +22,17 @@ export default function Story() {
           {wedding.story.title}
         </h2>
 
-        <p className="mt-12 text-4xl md:text-5xl leading-relaxed text-stone-800">
+        <p className="mt-12 text-4xl leading-relaxed text-stone-800 md:text-5xl">
           {wedding.story.intro}
         </p>
-        <div className="my-16 overflow-hidden rounded-3xl">
-  <img
-    src="/images/story.jpg"
-    alt="Our Story"
-    className="h-[1000px] w-full object-cover"
-  />
-</div>
+
+        <div className="my-16 overflow-hidden rounded-3xl bg-stone-100">
+          <img
+            src="/images/story.jpg"
+            alt="Our Story"
+            className="h-auto w-full object-contain"
+          />
+        </div>
 
         <div className="mt-14 space-y-8 text-left text-lg leading-9 text-stone-500">
           {wedding.story.paragraphs.map((paragraph, index) => (
