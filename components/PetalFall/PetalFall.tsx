@@ -42,7 +42,7 @@ export default function PetalFall() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="absolute top-0 rounded-[70%_30%_65%_35%] bg-[#fff1d6]/75 shadow-[0_2px_12px_rgba(120,78,28,0.12)]"
+          className="niksha-petal absolute top-0 rounded-[70%_30%_65%_35%] bg-[#fff1d6]/75 shadow-[0_2px_12px_rgba(120,78,28,0.12)]"
           style={{
             left: petal.left,
             width: petal.size,
