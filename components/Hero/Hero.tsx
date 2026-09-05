@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowDown, ArrowRight, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
 export default function Hero() {
   const [opened, setOpened] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const groom = wedding.couple.groom;
   const bride = wedding.couple.bride;
 
@@ -17,6 +18,16 @@ export default function Hero() {
       document.body.style.overflow = "";
     };
   }, [opened]);
+
+  const openInvitation = () => {
+    setOpened(true);
+    setRevealed(false);
+  };
+
+  const closeInvitation = () => {
+    setOpened(false);
+    setRevealed(false);
+  };
 
   return (
     <section className="relative min-h-[100svh] w-full overflow-hidden bg-charcoal text-ivory">
@@ -78,7 +89,7 @@ export default function Hero() {
 
         <motion.button
           type="button"
-          onClick={() => setOpened(true)}
+          onClick={openInvitation}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.8 }}
@@ -107,44 +118,108 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.45 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/95 px-6 py-10 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-charcoal/95 px-5 py-10 backdrop-blur-sm sm:px-6"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 45, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.75, ease: "easeOut" }}
-              className="relative w-full max-w-lg border border-champagne/40 bg-paper px-7 py-12 text-center text-charcoal shadow-2xl sm:px-12 sm:py-16"
+            <button
+              type="button"
+              onClick={closeInvitation}
+              className="absolute right-5 top-5 rounded-full p-2 text-ivory/60 transition-colors hover:text-ivory"
+              aria-label="Close invitation"
             >
-              <button
-                type="button"
-                onClick={() => setOpened(false)}
-                className="absolute right-5 top-5 rounded-full p-2 text-muted transition-colors hover:text-charcoal"
-                aria-label="Close invitation"
-              >
-                <X className="h-5 w-5" strokeWidth={1.3} />
-              </button>
+              <X className="h-5 w-5" strokeWidth={1.3} />
+            </button>
 
-              <p className="text-[10px] uppercase tracking-[0.45em] text-rose">With our families</p>
-              <div className="mx-auto mt-6 h-px w-14 bg-champagne" />
-              <p className="mt-8 font-heading text-3xl leading-relaxed sm:text-4xl">
-                We invite you to celebrate the beginning of our forever.
-              </p>
-              <p className="mt-8 font-heading text-4xl sm:text-5xl">
-                {groom} <span className="text-rose">&amp;</span> {bride}
-              </p>
-              <p className="mt-5 text-xs uppercase tracking-[0.28em] text-muted">18 November 2026 · Visakhapatnam</p>
-              <button
-                type="button"
-                onClick={() => {
-                  setOpened(false);
-                  document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="mt-10 inline-flex items-center gap-3 border-b border-charcoal/30 pb-2 text-[10px] uppercase tracking-[0.25em] text-charcoal transition-colors hover:border-rose hover:text-rose"
-              >
-                Enter the invitation
-                <ArrowRight className="h-4 w-4" strokeWidth={1.4} />
-              </button>
-            </motion.div>
+            <AnimatePresence mode="wait">
+              {!revealed ? (
+                <motion.div
+                  key="envelope"
+                  initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -24, scale: 0.98 }}
+                  transition={{ duration: 0.65, ease: "easeOut" }}
+                  className="flex w-full max-w-xl flex-col items-center"
+                >
+                  <p className="mb-7 text-[10px] uppercase tracking-[0.45em] text-champagne">A special invitation</p>
+
+                  <div className="relative w-full max-w-[34rem] [perspective:1200px]">
+                    <div className="relative aspect-[1.55/1] overflow-hidden border border-champagne/50 bg-[#efe5d7] shadow-2xl">
+                      <motion.div
+                        initial={false}
+                        animate={{ rotateX: -8 }}
+                        className="absolute inset-x-0 top-0 z-20 h-1/2 origin-top border-b border-charcoal/10 bg-[#e5d8c7]"
+                        style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)", transformStyle: "preserve-3d" }}
+                      />
+
+                      <div
+                        className="absolute inset-0"
+                        style={{ clipPath: "polygon(0 100%, 0 43%, 50% 100%, 100% 43%, 100% 100%)" }}
+                      >
+                        <div className="absolute inset-0 bg-[#f4eadc]" />
+                        <div className="absolute inset-x-0 bottom-0 h-px bg-charcoal/10" />
+                      </div>
+
+                      <div className="absolute inset-0 z-30 flex items-center justify-center">
+                        <motion.button
+                          type="button"
+                          onClick={() => setRevealed(true)}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.96 }}
+                          className="group relative flex h-20 w-20 items-center justify-center rounded-full border border-champagne/80 bg-rose text-paper shadow-lg sm:h-24 sm:w-24"
+                          aria-label="Open the invitation envelope"
+                        >
+                          <span className="absolute inset-2 rounded-full border border-paper/35" />
+                          <span className="font-heading text-2xl">{wedding.couple.monogram}</span>
+                          <span className="absolute -bottom-8 whitespace-nowrap text-[9px] uppercase tracking-[0.28em] text-charcoal/60 transition-colors group-hover:text-charcoal">
+                            Open the seal
+                          </span>
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="mt-16 max-w-sm text-center font-heading text-xl leading-relaxed text-ivory/70 sm:text-2xl">
+                    A little envelope, a big moment. Open it to begin.
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="letter"
+                  initial={{ opacity: 0, y: 35, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.75, ease: "easeOut" }}
+                  className="relative w-full max-w-lg border border-champagne/40 bg-paper px-7 py-12 text-center text-charcoal shadow-2xl sm:px-12 sm:py-16"
+                >
+                  <div aria-hidden="true" className="mx-auto flex items-center justify-center gap-3 text-champagne">
+                    <span className="h-px w-10 bg-champagne/70" />
+                    <span className="font-heading text-xl">{wedding.couple.monogram}</span>
+                    <span className="h-px w-10 bg-champagne/70" />
+                  </div>
+
+                  <p className="mt-8 text-[10px] uppercase tracking-[0.45em] text-rose">With our families</p>
+                  <p className="mt-7 font-heading text-3xl leading-relaxed sm:text-4xl">
+                    We invite you to celebrate the beginning of our forever.
+                  </p>
+                  <p className="mt-8 font-heading text-4xl sm:text-5xl">
+                    {groom} <span className="text-rose">&amp;</span> {bride}
+                  </p>
+                  <p className="mt-5 text-xs uppercase tracking-[0.28em] text-muted">18 November 2026 · Visakhapatnam</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeInvitation();
+                      window.setTimeout(() => {
+                        document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth" });
+                      }, 200);
+                    }}
+                    className="mt-10 inline-flex items-center gap-3 border-b border-charcoal/30 pb-2 text-[10px] uppercase tracking-[0.25em] text-charcoal transition-colors hover:border-rose hover:text-rose"
+                  >
+                    Enter the invitation
+                    <ArrowRight className="h-4 w-4" strokeWidth={1.4} />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
