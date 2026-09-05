@@ -2,55 +2,21 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
 const petals = [
-  { left: "7%", delay: 0, duration: 7.5, drift: 34, size: 10 },
-  { left: "15%", delay: 2.4, duration: 9, drift: -24, size: 8 },
-  { left: "24%", delay: 1.2, duration: 8.2, drift: 42, size: 7 },
-  { left: "34%", delay: 4.2, duration: 10, drift: -36, size: 11 },
-  { left: "43%", delay: 0.8, duration: 8.7, drift: 28, size: 8 },
-  { left: "53%", delay: 3.1, duration: 9.6, drift: -32, size: 9 },
-  { left: "63%", delay: 1.7, duration: 8.4, drift: 38, size: 7 },
-  { left: "72%", delay: 4.8, duration: 10.5, drift: -28, size: 10 },
-  { left: "81%", delay: 2.1, duration: 8.8, drift: 30, size: 8 },
-  { left: "91%", delay: 0.4, duration: 9.8, drift: -42, size: 11 },
+  { left: "6%", delay: 0, duration: 6.8, drift: 42, rotate: 22, size: 11 },
+  { left: "16%", delay: 1.7, duration: 8.2, drift: -28, rotate: -35, size: 8 },
+  { left: "27%", delay: 3.2, duration: 7.4, drift: 36, rotate: 48, size: 9 },
+  { left: "39%", delay: 0.9, duration: 9.1, drift: -44, rotate: -20, size: 10 },
+  { left: "51%", delay: 2.8, duration: 7.8, drift: 30, rotate: 35, size: 8 },
+  { left: "63%", delay: 4.1, duration: 8.8, drift: -38, rotate: -42, size: 10 },
+  { left: "74%", delay: 1.1, duration: 7.1, drift: 46, rotate: 30, size: 9 },
+  { left: "86%", delay: 3.6, duration: 8.5, drift: -32, rotate: -28, size: 11 },
+  { left: "94%", delay: 0.4, duration: 7.6, drift: 26, rotate: 44, size: 8 },
 ];
-
-function FlowerCluster({ className = "" }: { className?: string }) {
-  return (
-    <div className={`relative h-8 w-8 ${className}`} aria-hidden="true">
-      <span className="absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 rounded-full bg-[#fff8e9] shadow-[0_1px_4px_rgba(92,62,27,0.12)]" />
-      <span className="absolute bottom-0 left-0 h-3 w-3 rounded-full bg-[#fff8e9]" />
-      <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-[#fff8e9]" />
-      <span className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e6c77f]" />
-    </div>
-  );
-}
-
-function JasmineString({ left, delay }: { left: string; delay: number }) {
-  return (
-    <motion.div
-      initial={{ rotate: -2 }}
-      animate={{ rotate: 2 }}
-      transition={{ duration: 2.8, delay, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-      className="absolute top-0 hidden sm:block"
-      style={{ left }}
-      aria-hidden="true"
-    >
-      <div className="mx-auto h-9 w-px bg-[#b28a4c]/55" />
-      <div className="flex -translate-x-1/2 gap-1">
-        <FlowerCluster />
-        <FlowerCluster className="-ml-5 mt-5" />
-      </div>
-      <div className="mx-auto mt-1 h-5 w-px bg-[#b28a4c]/45" />
-      <div className="mx-auto h-3 w-5 rounded-b-full border border-[#9c7436]/70 bg-[#b48743] shadow-[0_3px_8px_rgba(70,42,13,0.2)]" />
-      <div className="mx-auto h-2 w-2 rounded-full bg-[#e4bd6d]" />
-    </motion.div>
-  );
-}
 
 export default function Hero() {
   const [isOpening, setIsOpening] = useState(false);
@@ -62,18 +28,29 @@ export default function Hero() {
 
     const timer = window.setTimeout(() => {
       document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 3400);
+    }, 2350);
 
     return () => window.clearTimeout(timer);
   }, [isOpening]);
 
   const openInvitation = () => {
-    if (isOpening) return;
-    setIsOpening(true);
+    if (!isOpening) setIsOpening(true);
   };
 
   return (
-    <section className="relative min-h-[100svh] w-full overflow-hidden bg-[#f1e2c5] text-charcoal">
+    <section
+      className="relative min-h-[100svh] w-full overflow-hidden bg-[#211b16] text-white"
+      onClick={openInvitation}
+      role="button"
+      tabIndex={0}
+      aria-label="Open the wedding invitation"
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openInvitation();
+        }
+      }}
+    >
       <Image
         src="/images/hero.jpg"
         alt={`${groom} and ${bride}`}
@@ -83,182 +60,82 @@ export default function Hero() {
         className="object-cover object-[center_35%] sm:object-center"
       />
 
-      <div className="absolute inset-0 bg-[#f7e9cc]/35" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#6e4c26]/25 via-[#f5e4c2]/12 to-[#5d3c1e]/45" />
-
-      <motion.div
-        animate={{ opacity: isOpening ? 0 : 1, y: isOpening ? -16 : 0 }}
-        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 text-center"
-      >
-        <div className="max-w-xl">
-          <p className="text-[9px] uppercase tracking-[0.5em] text-white/90 sm:text-[11px]">An invitation to celebrate love</p>
-          <h1 className="mt-7 font-heading text-[4.5rem] leading-[0.78] tracking-[-0.045em] text-white drop-shadow-[0_2px_18px_rgba(46,28,11,0.35)] sm:text-8xl lg:text-[9.5rem]">
-            {groom}
-            <span className="my-3 block text-2xl font-normal italic tracking-normal text-[#f2d49c] sm:my-4 sm:text-4xl">&amp;</span>
-            {bride}
-          </h1>
-          <div className="mx-auto mt-8 flex items-center justify-center gap-3 text-[9px] uppercase tracking-[0.3em] text-white/85 sm:mt-10 sm:text-[10px]">
-            <span>Wednesday</span>
-            <span className="h-1 w-1 rounded-full bg-[#e9c47c]" />
-            <span>Visakhapatnam</span>
-          </div>
-        </div>
-      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/55" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(20,12,7,0.34)_100%)]" />
 
       {!isOpening && (
-        <motion.button
-          type="button"
-          onClick={openInvitation}
-          initial={{ opacity: 0, y: 15, scale: 0.94 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: 0.8, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.95 }}
-          className="group absolute bottom-[11%] left-1/2 z-30 flex h-[82px] w-[82px] -translate-x-1/2 items-center justify-center rounded-full border border-[#d8b36e]/90 bg-[#f4e5c7]/20 text-[#fffaf0] shadow-[0_8px_40px_rgba(63,38,12,0.18)] backdrop-blur-[2px] outline-none sm:h-[92px] sm:w-[92px]"
-          aria-label="Open the invitation"
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-x-0 bottom-[10%] z-20 flex flex-col items-center text-center"
         >
-          <span className="absolute inset-1 rounded-full border border-white/35 transition-transform duration-700 group-hover:scale-[1.08]" />
-          <span className="flex flex-col items-center gap-0.5 text-[8px] uppercase tracking-[0.28em]">
-            <span>Open</span>
-            <ChevronDown className="h-4 w-4 text-[#f1ce8e] transition-transform duration-500 group-hover:translate-y-0.5" strokeWidth={1.2} />
-          </span>
-        </motion.button>
+          <p className="mb-5 text-[9px] uppercase tracking-[0.42em] text-white/75 sm:text-[10px]">
+            An invitation to celebrate love
+          </p>
+          <div className="group flex h-[78px] w-[78px] items-center justify-center rounded-full border border-white/60 bg-black/10 backdrop-blur-[3px] transition-transform duration-700 hover:scale-105 sm:h-[88px] sm:w-[88px]">
+            <span className="flex flex-col items-center gap-1 text-[8px] uppercase tracking-[0.28em]">
+              <span>Open</span>
+              <ArrowUpRight className="h-4 w-4 text-[#f1d19a] transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={1.15} />
+            </span>
+          </div>
+          <p className="mt-4 text-[8px] uppercase tracking-[0.34em] text-white/55">Tap to begin</p>
+        </motion.div>
       )}
 
-      <div
-        className={`fixed inset-0 z-[60] overflow-hidden ${isOpening ? "pointer-events-none" : "cursor-pointer"}`}
-        onClick={openInvitation}
-        role="button"
-        tabIndex={isOpening ? -1 : 0}
-        aria-label="Open the wedding invitation"
-        onKeyDown={(event) => {
-          if (!isOpening && (event.key === "Enter" || event.key === " ")) {
-            event.preventDefault();
-            openInvitation();
-          }
-        }}
-      >
-        {/* Grand stage treatment: the center stays softly translucent so the hero never disappears behind a dead opaque wall. */}
-        <motion.div
-          initial={false}
-          animate={{ y: isOpening ? "-115%" : "0%" }}
-          transition={{ duration: 1.1, delay: isOpening ? 1.75 : 0, ease: [0.76, 0, 0.24, 1] }}
-          className="absolute inset-x-0 top-0 h-[15vh] min-h-[104px] origin-top"
-          style={{
-            background: "linear-gradient(180deg, rgba(103,70,30,0.88), rgba(211,171,99,0.82) 35%, rgba(249,230,192,0.82) 72%, rgba(133,91,38,0.55))",
-            boxShadow: "0 16px 40px rgba(74,46,15,0.25)",
-          }}
-        >
-          <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-[#8d6330] via-[#e4c17d] to-[#8d6330]" />
-          <div className="absolute inset-x-0 bottom-2 h-px bg-white/45" />
-          <div className="absolute inset-x-0 top-1 h-4 bg-[radial-gradient(ellipse_at_center,rgba(255,248,226,0.55),transparent_70%)]" />
-        </motion.div>
-
-        {["6%", "18%", "30%", "42%", "54%", "66%", "78%", "90%"].map((left, index) => (
-          <JasmineString key={left} left={left} delay={index * 0.12} />
+      {/* Soft foreground petals are present before the transition begins, so the opening feels alive rather than staged. */}
+      <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden">
+        {petals.map((petal, index) => (
+          <motion.span
+            key={index}
+            initial={{ x: 0, y: "-12vh", opacity: 0, rotate: petal.rotate }}
+            animate={{
+              x: [0, petal.drift, petal.drift * -0.45, petal.drift * 0.7],
+              y: ["-12vh", "32vh", "72vh", "116vh"],
+              opacity: [0, 0.75, 0.65, 0],
+              rotate: [petal.rotate, petal.rotate + 90, petal.rotate + 210, petal.rotate + 330],
+            }}
+            transition={{ duration: petal.duration, delay: petal.delay, repeat: Infinity, ease: "linear" }}
+            className="absolute top-0 rounded-[70%_30%_65%_35%] bg-[#fff5df]/75 shadow-[0_1px_8px_rgba(255,239,200,0.18)]"
+            style={{ left: petal.left, width: petal.size, height: petal.size * 0.62 }}
+          />
         ))}
-
-        {/* Left decorative side drape: deeper, gathered and framed rather than a flat half-screen panel. */}
-        <motion.div
-          initial={false}
-          animate={{ x: isOpening ? "-112%" : "0%", scaleX: isOpening ? 0.92 : 1 }}
-          transition={{ duration: 2.05, ease: [0.76, 0, 0.24, 1] }}
-          className="absolute inset-y-0 left-0 w-[32%] min-w-[145px] origin-left"
-          style={{
-            clipPath: "polygon(0 0, 100% 0, 82% 9%, 74% 20%, 78% 36%, 70% 52%, 77% 70%, 67% 86%, 74% 100%, 0 100%)",
-            background: "linear-gradient(105deg, #7c572f 0%, #c39a5d 13%, #f1dcae 22%, #a77b42 33%, #e7c88d 44%, #8a6032 57%, #d8b776 68%, #8a6033 80%, #e7c98e 91%, #704b28 100%)",
-            boxShadow: "18px 0 48px rgba(67,40,12,0.3)",
-          }}
-        >
-          <div className="absolute inset-y-0 right-[7%] w-[22%] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          <div className="absolute inset-y-0 right-[17%] w-px bg-[#8b6330]/55" />
-          <div className="absolute left-0 top-0 h-full w-4 bg-[#6f4924]/35" />
-        </motion.div>
-
-        {/* Right decorative side drape mirrors the left to keep the composition ceremonial and symmetrical. */}
-        <motion.div
-          initial={false}
-          animate={{ x: isOpening ? "112%" : "0%", scaleX: isOpening ? 0.92 : 1 }}
-          transition={{ duration: 2.05, ease: [0.76, 0, 0.24, 1] }}
-          className="absolute inset-y-0 right-0 w-[32%] min-w-[145px] origin-right"
-          style={{
-            clipPath: "polygon(0 9%, 0 0, 100% 0, 100% 100%, 26% 100%, 33% 86%, 23% 70%, 30% 52%, 22% 36%, 26% 20%, 18% 9%)",
-            background: "linear-gradient(255deg, #7c572f 0%, #c39a5d 13%, #f1dcae 22%, #a77b42 33%, #e7c88d 44%, #8a6032 57%, #d8b776 68%, #8a6033 80%, #e7c98e 91%, #704b28 100%)",
-            boxShadow: "-18px 0 48px rgba(67,40,12,0.3)",
-          }}
-        >
-          <div className="absolute inset-y-0 left-[7%] w-[22%] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          <div className="absolute inset-y-0 left-[17%] w-px bg-[#8b6330]/55" />
-          <div className="absolute right-0 top-0 h-full w-4 bg-[#6f4924]/35" />
-        </motion.div>
-
-        {/* Sheer center curtain: translucent folds give the reference-like stage feel without completely hiding the photo. */}
-        <motion.div
-          initial={false}
-          animate={{ scaleX: isOpening ? 0 : 1, opacity: isOpening ? 0 : 0.93 }}
-          transition={{ duration: 1.95, ease: [0.76, 0, 0.24, 1] }}
-          className="absolute inset-y-[9%] left-[14%] right-[14%] origin-center"
-          style={{
-            background: "repeating-linear-gradient(90deg, rgba(247,227,190,0.82) 0%, rgba(255,245,220,0.9) 7%, rgba(190,145,80,0.45) 13%, rgba(255,243,213,0.88) 20%, rgba(194,151,91,0.42) 27%, rgba(255,245,221,0.9) 34%, rgba(188,143,79,0.44) 41%, rgba(255,244,217,0.88) 49%, rgba(190,145,82,0.42) 56%, rgba(255,245,221,0.9) 64%, rgba(190,145,82,0.43) 72%, rgba(255,244,216,0.9) 80%, rgba(186,141,77,0.42) 88%, rgba(250,232,198,0.84) 100%)",
-            boxShadow: "inset 0 0 90px rgba(113,72,26,0.16), 0 0 50px rgba(255,244,213,0.2)",
-          }}
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,250,235,0.32),transparent_58%)]" />
-          <div className="absolute inset-x-0 top-0 h-px bg-[#9f7339]/40" />
-        </motion.div>
-
-        {/* Floral canopy and greenery frame the top corners without becoming a flat illustrated border. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[13vh] min-h-[92px]" aria-hidden="true">
-          <div className="absolute left-0 top-0 h-20 w-40 rounded-br-[90px] bg-[radial-gradient(circle_at_25%_25%,#fffaf0_0_6%,transparent_7%),radial-gradient(circle_at_40%_35%,#f5e5b7_0_9%,transparent_10%),radial-gradient(circle_at_60%_22%,#fffaf0_0_7%,transparent_8%),radial-gradient(circle_at_48%_58%,#d4c994_0_18%,transparent_19%),linear-gradient(135deg,#4e633d,#9a9c62)] opacity-90" />
-          <div className="absolute right-0 top-0 h-20 w-40 rounded-bl-[90px] bg-[radial-gradient(circle_at_75%_25%,#fffaf0_0_6%,transparent_7%),radial-gradient(circle_at_60%_35%,#f5e5b7_0_9%,transparent_10%),radial-gradient(circle_at_40%_22%,#fffaf0_0_7%,transparent_8%),radial-gradient(circle_at_52%_58%,#d4c994_0_18%,transparent_19%),linear-gradient(225deg,#4e633d,#9a9c62)] opacity-90" />
-          <div className="absolute left-0 right-0 top-0 h-5 bg-[radial-gradient(ellipse_at_center,rgba(255,247,224,0.92),transparent_62%)]" />
-        </div>
-
-        {/* Petals are intentionally independent of the curtain so the scene feels alive from the first frame. */}
-        <div className="pointer-events-none absolute inset-0 z-[4] overflow-hidden" aria-hidden="true">
-          {petals.map((petal, index) => (
-            <motion.span
-              key={index}
-              initial={{ x: 0, y: "-12vh", opacity: 0, rotate: 0 }}
-              animate={{ x: [0, petal.drift, petal.drift * -0.45, petal.drift * 0.7], y: ["-12vh", "35vh", "72vh", "118vh"], opacity: [0, 0.85, 0.7, 0], rotate: [0, 70, 170, 280] }}
-              transition={{ duration: petal.duration, delay: petal.delay, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-0 rounded-[70%_35%_65%_30%] bg-[#fff5d9] shadow-[0_1px_5px_rgba(90,58,18,0.16)]"
-              style={{ left: petal.left, width: petal.size, height: petal.size * 0.58 }}
-            />
-          ))}
-        </div>
-
-        {!isOpening && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="pointer-events-none absolute bottom-[7%] left-1/2 z-10 -translate-x-1/2 text-center text-[8px] uppercase tracking-[0.38em] text-[#fff7e5]/90 sm:bottom-[7.5%]"
-          >
-            Tap anywhere to open
-          </motion.div>
-        )}
       </div>
 
+      {/* A short, layered veil reveal replaces the previous artificial curtain stage. */}
       {isOpening && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.9, duration: 0.8 }}
-          className="pointer-events-none fixed inset-0 z-[55] flex items-center justify-center px-8 text-center"
-        >
+        <div className="pointer-events-none fixed inset-0 z-[70] overflow-hidden bg-[#f4e8d2]">
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: [0, 1, 1, 0], y: [16, 0, 0, -10] }}
-            transition={{ duration: 1.35, delay: 0.05, times: [0, 0.22, 0.76, 1], ease: [0.22, 1, 0.36, 1] }}
-            className="text-charcoal"
+            initial={{ y: "108%", rotate: 1.5 }}
+            animate={{ y: "-108%", rotate: -1.5 }}
+            transition={{ duration: 1.55, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-x-[-8%] top-[-8%] h-[120%]"
+            style={{
+              background: "linear-gradient(105deg, rgba(232,215,181,0.98) 0%, rgba(255,248,232,0.98) 24%, rgba(213,189,148,0.95) 47%, rgba(255,247,225,0.98) 70%, rgba(225,204,166,0.98) 100%)",
+              boxShadow: "0 -30px 90px rgba(117,77,28,0.18), inset 0 0 90px rgba(255,255,255,0.24)",
+            }}
           >
-            <p className="text-[9px] uppercase tracking-[0.48em] text-[#9b7653]">The celebration begins</p>
-            <p className="mt-5 font-heading text-4xl tracking-[-0.025em] sm:text-6xl">{groom} <span className="font-normal italic text-[#ae8b69]">&amp;</span> {bride}</p>
-            <p className="mt-4 text-[9px] uppercase tracking-[0.36em] text-charcoal/60">18 November 2026 · Visakhapatnam</p>
+            <div className="absolute inset-0 opacity-55 [background:repeating-linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.38)_7%,rgba(144,106,57,0.12)_13%,rgba(255,255,255,0.3)_20%,transparent_28%)]" />
           </motion.div>
-        </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0.96, 1, 1.02, 1.04] }}
+            transition={{ duration: 2.05, times: [0, 0.25, 0.7, 1], ease: "easeInOut" }}
+            className="absolute inset-0 flex items-center justify-center text-center"
+          >
+            <div className="px-8">
+              <p className="text-[9px] uppercase tracking-[0.5em] text-[#7a5b35]/75">The celebration begins</p>
+              <h2 className="mt-5 font-heading text-[3.7rem] leading-[0.86] tracking-[-0.035em] text-[#4d3824] sm:text-7xl">
+                {groom}
+                <span className="my-2 block text-xl italic text-[#aa8250] sm:text-3xl">&amp;</span>
+                {bride}
+              </h2>
+              <div className="mx-auto mt-6 h-px w-14 bg-[#b28a55]/60" />
+              <p className="mt-5 text-[9px] uppercase tracking-[0.34em] text-[#7a5b35]/75">18 November 2026 · Visakhapatnam</p>
+            </div>
+          </motion.div>
+        </div>
       )}
     </section>
   );
