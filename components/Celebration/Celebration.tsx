@@ -1,74 +1,99 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { MapPin } from "lucide-react";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
 import Countdown from "@/components/Countdown/Countdown";
 
 export default function Celebration() {
+  const ceremony = wedding.ceremony;
+  const venue = ceremony.venue;
+
   return (
-    <Section id="celebration">
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="mx-auto max-w-3xl py-24 text-center"
-      >
-        <p className="uppercase tracking-[0.35em] text-sm text-stone-500">
-          Celebrate With Us
-        </p>
+    <Section id="celebration" className="relative overflow-hidden">
+      <div className="mx-auto max-w-5xl">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <p className="text-xs uppercase tracking-[0.4em] text-rose">
+            Chapter III
+          </p>
+          <div className="mx-auto mt-5 h-px w-16 bg-champagne" />
+          <h2 className="mt-6 font-heading text-5xl leading-none text-charcoal sm:text-6xl lg:text-7xl">
+            The Day We Celebrate
+          </h2>
+          <p className="mx-auto mt-7 max-w-2xl font-heading text-2xl leading-relaxed text-charcoal/70 sm:text-3xl">
+            A day filled with love, laughter, blessings, and the people who mean the most to us.
+          </p>
+        </motion.div>
 
-        <h2 className="mt-6 font-heading text-5xl text-stone-900">
-          We can't wait to celebrate together
-        </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mt-16 border-y border-line py-10 sm:py-12"
+        >
+          <div className="grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div className="px-4 py-6 text-center sm:px-8 sm:py-2">
+              <p className="text-[11px] uppercase tracking-[0.35em] text-muted">
+                Date
+              </p>
+              <p className="mt-3 font-heading text-3xl text-charcoal sm:text-4xl">
+                {ceremony.date}
+              </p>
+            </div>
 
-        <div className="mt-16 space-y-8">
-          <div>
-            <p className="uppercase tracking-[0.35em] text-xs text-stone-500">
-              Date
-            </p>
+            <div className="px-4 py-6 text-center sm:px-8 sm:py-2">
+              <p className="text-[11px] uppercase tracking-[0.35em] text-muted">
+                Time
+              </p>
+              <p className="mt-3 font-heading text-3xl text-charcoal sm:text-4xl">
+                {ceremony.time}
+              </p>
+            </div>
 
-            <p className="mt-3 text-3xl font-heading">
-              {wedding.ceremony.date}
-            </p>
+            <div className="px-4 py-6 text-center sm:px-8 sm:py-2">
+              <p className="text-[11px] uppercase tracking-[0.35em] text-muted">
+                Place
+              </p>
+              <p className="mt-3 font-heading text-3xl text-charcoal sm:text-4xl">
+                {venue.name}
+              </p>
+            </div>
           </div>
+        </motion.div>
 
-          <div>
-            <p className="uppercase tracking-[0.35em] text-xs text-stone-500">
-              Venue
-            </p>
+        <Countdown />
 
-            <p className="mt-3 text-2xl font-heading">
-              {wedding.ceremony.venue.name}
-            </p>
-
-            <p className="mt-2 text-stone-600">
-              {wedding.ceremony.venue.address}
-            </p>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7 }}
+          className="mt-14 text-center"
+        >
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-line text-rose">
+            <MapPin className="h-5 w-5" strokeWidth={1.5} />
           </div>
-
-          <div>
-            <p className="uppercase tracking-[0.35em] text-xs text-stone-500">
-              Time
-            </p>
-
-            <p className="mt-3 text-2xl">
-              {wedding.ceremony.time}
-            </p>
-          </div>
-
-<Countdown />
+          <p className="mt-5 font-heading text-2xl text-charcoal sm:text-3xl">
+            {venue.address}
+          </p>
           <a
-            href={wedding.ceremony.venue.maps}
+            href={venue.maps}
             target="_blank"
             rel="noreferrer"
-            className="inline-block pt-6 text-sm uppercase tracking-[0.3em] text-stone-800 hover:underline"
+            className="mt-5 inline-flex text-xs uppercase tracking-[0.3em] text-muted transition-colors hover:text-charcoal"
           >
-            View on Maps →
+            {venue.directionsLabel} <span className="ml-2">→</span>
           </a>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </Section>
   );
 }
