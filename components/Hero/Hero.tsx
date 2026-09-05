@@ -6,18 +6,6 @@ import { ArrowDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
-const petals = [
-  { left: "4%", delay: 0, duration: 7.2, drift: 42, rotate: 18, size: 10 },
-  { left: "12%", delay: 1.8, duration: 8.4, drift: -28, rotate: -26, size: 8 },
-  { left: "23%", delay: 3.2, duration: 7.6, drift: 34, rotate: 38, size: 9 },
-  { left: "36%", delay: 0.9, duration: 8.8, drift: -36, rotate: -16, size: 10 },
-  { left: "49%", delay: 2.5, duration: 7.9, drift: 28, rotate: 32, size: 8 },
-  { left: "61%", delay: 4.1, duration: 8.6, drift: -34, rotate: -38, size: 10 },
-  { left: "74%", delay: 1.1, duration: 7.3, drift: 40, rotate: 24, size: 9 },
-  { left: "86%", delay: 3.7, duration: 8.3, drift: -30, rotate: -24, size: 10 },
-  { left: "96%", delay: 0.4, duration: 7.7, drift: 24, rotate: 36, size: 8 },
-];
-
 const jasmineDrops = [
   { left: "8%", height: "18vh", delay: 0.1 },
   { left: "21%", height: "13vh", delay: 0.35 },
@@ -76,24 +64,6 @@ export default function Hero() {
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/45" />
 
-      <div className="pointer-events-none absolute inset-0 z-40 overflow-hidden">
-        {petals.map((petal, index) => (
-          <motion.span
-            key={index}
-            initial={{ x: 0, y: "-12vh", opacity: 0, rotate: petal.rotate }}
-            animate={{
-              x: [0, petal.drift, petal.drift * -0.45, petal.drift * 0.7],
-              y: ["-12vh", "30vh", "72vh", "116vh"],
-              opacity: [0, 0.72, 0.62, 0],
-              rotate: [petal.rotate, petal.rotate + 90, petal.rotate + 210, petal.rotate + 330],
-            }}
-            transition={{ duration: petal.duration, delay: petal.delay, repeat: Infinity, ease: "linear" }}
-            className="absolute top-0 rounded-[70%_30%_65%_35%] bg-[#fff4dd]/80 shadow-[0_1px_8px_rgba(255,239,200,0.2)]"
-            style={{ left: petal.left, width: petal.size, height: petal.size * 0.62 }}
-          />
-        ))}
-      </div>
-
       {!isOpening && (
         <motion.div
           initial={{ opacity: 0, y: 14 }}
@@ -116,17 +86,17 @@ export default function Hero() {
 
       {isCurtainVisible && (
         <div className="pointer-events-none fixed inset-0 z-[70] overflow-hidden" aria-hidden="true">
-          {/* A full-width floral canopy replaces the old solid top bar. */}
+          {/* Warm champagne canopy inspired by South Indian jasmine-and-brass wedding decor. */}
           <motion.div
             initial={{ y: 0, opacity: 1 }}
             animate={isOpening ? { y: "-105%", opacity: 0 } : { y: 0, opacity: 1 }}
             transition={{ duration: 1.9, ease: [0.76, 0, 0.24, 1] }}
             className="absolute inset-x-0 top-0 h-[15vh] min-h-[82px]"
           >
-            <div className="absolute inset-x-0 top-0 h-5 bg-gradient-to-b from-[#6f4a24] via-[#d6ad6d] to-transparent opacity-80" />
-            <div className="absolute inset-x-0 top-3 h-8 bg-gradient-to-b from-[#f4dfb1]/90 via-[#d4aa67]/70 to-transparent blur-[1px]" />
+            <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-[#5d3c1e] via-[#c28a49] to-transparent opacity-90" />
+            <div className="absolute inset-x-0 top-2 h-9 bg-gradient-to-b from-[#f5dfb1]/95 via-[#d2a573]/75 to-transparent blur-[1px]" />
             <div className="absolute inset-x-0 top-0 flex items-start justify-between px-[2%]">
-              {Array.from({ length: 15 }).map((_, index) => (
+              {Array.from({ length: 17 }).map((_, index) => (
                 <span
                   key={index}
                   className="relative block h-5 w-5 rounded-full bg-[#fff7e8] shadow-[0_2px_8px_rgba(255,239,192,0.55)] sm:h-7 sm:w-7"
@@ -157,45 +127,63 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Left gathered silk drape. The curtain is rich at the edge and opens away from the photograph. */}
+          {/* Left champagne silk curtain. Its center edge is intentionally clean and smooth — no zig-zag seam. */}
           <motion.div
             initial={{ x: 0, scaleX: 1 }}
-            animate={isOpening ? { x: "-93%", scaleX: 0.94 } : { x: 0, scaleX: 1 }}
+            animate={isOpening ? { x: "-96%", scaleX: 0.98 } : { x: 0, scaleX: 1 }}
             transition={{ duration: 2, ease: [0.76, 0, 0.24, 1] }}
-            className="absolute inset-y-0 left-0 w-[53%] origin-left"
+            className="absolute inset-y-0 left-0 z-20 w-[52%] origin-left overflow-hidden rounded-r-[18%]"
             style={{
-              background: "linear-gradient(90deg,#7b5128 0%,#d6ad69 7%,#f8e5bd 16%,#a8753d 25%,#e8c98e 35%,#8e5e30 45%,#f4dbab 56%,#b57f42 67%,#f7e6bd 77%,#9a6735 88%,#d9b172 100%)",
-              clipPath: "polygon(0 0,100% 0,97% 8%,100% 18%,96% 29%,100% 40%,96% 51%,100% 62%,96% 74%,100% 86%,96% 100%,0 100%)",
-              boxShadow: "inset -30px 0 50px rgba(73,42,15,0.3), 18px 0 48px rgba(65,39,18,0.2)",
+              background: "linear-gradient(90deg,#6f4823 0%,#b47d3e 6%,#f2d5a0 14%,#9a6733 22%,#e9c48a 31%,#7f5429 40%,#f7dfad 49%,#a8733a 58%,#f0ce96 68%,#8b5a2b 78%,#f6dfad 88%,#b47d3e 96%,#704823 100%)",
+              boxShadow: "inset -34px 0 58px rgba(66,37,12,0.38), 18px 0 55px rgba(55,32,13,0.24)",
             }}
           >
-            <div className="absolute inset-0 opacity-45 [background:repeating-linear-gradient(93deg,transparent_0%,rgba(255,248,226,.45)_5%,rgba(90,57,24,.22)_11%,transparent_18%)]" />
-            <div className="absolute inset-y-0 right-0 w-[10px] bg-gradient-to-l from-[#6f4926] via-[#f0d39b] to-transparent opacity-80" />
-            <div className="absolute right-[-3px] top-[17%] h-[68%] w-3 rounded-full bg-gradient-to-b from-[#f5dfb2] via-[#8b5b2d] to-[#e8c58b] opacity-70" />
-            <div className="absolute left-0 top-[12%] h-[18%] w-[34%] rounded-r-[100%] bg-gradient-to-r from-[#5d3b1d]/55 to-transparent" />
+            <div className="absolute inset-0 opacity-55 [background:repeating-linear-gradient(95deg,transparent_0%,rgba(255,247,224,.55)_4%,rgba(88,53,22,.28)_10%,transparent_17%)]" />
+            <div className="absolute inset-y-0 right-0 w-3 bg-gradient-to-l from-[#5f3b1c] via-[#f4d69e] to-transparent opacity-80" />
+            <div className="absolute inset-y-0 right-[2px] w-px bg-[#f8e4bd]/65" />
+
+            {/* Gathered fabric shadow near the side tie-back. */}
+            <div className="absolute left-[8%] top-[18%] h-[64%] w-[22%] rounded-r-[100%] bg-gradient-to-r from-[#4e3018]/55 via-[#8b5a2d]/15 to-transparent blur-[1px]" />
+            <div className="absolute left-[11%] top-[52%] h-[2px] w-[17%] -rotate-3 bg-gradient-to-r from-[#8c5c25] via-[#f0cf91] to-[#8c5c25] opacity-90" />
+            <div className="absolute left-[15%] top-[50.5%] h-4 w-4 rounded-full border border-[#f3d49b] bg-[#8d5d29] shadow-[0_2px_8px_rgba(56,31,11,.35)]" />
+            <div className="absolute left-[13.2%] top-[53%] h-9 w-5 rounded-b-full bg-gradient-to-b from-[#c3914d] via-[#8d5d29] to-[#5c3b1c] shadow-[0_3px_8px_rgba(56,31,11,.3)]" />
           </motion.div>
 
-          {/* Right gathered silk drape. */}
+          {/* Right champagne silk curtain, mirrored for a symmetrical stage reveal. */}
           <motion.div
             initial={{ x: 0, scaleX: 1 }}
-            animate={isOpening ? { x: "93%", scaleX: 0.94 } : { x: 0, scaleX: 1 }}
+            animate={isOpening ? { x: "96%", scaleX: 0.98 } : { x: 0, scaleX: 1 }}
             transition={{ duration: 2, ease: [0.76, 0, 0.24, 1] }}
-            className="absolute inset-y-0 right-0 w-[53%] origin-right"
+            className="absolute inset-y-0 right-0 z-20 w-[52%] origin-right overflow-hidden rounded-l-[18%]"
             style={{
-              background: "linear-gradient(90deg,#d9b172 0%,#9a6735 12%,#f7e6bd 23%,#b57f42 33%,#f4dbab 44%,#8e5e30 55%,#e8c98e 65%,#a8753d 75%,#f8e5bd 84%,#d6ad69 93%,#7b5128 100%)",
-              clipPath: "polygon(0 8%,3% 0,100% 0,100% 100%,4% 100%,0 86%,4% 74%,0 62%,4% 51%,0 40%,4% 29%,0 18%)",
-              boxShadow: "inset 30px 0 50px rgba(73,42,15,0.3), -18px 0 48px rgba(65,39,18,0.2)",
+              background: "linear-gradient(90deg,#704823 0%,#b47d3e 4%,#f6dfad 12%,#8b5a2b 22%,#f0ce96 32%,#a8733a 42%,#f7dfad 51%,#7f5429 60%,#e9c48a 69%,#9a6733 78%,#f2d5a0 86%,#b47d3e 94%,#6f4823 100%)",
+              boxShadow: "inset 34px 0 58px rgba(66,37,12,0.38), -18px 0 55px rgba(55,32,13,0.24)",
             }}
           >
-            <div className="absolute inset-0 opacity-45 [background:repeating-linear-gradient(87deg,transparent_0%,rgba(255,248,226,.45)_5%,rgba(90,57,24,.22)_11%,transparent_18%)]" />
-            <div className="absolute inset-y-0 left-0 w-[10px] bg-gradient-to-r from-[#6f4926] via-[#f0d39b] to-transparent opacity-80" />
-            <div className="absolute left-[-3px] top-[17%] h-[68%] w-3 rounded-full bg-gradient-to-b from-[#f5dfb2] via-[#8b5b2d] to-[#e8c58b] opacity-70" />
-            <div className="absolute right-0 top-[12%] h-[18%] w-[34%] rounded-l-[100%] bg-gradient-to-l from-[#5d3b1d]/55 to-transparent" />
+            <div className="absolute inset-0 opacity-55 [background:repeating-linear-gradient(85deg,transparent_0%,rgba(255,247,224,.55)_4%,rgba(88,53,22,.28)_10%,transparent_17%)]" />
+            <div className="absolute inset-y-0 left-0 w-3 bg-gradient-to-r from-[#5f3b1c] via-[#f4d69e] to-transparent opacity-80" />
+            <div className="absolute inset-y-0 left-[2px] w-px bg-[#f8e4bd]/65" />
+            <div className="absolute right-[8%] top-[18%] h-[64%] w-[22%] rounded-l-[100%] bg-gradient-to-l from-[#4e3018]/55 via-[#8b5a2d]/15 to-transparent blur-[1px]" />
+            <div className="absolute right-[11%] top-[52%] h-[2px] w-[17%] rotate-3 bg-gradient-to-r from-[#8c5c25] via-[#f0cf91] to-[#8c5c25] opacity-90" />
+            <div className="absolute right-[15%] top-[50.5%] h-4 w-4 rounded-full border border-[#f3d49b] bg-[#8d5d29] shadow-[0_2px_8px_rgba(56,31,11,.35)]" />
+            <div className="absolute right-[13.2%] top-[53%] h-9 w-5 rounded-b-full bg-gradient-to-b from-[#c3914d] via-[#8d5d29] to-[#5c3b1c] shadow-[0_3px_8px_rgba(56,31,11,.3)]" />
           </motion.div>
 
-          {/* Soft floral corners keep the frame ornamental without becoming a template-like wall. */}
-          <div className="absolute left-0 top-0 h-[24vh] w-[16vw] min-w-[90px] bg-[radial-gradient(circle_at_15%_15%,rgba(105,116,65,.95)_0_35%,transparent_36%),radial-gradient(circle_at_0%_60%,rgba(76,91,45,.8)_0_35%,transparent_36%)] opacity-85" />
-          <div className="absolute right-0 top-0 h-[24vh] w-[16vw] min-w-[90px] scale-x-[-1] bg-[radial-gradient(circle_at_15%_15%,rgba(105,116,65,.95)_0_35%,transparent_36%),radial-gradient(circle_at_0%_60%,rgba(76,91,45,.8)_0_35%,transparent_36%)] opacity-85" />
+          {/* Greenery and jasmine framing, kept to the edges so the curtain remains the hero. */
+          <div className="absolute left-0 top-0 h-[28vh] w-[18vw] min-w-[110px] opacity-90">
+            <div className="absolute left-[-6%] top-[8%] h-20 w-20 rounded-full bg-[#65703f]/90 blur-[1px]" />
+            <div className="absolute left-[2%] top-[34%] h-24 w-32 rounded-[50%] bg-[#485d31]/80 blur-[1px]" />
+            <div className="absolute left-[16%] top-[10%] h-3 w-3 rounded-full bg-[#fff7e8] shadow-[0_0_9px_rgba(255,244,210,.7)]" />
+            <div className="absolute left-[7%] top-[22%] h-4 w-4 rounded-full bg-[#fff7e8] shadow-[0_0_9px_rgba(255,244,210,.7)]" />
+            <div className="absolute left-[25%] top-[5%] h-4 w-4 rounded-full bg-[#fff7e8] shadow-[0_0_9px_rgba(255,244,210,.7)]" />
+          </div>
+          <div className="absolute right-0 top-0 h-[28vh] w-[18vw] min-w-[110px] scale-x-[-1] opacity-90">
+            <div className="absolute left-[-6%] top-[8%] h-20 w-20 rounded-full bg-[#65703f]/90 blur-[1px]" />
+            <div className="absolute left-[2%] top-[34%] h-24 w-32 rounded-[50%] bg-[#485d31]/80 blur-[1px]" />
+            <div className="absolute left-[16%] top-[10%] h-3 w-3 rounded-full bg-[#fff7e8] shadow-[0_0_9px_rgba(255,244,210,.7)]" />
+            <div className="absolute left-[7%] top-[22%] h-4 w-4 rounded-full bg-[#fff7e8] shadow-[0_0_9px_rgba(255,244,210,.7)]" />
+            <div className="absolute left-[25%] top-[5%] h-4 w-4 rounded-full bg-[#fff7e8] shadow-[0_0_9px_rgba(255,244,210,.7)]" />
+          </div>
 
           {!isOpening && (
             <motion.div
@@ -204,8 +192,9 @@ export default function Hero() {
               transition={{ duration: 0.7, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
               className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center"
             >
+              <div className="mb-3 text-[10px] font-medium uppercase tracking-[0.45em] text-[#fff5df]/80">NikSha</div>
               <div className="flex h-[74px] w-[74px] items-center justify-center rounded-full border border-[#f5dfb2]/85 bg-[#5f411f]/30 text-[8px] uppercase tracking-[0.32em] text-[#fff7e8] shadow-[0_8px_32px_rgba(63,39,18,0.2)] backdrop-blur-[2px] sm:h-[84px] sm:w-[84px]">
-                <span className="-mr-[-0.32em]">Open</span>
+                <span>Open</span>
               </div>
               <p className="mt-4 text-[8px] uppercase tracking-[0.4em] text-[#fff4dc]/80">Tap anywhere to open</p>
             </motion.div>
