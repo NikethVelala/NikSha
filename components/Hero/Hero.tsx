@@ -16,7 +16,7 @@ export default function Hero() {
 
     const timer = window.setTimeout(() => {
       document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 2200);
+    }, 3400);
 
     return () => window.clearTimeout(timer);
   }, [isOpening]);
@@ -40,31 +40,27 @@ export default function Hero() {
       <div className="absolute inset-0 bg-charcoal/20" />
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/50 via-transparent to-charcoal/85" />
 
-      {/* The hero remains underneath the entire interaction, so there is never a blank transition screen. */}
-      <div className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: isOpening ? 0 : 1, y: isOpening ? -18 : 0 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-xl"
-        >
+      <motion.div
+        animate={{ opacity: isOpening ? 0 : 1, y: isOpening ? -16 : 0 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 text-center"
+      >
+        <div className="max-w-xl">
           <p className="text-[9px] uppercase tracking-[0.5em] text-champagne sm:text-[11px]">
             An invitation to celebrate love
           </p>
-
           <h1 className="mt-7 font-heading text-[4.5rem] leading-[0.78] tracking-[-0.045em] sm:text-8xl lg:text-[9.5rem]">
             {groom}
             <span className="my-3 block text-2xl font-normal italic tracking-normal text-champagne sm:my-4 sm:text-4xl">&amp;</span>
             {bride}
           </h1>
-
           <div className="mx-auto mt-8 flex items-center justify-center gap-3 text-[9px] uppercase tracking-[0.3em] text-ivory/80 sm:mt-10 sm:text-[10px]">
             <span>Wednesday</span>
             <span className="h-1 w-1 rounded-full bg-champagne" />
             <span>Visakhapatnam</span>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
       {!isOpening && (
         <motion.button
@@ -85,51 +81,63 @@ export default function Hero() {
         </motion.button>
       )}
 
-      {/* Curtain reveal. The folds are built with CSS gradients so the animation stays crisp and dependency-free on mobile. */}
-      <div className="pointer-events-none fixed inset-0 z-20 overflow-hidden" aria-hidden="true">
+      {/* A theatrical reveal: layered fabric, top valance and tie-back details. The photo always remains behind it. */}
+      <div className="pointer-events-none fixed inset-0 z-[60] overflow-hidden" aria-hidden="true">
         <motion.div
           initial={false}
-          animate={{ x: isOpening ? "-103%" : "0%" }}
-          transition={{ duration: 1.8, ease: [0.76, 0, 0.24, 1] }}
-          className="absolute inset-y-0 left-0 w-[54%] origin-left"
+          animate={{ y: isOpening ? "-108%" : "0%" }}
+          transition={{ duration: 1.05, delay: isOpening ? 1.65 : 0, ease: [0.76, 0, 0.24, 1] }}
+          className="absolute left-0 right-0 top-0 h-[18vh] min-h-[112px] origin-top"
           style={{
             background:
-              "linear-gradient(90deg, #2b1718 0%, #6a3435 10%, #3b1e20 20%, #7b4140 31%, #432224 43%, #7a3c3d 55%, #321a1c 68%, #6a3032 81%, #32181a 100%)",
-            boxShadow: "18px 0 35px rgba(24, 12, 12, 0.28)",
+              "radial-gradient(ellipse at 50% 120%, rgba(226,183,139,0.18) 0%, transparent 44%), repeating-linear-gradient(90deg, #251415 0%, #54282b 5%, #351a1d 10%, #71393a 16%, #3b1d20 22%, #672f32 29%, #2b1719 36%, #71393a 43%, #351a1d 50%, #54282b 57%, #251415 64%, #5c2b2e 72%, #30191b 80%, #6b3335 88%, #251415 100%)",
+            boxShadow: "0 16px 40px rgba(19, 8, 9, 0.38)",
           }}
         >
-          <div className="absolute inset-0 bg-[linear-gradient(105deg,transparent_0%,rgba(255,238,214,0.13)_14%,transparent_25%,rgba(255,238,214,0.08)_42%,transparent_55%,rgba(255,238,214,0.12)_72%,transparent_84%)]" />
-          <div className="absolute right-0 top-0 h-full w-px bg-champagne/25" />
+          <div className="absolute inset-x-0 bottom-0 h-3 bg-gradient-to-r from-[#6f4936] via-[#c7a276] to-[#6f4936] opacity-80" />
+          <div className="absolute inset-x-0 bottom-3 h-px bg-ivory/25" />
+          <div className="absolute left-1/2 top-0 h-full w-[28vw] min-w-[180px] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,rgba(255,235,205,0.13),transparent_68%)]" />
         </motion.div>
 
         <motion.div
           initial={false}
-          animate={{ x: isOpening ? "103%" : "0%" }}
-          transition={{ duration: 1.8, ease: [0.76, 0, 0.24, 1] }}
-          className="absolute inset-y-0 right-0 w-[54%] origin-right"
+          animate={{ x: isOpening ? "-105%" : "0%", scaleX: isOpening ? 0.94 : 1 }}
+          transition={{ duration: 1.95, ease: [0.76, 0, 0.24, 1] }}
+          className="absolute inset-y-0 left-0 w-[53%] origin-left"
           style={{
             background:
-              "linear-gradient(90deg, #32181a 0%, #6a3032 19%, #321a1c 32%, #7a3c3d 45%, #432224 57%, #7b4140 69%, #3b1e20 80%, #6a3435 90%, #2b1718 100%)",
-            boxShadow: "-18px 0 35px rgba(24, 12, 12, 0.28)",
+              "radial-gradient(ellipse at 76% 42%, rgba(238,194,157,0.17), transparent 24%), repeating-linear-gradient(90deg, #211314 0%, #4b2326 6%, #7b4141 12%, #3a1b1e 18%, #683235 25%, #2a1719 32%, #7a3d3f 40%, #3a1c1f 48%, #6e3538 57%, #2b1719 66%, #74383b 75%, #3a1c1f 84%, #6b3235 92%, #211314 100%)",
+            boxShadow: "24px 0 55px rgba(17, 7, 8, 0.42)",
           }}
         >
-          <div className="absolute inset-0 bg-[linear-gradient(255deg,transparent_0%,rgba(255,238,214,0.13)_14%,transparent_25%,rgba(255,238,214,0.08)_42%,transparent_55%,rgba(255,238,214,0.12)_72%,transparent_84%)]" />
-          <div className="absolute left-0 top-0 h-full w-px bg-champagne/25" />
+          <div className="absolute inset-0 bg-[linear-gradient(108deg,transparent_0%,rgba(255,232,203,0.12)_16%,transparent_27%,rgba(255,232,203,0.08)_44%,transparent_57%,rgba(255,232,203,0.14)_74%,transparent_88%)]" />
+          <div className="absolute right-0 top-0 h-full w-[2px] bg-gradient-to-b from-transparent via-champagne/45 to-transparent" />
+          <div className="absolute right-[-10px] top-[48%] h-16 w-8 rounded-full border border-champagne/55 bg-[#6e4933]/80 shadow-[0_4px_18px_rgba(0,0,0,0.35)]" />
+          <div className="absolute right-[-4px] top-[50%] h-8 w-8 rounded-full border border-champagne/45 bg-[#3c2020]" />
         </motion.div>
 
-        {!isOpening && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.55, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute left-1/2 top-[8%] h-7 w-24 -translate-x-1/2 border-y border-champagne/35"
-          />
-        )}
+        <motion.div
+          initial={false}
+          animate={{ x: isOpening ? "105%" : "0%", scaleX: isOpening ? 0.94 : 1 }}
+          transition={{ duration: 1.95, ease: [0.76, 0, 0.24, 1] }}
+          className="absolute inset-y-0 right-0 w-[53%] origin-right"
+          style={{
+            background:
+              "radial-gradient(ellipse at 24% 42%, rgba(238,194,157,0.17), transparent 24%), repeating-linear-gradient(90deg, #211314 0%, #6b3235 8%, #3a1c1f 16%, #74383b 25%, #2b1719 34%, #6e3538 43%, #3a1c1f 52%, #7a3d3f 60%, #2a1719 68%, #683235 76%, #3a1b1e 84%, #7b4141 91%, #4b2326 96%, #211314 100%)",
+            boxShadow: "-24px 0 55px rgba(17, 7, 8, 0.42)",
+          }}
+        >
+          <div className="absolute inset-0 bg-[linear-gradient(252deg,transparent_0%,rgba(255,232,203,0.12)_16%,transparent_27%,rgba(255,232,203,0.08)_44%,transparent_57%,rgba(255,232,203,0.14)_74%,transparent_88%)]" />
+          <div className="absolute left-0 top-0 h-full w-[2px] bg-gradient-to-b from-transparent via-champagne/45 to-transparent" />
+          <div className="absolute left-[-10px] top-[48%] h-16 w-8 rounded-full border border-champagne/55 bg-[#6e4933]/80 shadow-[0_4px_18px_rgba(0,0,0,0.35)]" />
+          <div className="absolute left-[-4px] top-[50%] h-8 w-8 rounded-full border border-champagne/45 bg-[#3c2020]" />
+        </motion.div>
 
         <motion.div
-          animate={{ opacity: isOpening ? 0 : 1, y: isOpening ? -8 : 0 }}
-          transition={{ duration: 0.45 }}
-          className="absolute bottom-[4.5%] left-1/2 -translate-x-1/2 text-center text-[8px] uppercase tracking-[0.38em] text-champagne/75 sm:bottom-[5%]"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: isOpening ? 0 : 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="absolute bottom-[4.5%] left-1/2 -translate-x-1/2 text-center text-[8px] uppercase tracking-[0.38em] text-champagne/80 sm:bottom-[5%]"
         >
           Tap to open
         </motion.div>
@@ -139,20 +147,20 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.05, duration: 0.9 }}
-          className="pointer-events-none fixed inset-0 z-[25] flex items-center justify-center px-8 text-center"
+          transition={{ delay: 1.9, duration: 0.8 }}
+          className="pointer-events-none fixed inset-0 z-[55] flex items-center justify-center px-8 text-center"
         >
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: [0, 1, 1, 0], y: [14, 0, 0, -12] }}
-            transition={{ duration: 1.25, times: [0, 0.25, 0.72, 1], ease: [0.22, 1, 0.36, 1] }}
-            className="text-ivory"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: [0, 1, 1, 0], y: [16, 0, 0, -10] }}
+            transition={{ duration: 1.35, delay: 0.05, times: [0, 0.22, 0.76, 1], ease: [0.22, 1, 0.36, 1] }}
+            className="text-charcoal"
           >
-            <p className="text-[9px] uppercase tracking-[0.48em] text-champagne">The celebration begins</p>
+            <p className="text-[9px] uppercase tracking-[0.48em] text-[#9b7653]">The celebration begins</p>
             <p className="mt-5 font-heading text-4xl tracking-[-0.025em] sm:text-6xl">
-              {groom} <span className="font-normal italic text-champagne">&amp;</span> {bride}
+              {groom} <span className="font-normal italic text-[#ae8b69]">&amp;</span> {bride}
             </p>
-            <p className="mt-4 text-[9px] uppercase tracking-[0.36em] text-ivory/70">18 November 2026 · Visakhapatnam</p>
+            <p className="mt-4 text-[9px] uppercase tracking-[0.36em] text-charcoal/60">18 November 2026 · Visakhapatnam</p>
           </motion.div>
         </motion.div>
       )}
