@@ -36,31 +36,31 @@ export default function Countdown() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.8 }}
-      className="mt-14 border-t border-line pt-10 sm:mt-16 sm:pt-12"
+      className="mt-12 border-t border-line pt-8 sm:mt-16 sm:pt-12"
     >
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.4em] text-rose">The days are counting down</p>
-          <p className="mt-3 font-heading text-2xl text-charcoal sm:text-3xl">Until we say I do</p>
+          <p className="text-[10px] uppercase tracking-[0.36em] text-rose sm:text-[11px] sm:tracking-[0.4em]">The days are counting down</p>
+          <p className="mt-2 font-heading text-xl text-charcoal sm:mt-3 sm:text-3xl">Until we say I do</p>
         </div>
-        <p className="font-heading text-lg text-muted">18 · 11 · 2026</p>
+        <p className="font-heading text-base text-muted sm:text-lg">18 · 11 · 2026</p>
       </div>
 
-      <div className="mt-8 flex flex-col border-y border-line sm:flex-row sm:items-end">
-        <div className="flex-1 px-1 py-7 sm:px-5 sm:py-8">
-          <p className="font-heading text-7xl leading-none text-charcoal sm:text-8xl lg:text-9xl">
+      <div className="mt-6 border-y border-line sm:mt-8 sm:flex sm:items-end">
+        <div className="px-1 py-6 sm:flex-1 sm:px-5 sm:py-8">
+          <p className="font-heading text-[4.5rem] leading-none text-charcoal sm:text-8xl lg:text-9xl">
             {String(timeLeft.days).padStart(2, "0")}
           </p>
-          <p className="mt-3 text-[10px] uppercase tracking-[0.35em] text-muted">Days</p>
+          <p className="mt-2 text-[9px] uppercase tracking-[0.35em] text-muted sm:mt-3 sm:text-[10px]">Days</p>
         </div>
 
         <div className="grid grid-cols-3 border-t border-line sm:flex sm:border-l sm:border-t-0">
           {secondaryUnits.map((unit) => (
-            <div key={unit} className="border-r border-line px-4 py-6 last:border-r-0 sm:min-w-28 sm:px-6 sm:py-7">
+            <div key={unit} className="border-r border-line px-3 py-5 last:border-r-0 sm:min-w-28 sm:px-6 sm:py-7">
               <p className="font-heading text-3xl leading-none text-charcoal sm:text-4xl">
                 {String(timeLeft[unit]).padStart(2, "0")}
               </p>
-              <p className="mt-3 text-[9px] uppercase tracking-[0.28em] text-muted">{unit}</p>
+              <p className="mt-2 text-[8px] uppercase tracking-[0.24em] text-muted sm:mt-3 sm:text-[9px] sm:tracking-[0.28em]">{unit}</p>
             </div>
           ))}
         </div>
