@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MapPin, Navigation } from "lucide-react";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
 
@@ -9,57 +9,70 @@ export default function Venue() {
   const venue = wedding.ceremony.venue;
 
   return (
-    <Section id="venue">
-      <div className="mx-auto max-w-4xl">
-
-        <p className="text-center text-xs uppercase tracking-[0.35em] text-stone-500">
-          Wedding Venue
-        </p>
-
-        <h2 className="mt-4 text-center font-heading text-5xl text-stone-900">
-          Join Us
-        </h2>
-
-        <p className="mx-auto mt-8 max-w-2xl text-center text-lg leading-8 text-stone-600">
-          {venue.note}
-        </p>
+    <Section id="venue" className="relative overflow-hidden bg-paper">
+      <div className="mx-auto max-w-5xl">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <p className="text-xs uppercase tracking-[0.35em] text-rose">
+            Chapter V
+          </p>
+          <div className="mx-auto mt-5 h-px w-16 bg-champagne" />
+          <h2 className="mt-6 font-heading text-5xl leading-none text-charcoal sm:text-6xl lg:text-7xl">
+            The Place
+          </h2>
+          <p className="mx-auto mt-7 max-w-2xl font-heading text-2xl leading-relaxed text-charcoal/75 sm:text-3xl">
+            The setting where we gather, celebrate, and make this evening a memory to keep.
+          </p>
+        </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mt-16 rounded-[2rem] border border-stone-200 bg-white p-10 shadow-lg"
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mx-auto mt-16 max-w-3xl border-y border-line py-10 sm:py-12"
         >
+          <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-12">
+            <div>
+              <div className="flex items-center gap-3 text-rose">
+                <MapPin className="h-5 w-5" strokeWidth={1.5} />
+                <span className="text-[11px] uppercase tracking-[0.32em]">
+                  Visakhapatnam
+                </span>
+              </div>
 
-          <div className="flex justify-center">
-            <div className="rounded-full bg-stone-100 p-5">
-              <MapPin className="h-8 w-8 text-stone-700" />
+              <h3 className="mt-5 font-heading text-5xl text-charcoal sm:text-6xl">
+                {venue.name}
+              </h3>
+
+              <p className="mt-4 max-w-xl text-base leading-7 text-muted sm:text-lg">
+                {venue.address}
+              </p>
             </div>
-          </div>
 
-          <h3 className="mt-8 text-center font-heading text-4xl text-stone-900">
-            {venue.name}
-          </h3>
-
-          <p className="mt-6 text-center leading-8 text-stone-600">
-            {venue.address}
-          </p>
-
-          <div className="mt-10 flex justify-center">
             <a
               href={venue.maps}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full bg-stone-900 px-8 py-4 text-white transition hover:bg-stone-700"
+              className="group inline-flex w-fit items-center gap-3 border-b border-charcoal/30 pb-2 text-sm uppercase tracking-[0.22em] text-charcoal transition-colors hover:border-rose hover:text-rose"
             >
-              <Navigation className="h-5 w-5" />
               {venue.directionsLabel}
+              <ArrowUpRight
+                className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                strokeWidth={1.5}
+              />
             </a>
           </div>
-
         </motion.div>
 
+        <p className="mx-auto mt-12 max-w-xl text-center text-sm leading-7 text-muted sm:text-base">
+          {venue.note}
+        </p>
       </div>
     </Section>
   );
