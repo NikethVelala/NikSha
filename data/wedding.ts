@@ -7,8 +7,8 @@ export const wedding = {
 
   ceremony: {
     date: "18 November 2026",
-    dateTime: "2026-11-18T10:30:00",
-    time: "10:30 AM onwards",
+    dateTime: "2026-11-18T22:05:00",
+    time: "10:05 PM Muhurtham",
     venue: {
       name: "SB Square",
       address: "Chinna Bazaar, Rushikonda, Visakhapatnam, Andhra Pradesh",
@@ -20,18 +20,18 @@ export const wedding = {
 
   timeline: [
     {
-      title: "Wedding Ceremony",
-      icon: "💍",
-      date: "18 November 2026",
-      time: "10:30 AM onwards",
-      venue: "SB Square",
-      address: "Chinna Bazaar, Rushikonda, Visakhapatnam",
-    },
-    {
       title: "Dinner",
       icon: "🍽️",
       date: "18 November 2026",
       time: "8:00 PM onwards",
+      venue: "SB Square",
+      address: "Chinna Bazaar, Rushikonda, Visakhapatnam",
+    },
+    {
+      title: "Wedding Muhurtham",
+      icon: "💍",
+      date: "18 November 2026",
+      time: "10:05 PM",
       venue: "SB Square",
       address: "Chinna Bazaar, Rushikonda, Visakhapatnam",
     },
