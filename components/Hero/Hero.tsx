@@ -3,12 +3,13 @@
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { wedding } from "@/data/wedding";
 
 export default function Hero() {
   const [stage, setStage] = useState<"cover" | "opening">("cover");
   const [showInvitation, setShowInvitation] = useState(false);
+  const revealTimer = useRef<number | null>(null);
   const groom = wedding.couple.groom;
   const bride = wedding.couple.bride;
 
@@ -21,13 +22,30 @@ export default function Hero() {
     };
   }, [showInvitation]);
 
+  useEffect(() => {
+    return () => {
+      if (revealTimer.current) window.clearTimeout(revealTimer.current);
+    };
+  }, []);
+
   const enterCelebration = () => {
+    if (revealTimer.current) window.clearTimeout(revealTimer.current);
     setStage("opening");
-    window.setTimeout(() => setShowInvitation(true), 1100);
+    setShowInvitation(false);
+
+    // Give the opening card enough time to be read before the invitation arrives.
+    revealTimer.current = window.setTimeout(() => setShowInvitation(true), 3600);
+  };
+
+  const closeInvitation = () => {
+    if (revealTimer.current) window.clearTimeout(revealTimer.current);
+    setShowInvitation(false);
+    setStage("cover");
   };
 
   const enterInvitation = () => {
     setShowInvitation(false);
+    setStage("cover");
     window.setTimeout(() => document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth" }), 80);
   };
 
@@ -88,9 +106,10 @@ export default function Hero() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.45, duration: 0.9 }}
-                className="mx-auto my-7 flex h-14 w-14 items-center justify-center rounded-full border border-champagne/60 bg-charcoal/25 backdrop-blur-[2px] sm:my-8 sm:h-16 sm:w-16"
+                className="mx-auto my-7 flex h-16 w-16 items-center justify-center rounded-full border border-champagne/60 bg-charcoal/25 backdrop-blur-[2px] sm:my-8 sm:h-[4.5rem] sm:w-[4.5rem]"
+                aria-label="NikSha monogram"
               >
-                <span className="font-heading text-2xl italic text-champagne sm:text-3xl">N</span>
+                <span className="font-heading text-xl italic tracking-[-0.12em] text-champagne sm:text-2xl">N<span className="mx-0.5 text-base not-italic">·</span>S</span>
               </motion.div>
 
               <motion.h1
@@ -121,7 +140,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.15, duration: 0.8 }}
-                className="group mt-10 inline-flex min-h-12 items-center gap-4 border border-champagne/55 bg-charcoal/20 px-6 py-3 text-[9px] uppercase tracking-[0.3em] backdrop-blur-sm transition-colors hover:bg-champagne hover:text-charcoal sm:mt-12 sm:px-8 sm:text-[10px]"
+                className="group mt-10 inline-flex min-h-12 items-center gap-3 border-b border-champagne/70 pb-2 text-[9px] uppercase tracking-[0.3em] text-ivory transition-colors hover:border-champagne hover:text-champagne sm:mt-12 sm:text-[10px]"
               >
                 Enter the celebration
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.2} />
@@ -133,27 +152,71 @@ export default function Hero() {
         {stage === "opening" && !showInvitation && (
           <motion.div
             key="opening"
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.03 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 1.1, ease: "easeOut" }}
             className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 text-center"
           >
-            <div className="relative flex h-64 w-[min(86vw,360px)] items-center justify-center border border-champagne/45 bg-paper/95 px-8 text-charcoal shadow-2xl sm:h-72">
-              <div className="absolute inset-3 border border-charcoal/10" />
-              <div>
-                <p className="text-[8px] uppercase tracking-[0.42em] text-rose">With our families</p>
-                <div className="mx-auto my-5 h-px w-12 bg-champagne" />
-                <p className="font-heading text-3xl leading-tight sm:text-4xl">Two lives.<br />One beautiful beginning.</p>
-                <p className="mt-5 text-[8px] uppercase tracking-[0.28em] text-muted">Niketh &amp; Sirisha</p>
-              </div>
+            <div className="relative w-[min(88vw,390px)] bg-paper px-7 py-12 text-charcoal shadow-2xl sm:px-12 sm:py-14">
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1.1, delay: 0.35 }}
+                className="absolute left-8 right-8 top-7 h-px origin-center bg-champagne/80 sm:left-12 sm:right-12"
+              />
+
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75, duration: 0.8 }}
+                className="text-[9px] uppercase tracking-[0.42em] text-rose sm:text-[10px]"
+              >
+                With our families
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.15, duration: 0.8 }}
+                className="mx-auto my-6 h-px w-14 bg-champagne"
+              />
+
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.45, duration: 1 }}
+                className="font-heading text-[2rem] leading-[1.15] sm:text-[2.7rem]"
+              >
+                Two lives.<br />One beautiful beginning.
+              </motion.p>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2.15, duration: 1 }}
+                className="mt-7 font-heading text-2xl italic text-rose sm:text-3xl"
+              >
+                {groom} &amp; {bride}
+              </motion.p>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2.65, duration: 1 }}
+                className="mt-3 text-[8px] uppercase tracking-[0.28em] text-muted sm:text-[9px]"
+              >
+                18 November 2026 · Visakhapatnam
+              </motion.p>
+
               <motion.div
                 initial={{ scale: 0, rotate: -18 }}
                 animate={{ scale: 1, rotate: -8 }}
-                transition={{ delay: 0.35, duration: 0.5, type: "spring" }}
-                className="absolute -right-5 -top-5 flex h-12 w-12 items-center justify-center rounded-full border border-champagne/80 bg-rose text-ivory shadow-lg sm:-right-6 sm:-top-6 sm:h-14 sm:w-14"
+                transition={{ delay: 1.9, duration: 0.7, type: "spring" }}
+                className="absolute -right-4 -top-4 flex h-12 w-12 items-center justify-center rounded-full border border-champagne/80 bg-rose text-ivory shadow-lg sm:-right-5 sm:-top-5 sm:h-14 sm:w-14"
+                aria-label="NikSha monogram"
               >
-                <span className="font-heading text-xl italic">N</span>
+                <span className="font-heading text-base italic tracking-[-0.12em]">N<span className="mx-0.5 text-[10px] not-italic">·</span>S</span>
               </motion.div>
             </div>
           </motion.div>
@@ -171,12 +234,12 @@ export default function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               className="relative my-auto w-full max-w-lg border border-champagne/40 bg-paper px-6 py-11 text-center text-charcoal shadow-2xl sm:px-12 sm:py-16"
             >
               <button
                 type="button"
-                onClick={() => setShowInvitation(false)}
+                onClick={closeInvitation}
                 className="absolute right-3 top-3 inline-flex h-11 w-11 items-center justify-center text-muted transition-colors hover:text-charcoal sm:right-5 sm:top-5"
                 aria-label="Close invitation"
               >
@@ -190,10 +253,10 @@ export default function Hero() {
               <button
                 type="button"
                 onClick={enterInvitation}
-                className="mt-9 inline-flex min-h-12 items-center gap-3 border-b border-charcoal/30 pb-2 text-[9px] uppercase tracking-[0.24em] text-charcoal transition-colors hover:border-rose hover:text-rose sm:mt-10 sm:text-[10px]"
+                className="group mt-9 inline-flex min-h-12 items-center gap-3 border-b border-charcoal/30 pb-2 text-[9px] uppercase tracking-[0.24em] text-charcoal transition-colors hover:border-rose hover:text-rose sm:mt-10 sm:text-[10px]"
               >
                 Enter the invitation
-                <ArrowRight className="h-4 w-4" strokeWidth={1.4} />
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.4} />
               </button>
             </motion.div>
           </motion.div>
