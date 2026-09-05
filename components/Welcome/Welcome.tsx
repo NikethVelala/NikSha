@@ -69,7 +69,9 @@ export default function Welcome() {
                 <Icon className="h-5 w-5 shrink-0 text-rose sm:mx-auto" strokeWidth={1.25} />
                 <div className="sm:mt-4">
                   <p className="text-[11px] uppercase tracking-[0.3em] text-muted">{label}</p>
-                  <p className="mt-2 font-heading text-xl text-charcoal sm:text-3xl">{value}</p>
+                  <p className={`mt-2 font-heading text-xl text-charcoal sm:text-3xl ${label === "Date" ? "text-2xl sm:text-4xl" : ""}`}>
+                    {value}
+                  </p>
                 </div>
               </div>
             ))}
@@ -83,9 +85,9 @@ export default function Welcome() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mt-10 text-center sm:mt-14"
         >
-          <p className="font-heading text-3xl text-charcoal sm:text-5xl">
-            Niketh <span className="text-rose">&amp;</span> Sirisha
-          </p>
+          <p className="text-[10px] uppercase tracking-[0.38em] text-rose">On the evening of</p>
+          <p className="mt-3 font-heading text-3xl text-charcoal sm:text-5xl">18 November 2026</p>
+          <p className="mt-2 font-heading text-xl text-charcoal/65 sm:text-2xl">Niketh <span className="text-rose">&amp;</span> Sirisha</p>
           <p className="mt-3 text-sm uppercase tracking-[0.25em] text-muted">Together Forever</p>
         </motion.div>
       </div>
