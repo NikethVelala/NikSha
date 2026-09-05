@@ -5,10 +5,13 @@ import { Menu, X } from "lucide-react";
 import { wedding } from "@/data/wedding";
 
 const links = [
-  { label: "Story", href: "#story" },
-  { label: "Celebration", href: "#celebration" },
-  { label: "Venue", href: "#venue" },
-  { label: "Gallery", href: "#gallery" },
+  { number: "01", label: "Invitation", href: "#welcome" },
+  { number: "02", label: "Our Story", href: "#story" },
+  { number: "03", label: "Celebration", href: "#celebration" },
+  { number: "04", label: "The Day", href: "#timeline" },
+  { number: "05", label: "The Place", href: "#venue" },
+  { number: "06", label: "Memories", href: "#gallery" },
+  { number: "07", label: "Forever", href: "#forever" },
 ];
 
 export default function Navigation() {
@@ -22,11 +25,18 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   const closeMenu = () => setOpen(false);
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
         scrolled
           ? "border-b border-stone-200/70 bg-stone-50/90 shadow-sm backdrop-blur-md"
           : "bg-transparent"
@@ -36,52 +46,56 @@ export default function Navigation() {
         <a
           href="#top"
           onClick={closeMenu}
-          className="font-heading text-3xl tracking-wide text-stone-900"
+          className={`font-heading text-3xl tracking-wide transition-colors ${scrolled ? "text-stone-900" : "text-white"}`}
           aria-label="NikSha home"
         >
           {wedding.couple.monogram}
         </a>
 
-        <nav className="hidden items-center gap-9 md:flex" aria-label="Main navigation">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-xs uppercase tracking-[0.2em] text-stone-600 transition-colors hover:text-stone-950"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-300/70 text-stone-800 md:hidden"
-          aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+          className={`inline-flex h-11 items-center gap-3 border-b px-1 text-[10px] uppercase tracking-[0.25em] transition-colors ${
+            scrolled ? "border-stone-300 text-stone-800" : "border-white/50 text-white"
+          }`}
+          aria-label={open ? "Close invitation index" : "Open invitation index"}
           aria-expanded={open}
         >
-          {open ? <X size={18} strokeWidth={1.5} /> : <Menu size={18} strokeWidth={1.5} />}
+          <span className="hidden sm:inline">Index</span>
+          {open ? <X size={18} strokeWidth={1.35} /> : <Menu size={18} strokeWidth={1.35} />}
         </button>
       </div>
 
       <div
-        className={`overflow-hidden border-t border-stone-200/70 bg-stone-50/95 backdrop-blur-md transition-all duration-300 md:hidden ${
-          open ? "max-h-96 opacity-100" : "max-h-0 border-t-transparent opacity-0"
+        className={`fixed inset-x-0 top-0 z-[-1] h-[100svh] overflow-y-auto bg-paper/98 backdrop-blur-xl transition-all duration-500 ${
+          open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"
         }`}
       >
-        <nav className="mx-auto flex max-w-6xl flex-col px-6 py-3 sm:px-8" aria-label="Mobile navigation">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={closeMenu}
-              className="border-b border-stone-200/70 py-4 text-sm uppercase tracking-[0.18em] text-stone-600 last:border-b-0"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
+        <div className="mx-auto flex min-h-full max-w-5xl flex-col justify-center px-6 py-28 sm:px-10 lg:px-12">
+          <div className="mb-10 flex items-center gap-4 text-rose">
+            <span className="text-[10px] uppercase tracking-[0.4em]">The NikSha invitation</span>
+            <span className="h-px w-12 bg-champagne" />
+          </div>
+
+          <nav className="grid border-y border-line" aria-label="Invitation index">
+            {links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={closeMenu}
+                className="group grid grid-cols-[3rem_1fr] items-center gap-4 border-b border-line py-5 last:border-b-0 sm:grid-cols-[4rem_1fr_auto] sm:py-6"
+              >
+                <span className="text-[10px] tracking-[0.25em] text-muted">{link.number}</span>
+                <span className="font-heading text-4xl leading-none text-charcoal transition-transform duration-300 group-hover:translate-x-1 sm:text-5xl lg:text-6xl">
+                  {link.label}
+                </span>
+                <span className="hidden text-[10px] uppercase tracking-[0.25em] text-muted sm:block">Open</span>
+              </a>
+            ))}
+          </nav>
+
+          <p className="mt-10 font-heading text-xl text-charcoal/60">{wedding.ceremony.date} · Visakhapatnam</p>
+        </div>
       </div>
     </header>
   );
