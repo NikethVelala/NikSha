@@ -32,8 +32,6 @@ export default function Navigation() {
     };
   }, [open]);
 
-  const closeMenu = () => setOpen(false);
-
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
@@ -45,7 +43,7 @@ export default function Navigation() {
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6 sm:px-8 lg:px-12">
         <a
           href="#top"
-          onClick={closeMenu}
+          onClick={() => setOpen(false)}
           className={`font-heading text-3xl tracking-wide transition-colors ${scrolled ? "text-stone-900" : "text-white"}`}
           aria-label="NikSha home"
         >
@@ -55,8 +53,8 @@ export default function Navigation() {
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className={`inline-flex h-11 items-center gap-3 border-b px-1 text-[10px] uppercase tracking-[0.25em] transition-colors ${
-            scrolled ? "border-stone-300 text-stone-800" : "border-white/50 text-white"
+          className={`relative z-[60] inline-flex h-11 items-center gap-3 border-b px-1 text-[10px] uppercase tracking-[0.25em] transition-colors ${
+            scrolled || open ? "border-stone-300 text-stone-800" : "border-white/50 text-white"
           }`}
           aria-label={open ? "Close invitation index" : "Open invitation index"}
           aria-expanded={open}
@@ -67,7 +65,7 @@ export default function Navigation() {
       </div>
 
       <div
-        className={`fixed inset-x-0 top-0 z-[-1] h-[100svh] overflow-y-auto bg-paper/98 backdrop-blur-xl transition-all duration-500 ${
+        className={`fixed inset-0 z-40 overflow-y-auto bg-paper/98 backdrop-blur-xl transition-all duration-500 ${
           open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"
         }`}
       >
@@ -82,7 +80,7 @@ export default function Navigation() {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={closeMenu}
+                onClick={() => setOpen(false)}
                 className="group grid grid-cols-[3rem_1fr] items-center gap-4 border-b border-line py-5 last:border-b-0 sm:grid-cols-[4rem_1fr_auto] sm:py-6"
               >
                 <span className="text-[10px] tracking-[0.25em] text-muted">{link.number}</span>
