@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { wedding } from "@/data/wedding";
 
@@ -17,6 +17,7 @@ const links = [
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const scrollYRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 24);
@@ -26,48 +27,67 @@ export default function Navigation() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+
+    scrollYRef.current = window.scrollY;
+    const body = document.body;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollYRef.current}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = "";
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.overflow = "";
+      window.scrollTo(0, scrollYRef.current);
     };
   }, [open]);
 
-  return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "border-b border-stone-200/70 bg-stone-50/90 shadow-sm backdrop-blur-md"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6 sm:px-8 lg:px-12">
-        <a
-          href="#top"
-          onClick={() => setOpen(false)}
-          className={`font-heading text-3xl tracking-wide transition-colors ${scrolled ? "text-stone-900" : "text-white"}`}
-          aria-label="NikSha home"
-        >
-          {wedding.couple.monogram}
-        </a>
+  const closeMenu = () => setOpen(false);
 
-        <button
-          type="button"
-          onClick={() => setOpen((value) => !value)}
-          className={`relative z-[60] inline-flex h-11 items-center gap-3 border-b px-1 text-[10px] uppercase tracking-[0.25em] transition-colors ${
-            scrolled || open ? "border-stone-300 text-stone-800" : "border-white/50 text-white"
-          }`}
-          aria-label={open ? "Close invitation index" : "Open invitation index"}
-          aria-expanded={open}
-        >
-          <span className="hidden sm:inline">Index</span>
-          {open ? <X size={18} strokeWidth={1.35} /> : <Menu size={18} strokeWidth={1.35} />}
-        </button>
-      </div>
+  return (
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "border-b border-stone-200/70 bg-stone-50/90 shadow-sm backdrop-blur-md"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6 sm:px-8 lg:px-12">
+          <a
+            href="#top"
+            onClick={closeMenu}
+            className={`font-heading text-3xl tracking-wide transition-colors ${scrolled ? "text-stone-900" : "text-white"}`}
+            aria-label="NikSha home"
+          >
+            {wedding.couple.monogram}
+          </a>
+
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            className={`relative z-[60] inline-flex h-11 items-center gap-3 border-b px-1 text-[10px] uppercase tracking-[0.25em] transition-colors ${
+              scrolled || open ? "border-stone-300 text-stone-800" : "border-white/50 text-white"
+            }`}
+            aria-label={open ? "Close invitation index" : "Open invitation index"}
+            aria-expanded={open}
+          >
+            <span className="hidden sm:inline">Index</span>
+            {open ? <X size={18} strokeWidth={1.35} /> : <Menu size={18} strokeWidth={1.35} />}
+          </button>
+        </div>
+      </header>
 
       <div
-        className={`fixed inset-0 z-40 overflow-y-auto bg-paper/98 backdrop-blur-xl transition-all duration-500 ${
+        className={`fixed inset-0 z-[55] overflow-y-auto overscroll-contain bg-paper/98 backdrop-blur-xl transition-all duration-500 ${
           open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"
         }`}
+        aria-hidden={!open}
       >
         <div className="mx-auto flex min-h-full max-w-5xl flex-col justify-center px-6 py-28 sm:px-10 lg:px-12">
           <div className="mb-10 flex items-center gap-4 text-rose">
@@ -80,7 +100,7 @@ export default function Navigation() {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={() => setOpen(false)}
+                onClick={closeMenu}
                 className="group grid grid-cols-[3rem_1fr] items-center gap-4 border-b border-line py-5 last:border-b-0 sm:grid-cols-[4rem_1fr_auto] sm:py-6"
               >
                 <span className="text-[10px] tracking-[0.25em] text-muted">{link.number}</span>
@@ -95,6 +115,6 @@ export default function Navigation() {
           <p className="mt-10 font-heading text-xl text-charcoal/60">{wedding.ceremony.date} · Visakhapatnam</p>
         </div>
       </div>
-    </header>
+    </>
   );
 }
