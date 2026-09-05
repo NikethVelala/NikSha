@@ -6,7 +6,10 @@
 
   --ivory: #f8f4ee;
   --paper: #fcfaf7;
-  --champagne: #d8c8b3;
+  --champagne: #d2a573;
+  --champagne-light: #f0d1ad;
+  --gold: #c28a49;
+  --gold-deep: #7d4f1b;
   --rose: #b6978f;
   --forest: #2f433b;
   --charcoal: #292622;
@@ -20,6 +23,7 @@
   --color-ivory: var(--ivory);
   --color-paper: var(--paper);
   --color-champagne: var(--champagne);
+  --color-gold: var(--gold);
   --color-rose: var(--rose);
   --color-forest: var(--forest);
   --color-charcoal: var(--charcoal);
@@ -50,4 +54,30 @@ body {
 
 .font-heading {
   font-family: var(--font-heading), Georgia, serif;
+}
+
+/*
+ * The reference stage uses warm champagne silk rather than flat yellow/gold.
+ * This grade is deliberately subtle: warm highlights, controlled saturation,
+ * and stronger shadow separation make the CSS fabric read more like silk.
+ */
+section[role="button"] > div[aria-hidden="true"] {
+  filter: saturate(0.86) contrast(1.07) sepia(0.045);
+}
+
+/* Keep the opening canopy lighter and more champagne than the curtain body. */
+section[role="button"] > div[aria-hidden="true"] > div:first-child > div:first-child {
+  opacity: 0.56 !important;
+}
+
+/* A small amount of warmth on every petal keeps the falling-petal effect coherent with the palette. */
+.niksha-petal {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .niksha-petal {
+    display: none;
+  }
 }
