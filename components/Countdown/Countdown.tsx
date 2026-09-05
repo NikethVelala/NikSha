@@ -3,100 +3,64 @@
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
-export default function Countdown() {
+type TimeLeft = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
 
-  const calculateTimeLeft = () => {
+function calculateTimeLeft(): TimeLeft {
+  const weddingDate = new Date(wedding.ceremony.dateTime).getTime();
+  const difference = weddingDate - Date.now();
 
-const weddingDate = new Date(2026, 10, 18, 10, 30, 0);
+  if (difference <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
 
-
-const difference = weddingDate.getTime() - new Date().getTime();
-
-    if (difference <= 0) {
-      return {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-      };
-    }
-
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / (1000 * 60)) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
-    };
+  return {
+    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((difference / (1000 * 60)) % 60),
+    seconds: Math.floor((difference / 1000) % 60),
   };
-
-  const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft());
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-  // Tell React we're now running in the browser
-  setMounted(true);
-
-  // Set the initial countdown
-  setTimeLeft(calculateTimeLeft());
-
-  // Update every second
-  const interval = setInterval(() => {
-    setTimeLeft(calculateTimeLeft());
-  }, 1000);
-
-  return () => clearInterval(interval);
-}, []);
-
-if (!mounted) {
-  return null;
 }
 
+const units: Array<keyof TimeLeft> = ["days", "hours", "minutes", "seconds"];
+
+export default function Countdown() {
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
+
+  useEffect(() => {
+    setTimeLeft(calculateTimeLeft());
+
+    const interval = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!timeLeft) return null;
+
   return (
-    <div className="mt-16 border-y border-stone-200 py-12">
-
-      <p className="text-sm uppercase tracking-[0.35em] text-stone-500">
-        Countdown
+    <div className="mt-16 border-y border-line py-12 sm:mt-20 sm:py-14">
+      <p className="text-center text-[11px] uppercase tracking-[0.4em] text-muted">
+        Until we say I do
       </p>
 
-      <h2 className="mt-6 font-heading text-6xl text-stone-900">
-        {timeLeft.days}
-      </h2>
-
-      <p className="mt-2 text-lg text-stone-500">
-        Days Remaining
-      </p>
-
-      <div className="mt-10 flex justify-center gap-8">
-
-        <div className="text-center">
-          <p className="font-heading text-4xl">
-            {timeLeft.hours}
-          </p>
-          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">
-            Hours
-          </p>
-        </div>
-
-        <div className="text-center">
-          <p className="font-heading text-4xl">
-            {timeLeft.minutes}
-          </p>
-          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">
-            Minutes
-          </p>
-        </div>
-
-        <div className="text-center">
-          <p className="font-heading text-4xl">
-            {timeLeft.seconds}
-          </p>
-          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">
-            Seconds
-          </p>
-        </div>
-
+      <div className="mx-auto mt-10 grid max-w-3xl grid-cols-2 divide-x divide-y divide-line sm:grid-cols-4 sm:divide-y-0">
+        {units.map((unit) => (
+          <div key={unit} className="px-4 py-5 text-center sm:py-2">
+            <p className="font-heading text-4xl text-charcoal sm:text-5xl">
+              {String(timeLeft[unit]).padStart(2, "0")}
+            </p>
+            <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-muted">
+              {unit}
+            </p>
+          </div>
+        ))}
       </div>
-
     </div>
   );
 }
