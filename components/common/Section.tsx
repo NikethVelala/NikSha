@@ -6,19 +6,16 @@ type SectionProps = {
   className?: string;
 };
 
-export default function Section({
-  id,
-  children,
-  className,
-}: SectionProps) {
+export default function Section({ id, children, className }: SectionProps) {
   return (
     <section
       id={id}
-      className={`scroll-mt-16 bg-ivory px-6 py-28 sm:px-8 sm:py-32 lg:px-12 lg:py-36 ${className ?? ""}`}
+      className={`relative scroll-mt-16 overflow-hidden bg-ivory px-6 py-28 sm:px-8 sm:py-32 lg:px-12 lg:py-36 ${className ?? ""}`}
     >
-      <div className="mx-auto w-full max-w-5xl">
-        {children}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
+        <span className="h-px w-20 bg-champagne/45" />
       </div>
+      <div className="mx-auto w-full max-w-5xl">{children}</div>
     </section>
   );
 }
