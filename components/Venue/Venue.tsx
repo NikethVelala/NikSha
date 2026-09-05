@@ -9,7 +9,7 @@ export default function Venue() {
   const venue = wedding.ceremony.venue;
 
   return (
-    <Section id="venue" className="relative overflow-hidden bg-paper pt-20 sm:pt-24 lg:pt-28">
+    <Section id="venue" className="relative overflow-hidden bg-paper pt-12 pb-16 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24">
       <div className="mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
