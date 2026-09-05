@@ -10,7 +10,7 @@ export default function Celebration() {
   const venue = ceremony.venue;
 
   return (
-    <Section id="celebration" className="relative overflow-hidden">
+    <Section id="celebration" className="relative overflow-hidden pb-16 sm:pb-20 lg:pb-24">
       <div className="mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
