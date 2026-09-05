@@ -81,8 +81,21 @@ export default function Hero() {
         </motion.button>
       )}
 
-      {/* A theatrical reveal: layered fabric, top valance and tie-back details. The photo always remains behind it. */}
-      <div className="pointer-events-none fixed inset-0 z-[60] overflow-hidden" aria-hidden="true">
+      {/* The entire curtain scene is the opening control. This makes laptop testing forgiving: click the curtain, the photo, or the OPEN control. */}
+      <div
+        className={`fixed inset-0 z-[60] overflow-hidden ${isOpening ? "pointer-events-none" : "cursor-pointer"}`}
+        onClick={openInvitation}
+        role="button"
+        tabIndex={isOpening ? -1 : 0}
+        aria-label="Open the wedding invitation"
+        onKeyDown={(event) => {
+          if (!isOpening && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
+            openInvitation();
+          }
+        }}
+      >
+        {/* A theatrical reveal: layered fabric, top valance and tie-back details. The photo always remains behind it. */}
         <motion.div
           initial={false}
           animate={{ y: isOpening ? "-108%" : "0%" }}
@@ -133,14 +146,16 @@ export default function Hero() {
           <div className="absolute left-[-4px] top-[50%] h-8 w-8 rounded-full border border-champagne/45 bg-[#3c2020]" />
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: isOpening ? 0 : 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="absolute bottom-[4.5%] left-1/2 -translate-x-1/2 text-center text-[8px] uppercase tracking-[0.38em] text-champagne/80 sm:bottom-[5%]"
-        >
-          Tap to open
-        </motion.div>
+        {!isOpening && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="pointer-events-none absolute bottom-[7%] left-1/2 -translate-x-1/2 text-center text-[8px] uppercase tracking-[0.38em] text-champagne/80 sm:bottom-[7.5%]"
+          >
+            Tap anywhere to open
+          </motion.div>
+        )}
       </div>
 
       {isOpening && (
