@@ -11,29 +11,36 @@ export default function Welcome() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="mx-auto max-w-3xl py-32 md:py-40 text-center"
+        className="mx-auto max-w-3xl py-28 text-center md:py-36"
       >
-        <p className="mb-4 uppercase tracking-[0.4em] text-stone-500 text-sm">
+        <p className="text-xs uppercase tracking-[0.42em] text-stone-500 sm:text-sm">
           A Personal Invitation
         </p>
 
-        <h2 className="font-heading text-5xl md:text-6xl text-stone-900">
+        <h2 className="mt-5 font-heading text-5xl leading-none text-stone-900 md:text-6xl">
           Welcome
         </h2>
 
-        <p className="mt-10 text-xl leading-10 text-stone-600">
-          With immense joy and grateful hearts,
-          we invite you to celebrate the beginning
-          of our forever.
+        <div className="mx-auto mt-8 flex items-center justify-center gap-3">
+          <span className="h-px w-10 bg-stone-300" />
+          <span className="font-heading text-xl text-stone-400">♥</span>
+          <span className="h-px w-10 bg-stone-300" />
+        </div>
+
+        <p className="mx-auto mt-9 max-w-2xl font-heading text-2xl leading-relaxed text-stone-700 sm:text-3xl">
+          With immense joy and grateful hearts, we invite you to celebrate the
+          beginning of our forever.
         </p>
 
-        <p className="mt-8 text-lg leading-9 text-stone-500">
-          Your presence, blessings, and laughter
-          will make our celebration complete.
+        <p className="mx-auto mt-7 max-w-xl text-base leading-8 text-stone-500 sm:text-lg sm:leading-9">
+          Your presence, blessings, and laughter will make our celebration
+          complete.
         </p>
 
-        <p className="mt-16 font-heading text-3xl text-stone-800">
-          Niketh ♥ Sirisha
+        <div className="mx-auto mt-12 h-px w-12 bg-stone-300" />
+
+        <p className="mt-8 font-heading text-3xl text-stone-800 sm:text-4xl">
+          Niketh <span className="text-stone-400">♥</span> Sirisha
         </p>
       </motion.div>
     </Section>
