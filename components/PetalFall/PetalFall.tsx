@@ -32,7 +32,7 @@ export default function PetalFall() {
           animate={{
             x: [0, petal.drift, petal.drift * -0.55, petal.drift * 0.8, 0],
             y: ["-12vh", "22vh", "52vh", "82vh", "116vh"],
-            opacity: [0, 0.68, 0.72, 0.52, 0],
+            opacity: [0, 0.8, 0.9, 0.68, 0],
             rotate: [petal.rotate, petal.rotate + 100, petal.rotate + 210, petal.rotate + 310, petal.rotate + 420],
             scale: [0.8, 1, 0.92, 1.04, 0.8],
           }}
@@ -42,7 +42,7 @@ export default function PetalFall() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="niksha-petal absolute top-0 rounded-[70%_30%_65%_35%] bg-[#fff1d6]/75 shadow-[0_2px_12px_rgba(120,78,28,0.12)]"
+          className="niksha-petal absolute top-0 rounded-[70%_30%_65%_35%] bg-[#9f1730] shadow-[0_3px_14px_rgba(72,8,18,0.32)]"
           style={{
             left: petal.left,
             width: petal.size,
