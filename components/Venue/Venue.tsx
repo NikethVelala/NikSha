@@ -9,7 +9,7 @@ export default function Venue() {
   const venue = wedding.ceremony.venue;
 
   return (
-    <Section id="venue" className="relative overflow-hidden bg-paper">
+    <Section id="venue" className="relative overflow-hidden bg-paper pt-20 sm:pt-24 lg:pt-28">
       <div className="mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -31,9 +31,9 @@ export default function Venue() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="mx-auto mt-16 max-w-3xl border-y border-line py-10 sm:py-12"
+          className="mx-auto mt-12 max-w-3xl border-y border-line py-9 sm:py-10"
         >
-          <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-12">
+          <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-12">
             <div>
               <div className="flex items-center gap-3 text-rose">
                 <MapPin className="h-5 w-5" strokeWidth={1.5} />
@@ -54,7 +54,7 @@ export default function Venue() {
           </div>
         </motion.div>
 
-        <p className="mx-auto mt-12 max-w-xl text-center text-sm leading-7 text-muted sm:text-base">{venue.note}</p>
+        <p className="mx-auto mt-9 max-w-xl text-center text-sm leading-7 text-muted sm:text-base">{venue.note}</p>
       </div>
     </Section>
   );
