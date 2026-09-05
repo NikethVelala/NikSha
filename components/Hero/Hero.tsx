@@ -2,33 +2,38 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
 export default function Hero() {
   const [stage, setStage] = useState<"cover" | "opening" | "done">("cover");
   const [sealOpened, setSealOpened] = useState(false);
+  const [cardRevealed, setCardRevealed] = useState(false);
   const groom = wedding.couple.groom;
   const bride = wedding.couple.bride;
 
   useEffect(() => {
     if (!sealOpened) return;
 
-    const timer = window.setTimeout(() => {
+    const revealTimer = window.setTimeout(() => setCardRevealed(true), 1650);
+    const finishTimer = window.setTimeout(() => {
       setStage("done");
       window.setTimeout(() => {
         document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 180);
-    }, 4300);
+      }, 220);
+    }, 4800);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(revealTimer);
+      window.clearTimeout(finishTimer);
+    };
   }, [sealOpened]);
 
   const openInvitation = () => {
     if (stage !== "cover") return;
     setStage("opening");
-    window.setTimeout(() => setSealOpened(true), 900);
+    window.setTimeout(() => setSealOpened(true), 950);
   };
 
   return (
@@ -52,9 +57,9 @@ export default function Hero() {
             key="cover"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.025, filter: "blur(2px)" }}
+            exit={{ opacity: 0, scale: 1.02, filter: "blur(2px)" }}
             transition={{ duration: 1 }}
-            className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 text-center"
+            className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 pb-8 text-center"
           >
             <div className="max-w-xl">
               <motion.p
@@ -91,15 +96,17 @@ export default function Hero() {
               <motion.button
                 type="button"
                 onClick={openInvitation}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.25, duration: 0.9 }}
-                className="group mt-12 inline-flex min-h-12 items-center gap-3 border-0 bg-transparent px-2 py-3 text-[9px] uppercase tracking-[0.34em] text-ivory/90 outline-none sm:mt-14 sm:text-[10px]"
+                initial={{ opacity: 0, y: 18, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 1.3, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                aria-label="Open the invitation"
+                className="group mt-10 flex flex-col items-center gap-3 mx-auto outline-none sm:mt-12"
               >
-                <span className="relative pb-1 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-100 after:bg-champagne/65 after:transition-transform after:duration-500 group-hover:after:origin-left group-hover:after:scale-x-0">
-                  Open the invitation
+                <span className="relative flex h-[68px] w-[68px] items-center justify-center rounded-full border border-champagne/70 bg-charcoal/20 shadow-[0_12px_35px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-all duration-500 group-hover:scale-105 group-hover:border-champagne group-hover:bg-champagne/10 group-focus-visible:ring-2 group-focus-visible:ring-champagne/70 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-charcoal/50 sm:h-[74px] sm:w-[74px]">
+                  <span className="absolute inset-[6px] rounded-full border border-champagne/20" />
+                  <ArrowDown className="h-5 w-5 text-champagne transition-transform duration-500 group-hover:translate-y-1" strokeWidth={1.2} />
                 </span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1.5" strokeWidth={1.2} />
+                <span className="text-[8px] uppercase tracking-[0.38em] text-ivory/80 sm:text-[9px]">Open invitation</span>
               </motion.button>
             </div>
           </motion.div>
@@ -112,116 +119,112 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.9 }}
-            className="fixed inset-0 z-30 flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#292620] px-5"
+            className="fixed inset-0 z-30 flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#24221e] px-5"
           >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(205,175,138,0.18),transparent_45%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_43%,rgba(205,175,138,0.16),transparent_48%)]" />
 
             <motion.div
-              className="absolute inset-0 opacity-60"
+              className="absolute inset-0 opacity-50"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
+              animate={{ opacity: 0.5 }}
               transition={{ duration: 1.5 }}
               aria-hidden="true"
             >
-              {Array.from({ length: 16 }).map((_, index) => (
+              {Array.from({ length: 12 }).map((_, index) => (
                 <motion.span
                   key={index}
-                  className="absolute h-1.5 w-1 rounded-full bg-champagne/60"
-                  style={{
-                    left: `${8 + ((index * 17) % 84)}%`,
-                    top: `${10 + ((index * 29) % 75)}%`,
-                  }}
-                  animate={{ y: [0, -18, 0], x: [0, index % 2 ? 8 : -8, 0], opacity: [0.25, 0.7, 0.25] }}
-                  transition={{ duration: 3.5 + (index % 4) * 0.6, repeat: Infinity, delay: index * 0.13, ease: "easeInOut" }}
+                  className="absolute h-1 w-1 rounded-full bg-champagne/50"
+                  style={{ left: `${8 + ((index * 19) % 84)}%`, top: `${12 + ((index * 31) % 72)}%` }}
+                  animate={{ y: [0, -12, 0], opacity: [0.15, 0.55, 0.15] }}
+                  transition={{ duration: 4 + (index % 3) * 0.6, repeat: Infinity, delay: index * 0.2, ease: "easeInOut" }}
                 />
               ))}
             </motion.div>
 
-            <div className="relative z-10 w-[min(90vw,430px)] text-center">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9 }}
-              >
-                <p className="text-[9px] uppercase tracking-[0.46em] text-champagne/80">For you, with love</p>
-                <p className="mt-3 font-heading text-2xl italic text-ivory/90 sm:text-3xl">Niketh &amp; Sirisha</p>
-              </motion.div>
-
-              <div className="relative mx-auto mt-8 h-[250px] w-full max-w-[370px] [perspective:1200px] sm:mt-10 sm:h-[280px] sm:max-w-[420px]">
+            <div className="relative z-10 w-[min(92vw,440px)]">
+              <div className="relative mx-auto h-[370px] w-full max-w-[390px] [perspective:1400px] sm:h-[420px] sm:max-w-[430px]">
+                {/* The invitation card starts completely hidden behind the closed envelope. */}
                 <motion.div
-                  className="absolute left-1/2 top-[9%] z-[2] h-[78%] w-[84%] -translate-x-1/2 rounded-[3px] bg-[#f0e8db] shadow-[0_28px_70px_rgba(0,0,0,0.42)]"
-                  initial={{ y: 0, rotateZ: 0 }}
-                  animate={{ y: sealOpened ? 108 : 0, rotateZ: sealOpened ? -1.5 : 0 }}
-                  transition={{ delay: 1.65, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute left-1/2 top-[19%] z-[2] h-[61%] w-[78%] -translate-x-1/2 bg-[#f5eee3] shadow-[0_22px_55px_rgba(0,0,0,0.34)]"
+                  initial={{ y: 0, opacity: 0 }}
+                  animate={{ y: cardRevealed ? -72 : 0, opacity: cardRevealed ? 1 : 0 }}
+                  transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <div className="absolute inset-2.5 border border-[#a98c68]/35" />
-                  <div className="absolute inset-5 border border-[#a98c68]/15" />
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                    <p className="text-[7px] uppercase tracking-[0.4em] text-[#9a7b58]">With our families</p>
-                    <p className="mt-4 font-heading text-2xl text-[#302b25]">We invite you</p>
-                    <p className="mt-1 font-heading text-lg italic text-[#8e6d4c]">to celebrate with us</p>
-                  </div>
+                  <div className="absolute inset-[10px] border border-[#aa8a64]/35" />
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: cardRevealed ? 1 : 0, y: cardRevealed ? 0 : 8 }}
+                    transition={{ delay: 0.35, duration: 0.8 }}
+                    className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center text-[#332d27]"
+                  >
+                    <p className="text-[7px] uppercase tracking-[0.4em] text-[#9b7b5a]">With our families</p>
+                    <div className="my-4 h-px w-10 bg-[#b79a76]/55" />
+                    <p className="font-heading text-[1.65rem] leading-tight sm:text-3xl">We invite you</p>
+                    <p className="mt-1 font-heading text-lg italic text-[#94704f] sm:text-xl">to celebrate with us</p>
+                    <p className="mt-5 font-heading text-2xl sm:text-3xl">{groom} <span className="text-[#9b4f4d]">&amp;</span> {bride}</p>
+                    <p className="mt-2 text-[7px] uppercase tracking-[0.26em] text-[#80766d]">18 November 2026 · Visakhapatnam</p>
+                  </motion.div>
                 </motion.div>
 
+                {/* One continuous envelope body. The front pocket sits above the card and hides it until the flap opens. */}
                 <motion.div
-                  className="absolute left-1/2 top-[9%] z-[5] h-[50%] w-[84%] -translate-x-1/2 origin-top bg-[#f6efe5] [clip-path:polygon(0_0,100%_0,50%_100%)]"
+                  className="absolute left-1/2 bottom-[8%] z-[5] h-[57%] w-[88%] -translate-x-1/2 overflow-hidden rounded-[3px] bg-[#e9dfd0] shadow-[0_32px_75px_rgba(0,0,0,0.46)]"
+                  initial={{ y: 0 }}
+                  animate={{ y: sealOpened ? 12 : 0 }}
+                  transition={{ delay: 2.05, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className="absolute inset-[9px] border border-[#a88b6d]/30" />
+                  <div className="absolute inset-x-0 bottom-0 h-[78%] bg-[#e5dac9]" style={{ clipPath: "polygon(0 25%, 50% 70%, 100% 25%, 100% 100%, 0 100%)" }} />
+                  <div className="absolute inset-x-0 bottom-0 h-[72%]" style={{ clipPath: "polygon(0 100%, 50% 32%, 100% 100%)", background: "#ded1be" }} />
+                </motion.div>
+
+                {/* Closed front flap. It is the only thing covering the envelope/card before the seal breaks. */}
+                <motion.div
+                  className="absolute left-1/2 top-[27%] z-[7] h-[51%] w-[88%] -translate-x-1/2 origin-top bg-[#f0e7da] shadow-[0_8px_18px_rgba(0,0,0,0.08)] [clip-path:polygon(0_0,100%_0,50%_88%)]"
                   initial={{ rotateX: 0 }}
-                  animate={{ rotateX: sealOpened ? -178 : 0 }}
-                  transition={{ delay: 1.05, duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ transformStyle: "preserve-3d" }}
+                  animate={{ rotateX: sealOpened ? -174 : 0 }}
+                  transition={{ delay: 1.02, duration: 1.25, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
                 />
 
-                <motion.div
-                  className="absolute left-1/2 top-[43%] z-[7] h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#873f3e] shadow-[0_12px_28px_rgba(0,0,0,0.3)] sm:h-[86px] sm:w-[86px]"
-                  initial={{ scale: 1, rotate: -4 }}
-                  animate={{
-                    scale: sealOpened ? 1.28 : 1,
-                    rotate: sealOpened ? 9 : -4,
-                    opacity: sealOpened ? 0 : 1,
-                  }}
-                  transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+                {/* Wax seal: a tactile-looking ceremonial seal, then a subtle crack/ripple and disappearance. */}
+                <motion.button
+                  type="button"
+                  aria-label="Opening invitation seal"
+                  disabled
+                  className="absolute left-1/2 top-[58%] z-[10] flex h-[76px] w-[76px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#8b403f] shadow-[0_10px_28px_rgba(0,0,0,0.32)] sm:h-[84px] sm:w-[84px]"
+                  initial={{ scale: 1, rotate: -4, opacity: 1 }}
+                  animate={{ scale: sealOpened ? 1.34 : 1, rotate: sealOpened ? 10 : -4, opacity: sealOpened ? 0 : 1 }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <span className="absolute inset-[6px] rounded-full border border-[#d7bd98]/65" />
-                  <span className="absolute left-1/2 top-[30%] h-6 w-px -translate-x-1/2 rotate-45 bg-[#d7bd98]/70" />
-                  <span className="absolute left-1/2 top-[30%] h-6 w-px -translate-x-1/2 -rotate-45 bg-[#d7bd98]/70" />
-                  <span className="absolute bottom-[27%] left-1/2 h-5 w-5 -translate-x-1/2 rotate-45 border border-[#d7bd98]/70" />
-                </motion.div>
+                  <span className="absolute inset-[5px] rounded-full border border-[#d8bc96]/70" />
+                  <span className="font-heading text-xl italic tracking-wide text-[#f1e4d1]">N <span className="text-[#d8bc96]">&amp;</span> S</span>
+                </motion.button>
 
                 <motion.div
-                  className="pointer-events-none absolute left-1/2 top-[43%] z-[8] -translate-x-1/2 -translate-y-1/2"
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: sealOpened ? 0.9 : 0, scale: sealOpened ? 1.8 : 0.7 }}
-                  transition={{ delay: 0.05, duration: 0.55 }}
-                >
-                  <span className="block h-24 w-24 rounded-full border border-champagne/50" />
-                </motion.div>
+                  className="pointer-events-none absolute left-1/2 top-[58%] z-[11] h-[82px] w-[82px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#d8bc96]/70"
+                  initial={{ scale: 0.7, opacity: 0 }}
+                  animate={{ scale: sealOpened ? 1.7 : 0.7, opacity: sealOpened ? 0 : 0 }}
+                  transition={{ duration: 0.7 }}
+                />
 
-                {Array.from({ length: 8 }).map((_, index) => (
+                {/* Petal-like seal fragments give the opening a physical moment without looking like confetti. */}
+                {Array.from({ length: 10 }).map((_, index) => (
                   <motion.span
                     key={index}
-                    className="absolute z-[9] h-2 w-1.5 rounded-[50%_20%_50%_20%] bg-[#a85545]"
-                    style={{ left: `${38 + (index % 4) * 7}%`, top: `${37 + Math.floor(index / 4) * 8}%` }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={sealOpened ? { opacity: [0, 1, 0], scale: [0.4, 1, 0.7], x: [0, index % 2 ? 32 : -32], y: [0, -24 - index * 3] } : { opacity: 0, scale: 0 }}
-                    transition={{ delay: 0.05 + index * 0.02, duration: 0.8, ease: "easeOut" }}
+                    className="pointer-events-none absolute left-1/2 top-[58%] z-[12] h-2 w-1.5 rounded-[60%_25%_60%_25%] bg-[#a8534d]"
+                    initial={{ x: "-50%", y: "-50%", scale: 0, opacity: 0 }}
+                    animate={sealOpened ? { x: `${-50 + (index % 5) * (index % 2 ? 15 : -15)}%`, y: `${-50 - 16 - index * 2}%`, scale: [0.4, 1, 0.65], opacity: [0, 0.95, 0] } : { scale: 0, opacity: 0 }}
+                    transition={{ delay: 0.04 + index * 0.025, duration: 0.75, ease: "easeOut" }}
                   />
                 ))}
               </div>
 
               <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: sealOpened ? 0 : 1, y: sealOpened ? 8 : 0 }}
-                transition={{ duration: 0.5 }}
-                className="mt-7 text-[8px] uppercase tracking-[0.4em] text-ivory/50"
-              >
-                Your invitation is on its way
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: sealOpened ? 1 : 0, y: sealOpened ? 0 : 12 }}
-                transition={{ delay: 1.9, duration: 0.8 }}
-                className="mt-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: cardRevealed ? 1 : 0 }}
+                transition={{ delay: 0.75, duration: 0.8 }}
+                className="mt-2 text-center"
               >
                 <p className="font-heading text-2xl italic text-champagne sm:text-3xl">With joy, we welcome you.</p>
               </motion.div>
@@ -230,9 +233,7 @@ export default function Hero() {
         )}
       </AnimatePresence>
 
-      {stage === "done" && (
-        <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
-      )}
+      {stage === "done" && <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true" />}
     </section>
   );
 }
