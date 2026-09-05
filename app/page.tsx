@@ -1,3 +1,4 @@
+import Navigation from "@/components/Navigation/Navigation";
 import Hero from "@/components/Hero/Hero";
 import Welcome from "@/components/Welcome/Welcome";
 import Story from "@/components/Story/Story";
@@ -9,6 +10,8 @@ import Venue from "@/components/Venue/Venue";
 export default function Home() {
   return (
     <>
+      <div id="top" />
+      <Navigation />
       <Hero />
       <Welcome />
       <Story />
