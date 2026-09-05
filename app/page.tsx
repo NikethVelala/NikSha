@@ -6,6 +6,7 @@ import Celebration from "@/components/Celebration/Celebration";
 import Gallery from "@/components/Gallery/Gallery";
 import Timeline from "@/components/Timeline/Timeline";
 import Venue from "@/components/Venue/Venue";
+import Footer from "@/components/Footer/Footer";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <Timeline />
       <Venue />
       <Gallery />
+      <Footer />
     </>
   );
 }
