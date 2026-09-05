@@ -7,7 +7,7 @@ import { wedding } from "@/data/wedding";
 
 export default function Timeline() {
   return (
-    <Section id="timeline" className="relative overflow-hidden">
+    <Section id="timeline" className="relative overflow-hidden pb-20 sm:pb-24 lg:pb-28">
       <div className="mx-auto max-w-5xl">
         <div className="grid gap-14 lg:grid-cols-[0.75fr_1.25fr] lg:gap-24">
           <motion.div
@@ -19,9 +19,7 @@ export default function Timeline() {
           >
             <p className="text-xs uppercase tracking-[0.35em] text-rose">Chapter IV</p>
             <div className="mt-5 h-px w-16 bg-champagne" />
-            <h2 className="mt-6 font-heading text-5xl leading-none text-charcoal sm:text-6xl lg:text-7xl">
-              The Day
-            </h2>
+            <h2 className="mt-6 font-heading text-5xl leading-none text-charcoal sm:text-6xl lg:text-7xl">The Day</h2>
             <p className="mt-7 max-w-md font-heading text-3xl leading-relaxed text-charcoal/80 sm:text-4xl">
               An evening of celebration, leading to the moment we begin forever.
             </p>
