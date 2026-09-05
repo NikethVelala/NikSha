@@ -31,6 +31,13 @@ export default function Navigation() {
 
     scrollYRef.current = window.scrollY;
     const body = document.body;
+    const previous = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      overflow: body.style.overflow,
+    };
     body.style.position = "fixed";
     body.style.top = `-${scrollYRef.current}px`;
     body.style.left = "0";
@@ -38,11 +45,11 @@ export default function Navigation() {
     body.style.overflow = "hidden";
 
     return () => {
-      body.style.position = "";
-      body.style.top = "";
-      body.style.left = "";
-      body.style.right = "";
-      body.style.overflow = "";
+      body.style.position = previous.position;
+      body.style.top = previous.top;
+      body.style.left = previous.left;
+      body.style.right = previous.right;
+      body.style.overflow = previous.overflow;
       window.scrollTo(0, scrollYRef.current);
     };
   }, [open]);
@@ -58,11 +65,11 @@ export default function Navigation() {
             : "bg-transparent"
         }`}
       >
-        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6 sm:px-8 lg:px-12">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:h-20 sm:px-8 lg:px-12">
           <a
             href="#top"
             onClick={closeMenu}
-            className={`font-heading text-3xl tracking-wide transition-colors ${scrolled ? "text-stone-900" : "text-white"}`}
+            className={`font-heading text-2xl tracking-wide transition-colors sm:text-3xl ${scrolled ? "text-stone-900" : "text-white"}`}
             aria-label="NikSha home"
           >
             {wedding.couple.monogram}
@@ -71,7 +78,7 @@ export default function Navigation() {
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className={`relative z-[60] inline-flex h-11 items-center gap-3 border-b px-1 text-[10px] uppercase tracking-[0.25em] transition-colors ${
+            className={`relative z-[60] inline-flex min-h-11 items-center gap-2 border-b px-1 text-[9px] uppercase tracking-[0.22em] transition-colors sm:gap-3 sm:text-[10px] sm:tracking-[0.25em] ${
               scrolled || open ? "border-stone-300 text-stone-800" : "border-white/50 text-white"
             }`}
             aria-label={open ? "Close invitation index" : "Open invitation index"}
@@ -89,10 +96,10 @@ export default function Navigation() {
         }`}
         aria-hidden={!open}
       >
-        <div className="mx-auto flex min-h-full max-w-5xl flex-col justify-center px-6 py-28 sm:px-10 lg:px-12">
-          <div className="mb-10 flex items-center gap-4 text-rose">
-            <span className="text-[10px] uppercase tracking-[0.4em]">The NikSha invitation</span>
-            <span className="h-px w-12 bg-champagne" />
+        <div className="mx-auto flex min-h-full max-w-5xl flex-col justify-start px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(6rem,calc(env(safe-area-inset-top)+5rem))] sm:justify-center sm:px-10 sm:py-28 lg:px-12">
+          <div className="mb-7 flex items-center gap-3 text-rose sm:mb-10 sm:gap-4">
+            <span className="text-[9px] uppercase tracking-[0.35em] sm:text-[10px] sm:tracking-[0.4em]">The NikSha invitation</span>
+            <span className="h-px w-10 bg-champagne sm:w-12" />
           </div>
 
           <nav className="grid border-y border-line" aria-label="Invitation index">
@@ -101,10 +108,10 @@ export default function Navigation() {
                 key={link.href}
                 href={link.href}
                 onClick={closeMenu}
-                className="group grid grid-cols-[3rem_1fr] items-center gap-4 border-b border-line py-5 last:border-b-0 sm:grid-cols-[4rem_1fr_auto] sm:py-6"
+                className="group grid min-h-16 grid-cols-[2.5rem_1fr] items-center gap-3 border-b border-line py-4 last:border-b-0 sm:grid-cols-[4rem_1fr_auto] sm:py-6"
               >
-                <span className="text-[10px] tracking-[0.25em] text-muted">{link.number}</span>
-                <span className="font-heading text-4xl leading-none text-charcoal transition-transform duration-300 group-hover:translate-x-1 sm:text-5xl lg:text-6xl">
+                <span className="text-[9px] tracking-[0.22em] text-muted sm:text-[10px] sm:tracking-[0.25em]">{link.number}</span>
+                <span className="font-heading text-[2.15rem] leading-none text-charcoal transition-transform duration-300 group-hover:translate-x-1 sm:text-5xl lg:text-6xl">
                   {link.label}
                 </span>
                 <span className="hidden text-[10px] uppercase tracking-[0.25em] text-muted sm:block">Open</span>
@@ -112,7 +119,7 @@ export default function Navigation() {
             ))}
           </nav>
 
-          <p className="mt-10 font-heading text-xl text-charcoal/60">{wedding.ceremony.date} · Visakhapatnam</p>
+          <p className="mt-7 font-heading text-lg text-charcoal/60 sm:mt-10 sm:text-xl">{wedding.ceremony.date} · Visakhapatnam</p>
         </div>
       </div>
     </>

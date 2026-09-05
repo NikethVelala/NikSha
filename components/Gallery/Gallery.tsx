@@ -3,13 +3,14 @@
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
 
 export default function Gallery() {
   const images = wedding.gallery.images;
   const [selected, setSelected] = useState<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
   const closeLightbox = () => setSelected(null);
   const previous = () => setSelected((value) => value === null ? null : (value - 1 + images.length) % images.length);
@@ -24,45 +25,59 @@ export default function Gallery() {
       if (event.key === "ArrowRight") next();
     };
 
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selected]);
 
+  const handleTouchStart = (event: React.TouchEvent) => {
+    touchStartX.current = event.changedTouches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const distance = event.changedTouches[0]?.clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(distance) < 50) return;
+    if (distance < 0) next();
+    else previous();
+  };
+
   return (
-    <Section id="gallery" className="relative overflow-hidden bg-paper pt-20 pb-20 sm:pt-24 sm:pb-24 lg:pt-28 lg:pb-28">
+    <Section id="gallery" className="relative overflow-hidden bg-paper pt-16 pb-16 sm:pt-24 sm:pb-24 lg:pt-28 lg:pb-28">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, x: -24 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.8 }}
-          className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end lg:gap-24"
+          className="grid gap-7 lg:grid-cols-[0.72fr_1.28fr] lg:items-end lg:gap-24"
         >
           <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-rose">Chapter VI</p>
-            <div className="mt-5 h-px w-16 bg-champagne" />
-            <h2 className="mt-6 font-heading text-5xl leading-none text-charcoal sm:text-6xl lg:text-7xl">
+            <p className="text-[10px] uppercase tracking-[0.35em] text-rose sm:text-xs">Chapter VI</p>
+            <div className="mt-4 h-px w-16 bg-champagne sm:mt-5" />
+            <h2 className="mt-5 font-heading text-5xl leading-none text-charcoal sm:mt-6 sm:text-6xl lg:text-7xl">
               {wedding.gallery.title}
             </h2>
           </div>
-          <p className="max-w-2xl font-heading text-2xl leading-relaxed text-charcoal/70 sm:text-3xl lg:pb-1">
+          <p className="max-w-2xl font-heading text-[1.45rem] leading-relaxed text-charcoal/70 sm:text-3xl lg:pb-1">
             {wedding.gallery.subtitle}
           </p>
         </motion.div>
 
-        <div className="mt-16 space-y-14 sm:mt-20 sm:space-y-20">
+        <div className="mt-12 space-y-11 sm:mt-20 sm:space-y-20">
           <GalleryImage image={images[0]} index={0} aspect="hero" onOpen={() => setSelected(0)} />
 
-          <div className="grid gap-14 md:grid-cols-12 md:items-start md:gap-x-10">
+          <div className="grid gap-11 md:grid-cols-12 md:items-start md:gap-x-10">
             <GalleryImage image={images[1]} index={1} className="md:col-span-4 md:mt-16" aspect="portrait" onOpen={() => setSelected(1)} />
             <GalleryImage image={images[2]} index={2} className="md:col-span-8" aspect="wide" onOpen={() => setSelected(2)} />
           </div>
 
-          <div className="grid gap-14 md:grid-cols-12 md:items-start md:gap-x-10">
+          <div className="grid gap-11 md:grid-cols-12 md:items-start md:gap-x-10">
             <GalleryImage image={images[3]} index={3} className="md:col-span-7" aspect="wide" onOpen={() => setSelected(3)} />
             <GalleryImage image={images[4]} index={4} className="md:col-span-5 md:mt-20" aspect="portrait" onOpen={() => setSelected(4)} />
           </div>
@@ -75,7 +90,7 @@ export default function Gallery() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.8 }}
-          className="mt-16 text-center font-heading text-2xl text-charcoal/65 sm:mt-20 sm:text-3xl"
+          className="mt-12 text-center font-heading text-xl text-charcoal/65 sm:mt-20 sm:text-3xl"
         >
           Every photograph holds a little piece of our journey.
         </motion.p>
@@ -90,13 +105,15 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/95 px-4 py-6 backdrop-blur-md sm:px-8 sm:py-10"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/95 px-3 py-4 backdrop-blur-md sm:px-8 sm:py-10"
             onClick={closeLightbox}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
             <button
               type="button"
               onClick={closeLightbox}
-              className="absolute right-4 top-4 z-10 inline-flex h-11 w-11 items-center justify-center border border-ivory/20 text-ivory/80 transition-colors hover:border-champagne hover:text-champagne sm:right-7 sm:top-7"
+              className="absolute right-3 top-3 z-10 inline-flex h-12 w-12 items-center justify-center border border-ivory/20 text-ivory/80 transition-colors hover:border-champagne hover:text-champagne sm:right-7 sm:top-7"
               aria-label="Close photo viewer"
             >
               <X className="h-5 w-5" strokeWidth={1.3} />
@@ -105,7 +122,7 @@ export default function Gallery() {
             <button
               type="button"
               onClick={(event) => { event.stopPropagation(); previous(); }}
-              className="absolute left-2 top-1/2 z-10 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center border border-ivory/20 text-ivory/75 transition-colors hover:border-champagne hover:text-champagne sm:left-7"
+              className="absolute left-1 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center border border-ivory/20 text-ivory/75 transition-colors hover:border-champagne hover:text-champagne sm:inline-flex sm:left-7"
               aria-label="Previous photo"
             >
               <ChevronLeft className="h-5 w-5" strokeWidth={1.2} />
@@ -114,7 +131,7 @@ export default function Gallery() {
             <button
               type="button"
               onClick={(event) => { event.stopPropagation(); next(); }}
-              className="absolute right-2 top-1/2 z-10 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center border border-ivory/20 text-ivory/75 transition-colors hover:border-champagne hover:text-champagne sm:right-7"
+              className="absolute right-1 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center border border-ivory/20 text-ivory/75 transition-colors hover:border-champagne hover:text-champagne sm:inline-flex sm:right-7"
               aria-label="Next photo"
             >
               <ChevronRight className="h-5 w-5" strokeWidth={1.2} />
@@ -122,13 +139,13 @@ export default function Gallery() {
 
             <motion.figure
               key={selected}
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.35 }}
-              className="flex max-h-full w-full max-w-5xl flex-col items-center justify-center"
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex max-h-full w-full max-w-5xl touch-pan-y flex-col items-center justify-center"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="relative h-[68svh] w-full sm:h-[74svh]">
+              <div className="relative h-[72svh] w-full sm:h-[74svh]">
                 <Image
                   src={images[selected].src}
                   alt={`Niketh and Sirisha memory ${selected + 1}`}
@@ -138,11 +155,11 @@ export default function Gallery() {
                   priority
                 />
               </div>
-              <figcaption className="mt-4 max-w-2xl text-center font-heading text-xl text-ivory/80 sm:text-2xl">
+              <figcaption className="mt-3 max-w-2xl px-8 text-center font-heading text-lg text-ivory/80 sm:mt-4 sm:px-0 sm:text-2xl">
                 {images[selected].caption}
               </figcaption>
               <p className="mt-2 text-[9px] uppercase tracking-[0.3em] text-ivory/40">
-                {selected + 1} / {images.length}
+                {selected + 1} / {images.length} · Swipe
               </p>
             </motion.figure>
           </motion.div>
@@ -172,7 +189,7 @@ function GalleryImage({ image, index, className = "", aspect, onOpen }: GalleryI
       <button
         type="button"
         onClick={onOpen}
-        className="group block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
+        className="group block w-full touch-manipulation text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
         aria-label={`Open memory ${index + 1}`}
       >
         <div
@@ -197,7 +214,7 @@ function GalleryImage({ image, index, className = "", aspect, onOpen }: GalleryI
           </span>
         </div>
       </button>
-      <figcaption className="mt-4 max-w-lg font-heading text-xl leading-snug text-charcoal/70 sm:text-2xl">
+      <figcaption className="mt-3 max-w-lg font-heading text-lg leading-snug text-charcoal/70 sm:mt-4 sm:text-2xl">
         {image.caption}
       </figcaption>
     </motion.figure>
