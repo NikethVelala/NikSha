@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ChevronDown, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
 export default function Hero() {
-  const [stage, setStage] = useState<"cover" | "opening" | "entered">("cover");
+  const [stage, setStage] = useState<"cover" | "opening">("cover");
   const [showInvitation, setShowInvitation] = useState(false);
   const groom = wedding.couple.groom;
   const bride = wedding.couple.bride;
@@ -23,7 +23,7 @@ export default function Hero() {
 
   const enterCelebration = () => {
     setStage("opening");
-    window.setTimeout(() => setStage("entered"), 1100);
+    window.setTimeout(() => setShowInvitation(true), 1100);
   };
 
   const enterInvitation = () => {
@@ -55,7 +55,7 @@ export default function Hero() {
 
       <motion.div
         initial={false}
-        animate={{ opacity: stage === "entered" ? 0 : 1, y: stage === "entered" ? -20 : 0 }}
+        animate={{ opacity: showInvitation ? 0 : 1, y: showInvitation ? -20 : 0 }}
         transition={{ duration: 0.65 }}
         className="absolute inset-x-0 bottom-5 z-20 flex justify-center sm:bottom-8"
       >
@@ -130,20 +130,16 @@ export default function Hero() {
           </motion.div>
         )}
 
-        {stage === "opening" && (
+        {stage === "opening" && !showInvitation && (
           <motion.div
             key="opening"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.03 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
             className="relative z-10 flex min-h-[100svh] items-center justify-center px-6 text-center"
           >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
-              className="relative flex h-64 w-[min(86vw,360px)] items-center justify-center border border-champagne/45 bg-paper/95 px-8 text-charcoal shadow-2xl sm:h-72"
-            >
+            <div className="relative flex h-64 w-[min(86vw,360px)] items-center justify-center border border-champagne/45 bg-paper/95 px-8 text-charcoal shadow-2xl sm:h-72">
               <div className="absolute inset-3 border border-charcoal/10" />
               <div>
                 <p className="text-[8px] uppercase tracking-[0.42em] text-rose">With our families</p>
@@ -159,33 +155,6 @@ export default function Hero() {
               >
                 <span className="font-heading text-xl italic">N</span>
               </motion.div>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {stage === "entered" && (
-          <motion.div
-            key="entered"
-            initial={{ opacity: 0, scale: 1.03 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
-            className="relative z-10 flex min-h-[100svh] items-end justify-center px-6 pb-20 text-center sm:pb-24"
-          >
-            <div>
-              <p className="text-[9px] uppercase tracking-[0.42em] text-champagne sm:text-[10px]">The celebration begins</p>
-              <h2 className="mt-4 font-heading text-4xl sm:text-6xl">Come celebrate with us.</h2>
-              <button
-                type="button"
-                onClick={() => setShowInvitation(true)}
-                className="mt-7 inline-flex min-h-12 items-center gap-3 border-b border-ivory/50 pb-2 text-[9px] uppercase tracking-[0.3em] text-ivory transition-colors hover:border-champagne hover:text-champagne sm:text-[10px]"
-              >
-                Open invitation
-                <ArrowRight className="h-4 w-4" strokeWidth={1.2} />
-              </button>
-              <a href="#welcome" className="mx-auto mt-7 flex w-fit flex-col items-center gap-2 text-[8px] uppercase tracking-[0.3em] text-ivory/55">
-                Begin
-                <ChevronDown className="h-4 w-4 animate-pulse" strokeWidth={1.1} />
-              </a>
             </div>
           </motion.div>
         )}
