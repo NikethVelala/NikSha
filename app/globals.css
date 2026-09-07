@@ -47,6 +47,16 @@ body {
   font-feature-settings: "kern" 1, "liga" 1;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+}
+
 ::selection {
   background: var(--champagne);
   color: var(--charcoal);
@@ -61,7 +71,17 @@ section[role="button"] > div[aria-hidden="true"] {
   filter: saturate(0.86) contrast(1.07) sepia(0.045);
 }
 
-/* The curtain artwork itself stays fully opaque. The hero photo is revealed only after the panels open. */
+/* Keep interactive controls feeling tactile without making motion feel busy. */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 1px solid var(--champagne);
+  outline-offset: 4px;
+}
 
 .niksha-petal {
   will-change: transform, opacity;
@@ -69,6 +89,10 @@ section[role="button"] > div[aria-hidden="true"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .niksha-petal {
     display: none;
   }

@@ -5,11 +5,13 @@ import Welcome from "@/components/Welcome/Welcome";
 import Story from "@/components/Story/Story";
 import Gallery from "@/components/Gallery/Gallery";
 import Footer from "@/components/Footer/Footer";
+import LuxuryInteractions from "@/components/LuxuryInteractions/LuxuryInteractions";
 
 export default function Home() {
   return (
     <>
       <div id="top" />
+      <LuxuryInteractions />
       <Navigation />
       <Hero />
       <PetalFall />
