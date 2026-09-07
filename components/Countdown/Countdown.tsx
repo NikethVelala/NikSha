@@ -19,7 +19,7 @@ function calculateTimeLeft(): TimeLeft {
 
 const secondaryUnits: Array<keyof Omit<TimeLeft, "days">> = ["hours", "minutes", "seconds"];
 
-export default function Countdown() {
+export default function Countdown({ compact = false }: { compact?: boolean }) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
@@ -29,6 +29,37 @@ export default function Countdown() {
   }, []);
 
   if (!timeLeft) return null;
+
+  if (compact) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-20px" }}
+        transition={{ duration: 0.7 }}
+        className="mx-auto mt-7 max-w-xl px-2 text-center sm:mt-9"
+      >
+        <div className="flex items-center justify-center gap-3 text-[#a8783f]/60 sm:gap-4">
+          <span className="h-px w-12 bg-[#a8783f]/30 sm:w-20" />
+          <span className="text-[9px]">✦</span>
+          <span className="h-px w-12 bg-[#a8783f]/30 sm:w-20" />
+        </div>
+        <p className="mt-4 text-[8px] uppercase tracking-[0.36em] text-[#756957] sm:text-[9px] sm:tracking-[0.42em]">Counting down to our forever</p>
+        <div className="mt-2 flex items-baseline justify-center gap-2 sm:gap-3">
+          <span className="font-heading text-5xl leading-none text-[#292622] sm:text-6xl">{timeLeft.days}</span>
+          <span className="font-heading text-lg italic text-[#8c6130] sm:text-xl">days to go</span>
+        </div>
+        <div className="mx-auto mt-3 flex items-center justify-center gap-4 text-[#6f665d] sm:gap-6">
+          {secondaryUnits.map((unit) => (
+            <div key={unit} className="flex items-baseline gap-1">
+              <span className="font-heading text-lg leading-none text-[#292622] sm:text-xl">{String(timeLeft[unit]).padStart(2, "0")}</span>
+              <span className="text-[7px] uppercase tracking-[0.18em] text-[#756957]">{unit.slice(0, 1)}</span>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -45,21 +76,15 @@ export default function Countdown() {
         </div>
         <p className="font-heading text-base text-muted sm:text-lg">18 · 11 · 2026</p>
       </div>
-
       <div className="mt-6 border-y border-line sm:mt-8 sm:flex sm:items-end">
         <div className="px-1 py-6 sm:flex-1 sm:px-5 sm:py-8">
-          <p className="font-heading text-[4.5rem] leading-none text-charcoal sm:text-8xl lg:text-9xl">
-            {String(timeLeft.days).padStart(2, "0")}
-          </p>
+          <p className="font-heading text-[4.5rem] leading-none text-charcoal sm:text-8xl lg:text-9xl">{String(timeLeft.days).padStart(2, "0")}</p>
           <p className="mt-2 text-[9px] uppercase tracking-[0.35em] text-muted sm:mt-3 sm:text-[10px]">Days</p>
         </div>
-
         <div className="grid grid-cols-3 border-t border-line sm:flex sm:border-l sm:border-t-0">
           {secondaryUnits.map((unit) => (
             <div key={unit} className="border-r border-line px-3 py-5 last:border-r-0 sm:min-w-28 sm:px-6 sm:py-7">
-              <p className="font-heading text-3xl leading-none text-charcoal sm:text-4xl">
-                {String(timeLeft[unit]).padStart(2, "0")}
-              </p>
+              <p className="font-heading text-3xl leading-none text-charcoal sm:text-4xl">{String(timeLeft[unit]).padStart(2, "0")}</p>
               <p className="mt-2 text-[8px] uppercase tracking-[0.24em] text-muted sm:mt-3 sm:text-[9px] sm:tracking-[0.28em]">{unit}</p>
             </div>
           ))}
