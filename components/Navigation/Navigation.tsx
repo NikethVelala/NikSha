@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { wedding } from "@/data/wedding";
 
 const links = [
-  { number: "01", label: "Invitation", href: "#welcome" },
-  { number: "02", label: "Our Story", href: "#story" },
-  { number: "03", label: "Memories", href: "#gallery" },
-  { number: "04", label: "Forever", href: "#forever" },
+  { number: "01", label: "Invitation", href: "#welcome", note: "The celebration" },
+  { number: "02", label: "Our Story", href: "#story", note: "How it all began" },
+  { number: "03", label: "Memories", href: "#gallery", note: "Moments together" },
+  { number: "04", label: "Forever", href: "#forever", note: "With love, always" },
 ];
 
 export default function Navigation() {
@@ -61,20 +61,37 @@ export default function Navigation() {
 
       <div className={`fixed inset-0 z-[95] overflow-y-auto overscroll-contain bg-paper/98 backdrop-blur-xl transition-all duration-500 ${open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"}`} aria-hidden={!open}>
         <div className="mx-auto flex min-h-full max-w-5xl flex-col justify-start px-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(6rem,calc(env(safe-area-inset-top)+5rem))] sm:justify-center sm:px-10 sm:py-28 lg:px-12">
-          <div className="mb-7 flex items-center gap-3 text-rose sm:mb-10 sm:gap-4">
-            <span className="text-[9px] uppercase tracking-[0.35em] sm:text-[10px] sm:tracking-[0.4em]">The NikSha invitation</span>
-            <span className="h-px w-10 bg-champagne sm:w-12" />
+          <div className="mb-8 flex items-end justify-between gap-6 sm:mb-12">
+            <div>
+              <div className="mb-3 flex items-center gap-3 text-rose sm:mb-4 sm:gap-4">
+                <span className="text-[9px] uppercase tracking-[0.35em] sm:text-[10px] sm:tracking-[0.4em]">The NikSha invitation</span>
+                <span className="h-px w-10 bg-champagne sm:w-12" />
+              </div>
+              <p className="font-heading text-3xl leading-none text-charcoal sm:text-5xl">A little journey,</p>
+              <p className="mt-1 font-heading text-3xl italic leading-none text-charcoal/55 sm:text-5xl">from here to forever.</p>
+            </div>
+            <span className="hidden pb-1 text-[9px] uppercase tracking-[0.25em] text-muted sm:block">{wedding.ceremony.date}</span>
           </div>
+
           <nav className="grid border-y border-line" aria-label="Invitation index">
             {links.map((link) => (
-              <a key={link.href} href={link.href} onClick={closeMenu} className="group grid min-h-[4.5rem] grid-cols-[2.25rem_1fr] items-center gap-3 border-b border-line py-4 last:border-b-0 sm:grid-cols-[4rem_1fr_auto] sm:py-6">
-                <span className="text-[9px] tracking-[0.22em] text-muted sm:text-[10px] sm:tracking-[0.25em]">{link.number}</span>
-                <span className="font-heading text-[2rem] leading-none text-charcoal transition-transform duration-300 group-hover:translate-x-1 sm:text-5xl lg:text-6xl">{link.label}</span>
-                <span className="hidden text-[10px] uppercase tracking-[0.25em] text-muted sm:block">Open</span>
+              <a key={link.href} href={link.href} onClick={closeMenu} className="group grid min-h-[5.6rem] grid-cols-[2.1rem_1fr_auto] items-center gap-3 border-b border-line py-5 last:border-b-0 sm:min-h-[7rem] sm:grid-cols-[4rem_1fr_auto] sm:gap-5 sm:py-6">
+                <span className="self-start pt-1 text-[9px] tracking-[0.22em] text-muted sm:text-[10px] sm:tracking-[0.25em]">{link.number}</span>
+                <span className="min-w-0">
+                  <span className="block font-heading text-[2.15rem] leading-none text-charcoal transition-transform duration-300 group-hover:translate-x-1 sm:text-5xl lg:text-6xl">{link.label}</span>
+                  <span className="mt-2 block text-[9px] uppercase tracking-[0.2em] text-muted sm:text-[10px] sm:tracking-[0.25em]">{link.note}</span>
+                </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-muted transition-all duration-300 group-hover:border-champagne group-hover:text-gold sm:h-10 sm:w-10">
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={1.25} />
+                </span>
               </a>
             ))}
           </nav>
-          <p className="mt-7 font-heading text-lg text-charcoal/60 sm:mt-10">The NikSha wedding</p>
+
+          <div className="mt-8 flex items-center justify-between gap-5 sm:mt-10">
+            <p className="font-heading text-lg text-charcoal/60 sm:text-xl">The NikSha wedding</p>
+            <span className="text-[9px] uppercase tracking-[0.25em] text-muted sm:hidden">{wedding.ceremony.date}</span>
+          </div>
         </div>
       </div>
     </>
