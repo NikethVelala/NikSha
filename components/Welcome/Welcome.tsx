@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
@@ -40,6 +41,49 @@ function CornerFlourish({ position }: { position: "tl" | "tr" | "bl" | "br" }) {
 }
 
 export default function Welcome() {
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+    const previousHtmlTouchAction = html.style.touchAction;
+    const previousBodyTouchAction = body.style.touchAction;
+    const previousHtmlOverscrollBehavior = html.style.overscrollBehavior;
+    const previousBodyOverscrollBehavior = body.style.overscrollBehavior;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    html.style.touchAction = "none";
+    body.style.touchAction = "none";
+    html.style.overscrollBehavior = "none";
+    body.style.overscrollBehavior = "none";
+
+    return () => {
+      html.style.overflow = previousHtmlOverflow;
+      body.style.overflow = previousBodyOverflow;
+      html.style.touchAction = previousHtmlTouchAction;
+      body.style.touchAction = previousBodyTouchAction;
+      html.style.overscrollBehavior = previousHtmlOverscrollBehavior;
+      body.style.overscrollBehavior = previousBodyOverscrollBehavior;
+    };
+  }, []);
+
+  const openStory = () => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    html.style.overflow = "auto";
+    body.style.overflow = "auto";
+    html.style.touchAction = "auto";
+    body.style.touchAction = "auto";
+    html.style.overscrollBehavior = "auto";
+    body.style.overscrollBehavior = "auto";
+
+    requestAnimationFrame(() => {
+      document.getElementById("story")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
   return (
     <Section id="welcome" className="relative overflow-hidden bg-[#f5eee2] py-14 sm:py-20">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(183,126,59,0.13),transparent_34%)]" />
@@ -142,6 +186,10 @@ export default function Welcome() {
           </p>
           <a
             href="#story"
+            onClick={(event) => {
+              event.preventDefault();
+              openStory();
+            }}
             className="mt-3 inline-flex min-h-11 items-center gap-2 border-b border-champagne/70 pb-1 text-[9px] font-medium uppercase tracking-[0.28em] text-charcoal transition-colors hover:text-rose sm:mt-4 sm:text-[10px]"
           >
             Discover Our Story
