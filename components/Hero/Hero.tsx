@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
-const curtainImage = "/images/curtain-reference-800.jpg";
+const curtainImage = "/images/curtain-reference.webp";
 
 export default function Hero() {
   const [opening, setOpening] = useState(false);
