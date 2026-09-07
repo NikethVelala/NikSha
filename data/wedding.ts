@@ -51,12 +51,12 @@ export const wedding = {
     title: "Our Journey",
     subtitle: "From classmates to best friends, from friendship to forever—every moment brought us closer to this beautiful day.",
     images: [
-      { src: "/images/gallery/photo1.jpg", caption: "Where blessings and beautiful memories began." },
-      { src: "/images/gallery/photo2.jpg", caption: "Together, every celebration feels complete." },
-      { src: "/images/gallery/photo3.jpg", caption: "Finding happiness in the little moments." },
-      { src: "/images/gallery/photo4.jpg", caption: "Partners in every adventure." },
-      { src: "/images/gallery/photo5.jpg", caption: "Exploring life, hand in hand." },
-      { src: "/images/gallery/photo6.jpg", caption: "Forever begins with us." },
+      { src: "/images/gallery/photo1.jpg", label: "The beginning", caption: "Where blessings and beautiful memories began." },
+      { src: "/images/gallery/photo2.jpg", label: "Together", caption: "Together, every celebration feels complete." },
+      { src: "/images/gallery/photo3.jpg", label: "Little moments", caption: "Finding happiness in the little moments." },
+      { src: "/images/gallery/photo4.jpg", label: "Every adventure", caption: "Partners in every adventure." },
+      { src: "/images/gallery/photo5.jpg", label: "Hand in hand", caption: "Exploring life, hand in hand." },
+      { src: "/images/gallery/photo6.jpg", label: "Forever", caption: "Forever begins with us." },
     ],
   },
 };
