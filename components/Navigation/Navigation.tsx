@@ -7,11 +7,10 @@ import { wedding } from "@/data/wedding";
 const links = [
   { number: "01", label: "Invitation", href: "#welcome" },
   { number: "02", label: "Our Story", href: "#story" },
-  { number: "03", label: "Celebration", href: "#celebration" },
-  { number: "04", label: "The Day", href: "#timeline" },
-  { number: "05", label: "The Place", href: "#venue" },
-  { number: "06", label: "Memories", href: "#gallery" },
-  { number: "07", label: "Forever", href: "#forever" },
+  { number: "03", label: "The Day", href: "#timeline" },
+  { number: "04", label: "The Place", href: "#venue" },
+  { number: "05", label: "Memories", href: "#gallery" },
+  { number: "06", label: "Forever", href: "#forever" },
 ];
 
 export default function Navigation() {
@@ -52,22 +51,10 @@ export default function Navigation() {
     <>
       <header className={`fixed inset-x-0 top-0 z-[80] transition-all duration-500 ${scrolled ? "border-b border-stone-200/70 bg-stone-50/90 shadow-sm backdrop-blur-md" : "bg-transparent"}`}>
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:h-20 sm:px-8 lg:px-12">
-          <a
-            href="#top"
-            onClick={closeMenu}
-            className={`rounded-full border px-5 py-2 font-heading text-[1.45rem] leading-none tracking-wide transition-all sm:px-6 sm:py-2.5 sm:text-[1.7rem] ${scrolled ? "border-stone-300 bg-white/80 text-stone-900" : "border-white/15 bg-black/10 text-white backdrop-blur-[2px]"}`}
-            aria-label="NikSha home"
-          >
+          <a href="#top" onClick={closeMenu} className={`rounded-full border px-5 py-2 font-heading text-[1.45rem] leading-none tracking-wide transition-all sm:px-6 sm:py-2.5 sm:text-[1.7rem] ${scrolled ? "border-stone-300 bg-white/80 text-stone-900" : "border-white/15 bg-black/10 text-white backdrop-blur-[2px]"}`} aria-label="NikSha home">
             {wedding.couple.monogram}
           </a>
-
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            className={`relative z-[90] inline-flex min-h-11 items-center gap-3 rounded-full border px-5 py-2 text-[9px] uppercase tracking-[0.28em] transition-all sm:px-6 sm:text-[10px] ${scrolled || open ? "border-stone-300 bg-white/80 text-stone-800" : "border-white/15 bg-black/10 text-white backdrop-blur-[2px]"}`}
-            aria-label={open ? "Close invitation index" : "Open invitation index"}
-            aria-expanded={open}
-          >
+          <button type="button" onClick={() => setOpen((value) => !value)} className={`relative z-[90] inline-flex min-h-11 items-center gap-3 rounded-full border px-5 py-2 text-[9px] uppercase tracking-[0.28em] transition-all sm:px-6 sm:text-[10px] ${scrolled || open ? "border-stone-300 bg-white/80 text-stone-800" : "border-white/15 bg-black/10 text-white backdrop-blur-[2px]"}`} aria-label={open ? "Close invitation index" : "Open invitation index"} aria-expanded={open}>
             <span>Index</span>
             {open ? <X size={18} strokeWidth={1.25} /> : <Menu size={18} strokeWidth={1.25} />}
           </button>
@@ -89,7 +76,7 @@ export default function Navigation() {
               </a>
             ))}
           </nav>
-          <p className="mt-7 font-heading text-lg text-charcoal/60 sm:mt-10 sm:text-xl">{wedding.ceremony.date} · Visakhapatnam</p>
+          <p className="mt-7 font-heading text-lg text-charcoal/60 sm:mt-10">The NikSha wedding</p>
         </div>
       </div>
     </>
