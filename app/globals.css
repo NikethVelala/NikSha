@@ -3,7 +3,6 @@
 :root {
   --background: #f8f4ee;
   --foreground: #292622;
-
   --ivory: #f8f4ee;
   --paper: #fcfaf7;
   --champagne: #d2a573;
@@ -37,6 +36,8 @@
 html {
   scroll-behavior: smooth;
   background: var(--ivory);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -45,6 +46,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   font-feature-settings: "kern" 1, "liga" 1;
+  overscroll-behavior-x: none;
 }
 
 body::before {
@@ -66,12 +68,10 @@ body::before {
   font-family: var(--font-heading), Georgia, serif;
 }
 
-/* Warm grade for the photographic curtain artwork. */
 section[role="button"] > div[aria-hidden="true"] {
   filter: saturate(0.86) contrast(1.07) sepia(0.045);
 }
 
-/* Keep interactive controls feeling tactile without making motion feel busy. */
 button,
 a {
   -webkit-tap-highlight-color: transparent;
@@ -86,6 +86,27 @@ a:focus-visible {
 .niksha-petal {
   will-change: transform, opacity;
   backface-visibility: hidden;
+}
+
+@media (max-width: 767px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    overscroll-behavior-y: contain;
+  }
+
+  .niksha-mobile-ready {
+    touch-action: pan-y;
+  }
+
+  .niksha-petal {
+    will-change: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
