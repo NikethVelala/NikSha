@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Section from "@/components/common/Section";
+import Countdown from "@/components/Countdown/Countdown";
 import { wedding } from "@/data/wedding";
 
 function CardOrnament({ className = "" }: { className?: string }) {
@@ -100,6 +101,9 @@ export default function Welcome() {
             <div className="mt-6 flex justify-center sm:mt-7"><CardOrnament /></div>
           </div>
         </div>
+
+        <Countdown compact />
+
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20px" }} transition={{ duration: 0.8, delay: 0.15 }} className="px-3 pb-14 pt-8 text-center sm:pb-16 sm:pt-10"><p className="text-[8px] font-medium uppercase tracking-[0.32em] text-[#756957] sm:text-[9px]">There&apos;s more to our story</p><p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">If you&apos;d like to stay a little longer…</p><a href="#story" onClick={(event) => { event.preventDefault(); openStory(); }} className="group mx-auto mt-5 flex min-h-14 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-4 text-[10px] font-medium uppercase tracking-[0.24em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]">Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
       </motion.div>
     </Section>
