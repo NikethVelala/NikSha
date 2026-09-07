@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
-const curtainImage = "/images/curtain-reference.webp";
+const curtainImage = "https://raw.githubusercontent.com/NikethVelala/NikSha/feature/cinematic-opening-v2/public/images/curtain-reference.webp";
 
 export default function Hero() {
   const [opening, setOpening] = useState(false);
@@ -62,7 +62,7 @@ export default function Hero() {
               src={curtainImage}
               alt=""
               draggable={false}
-              className="absolute inset-y-0 left-0 h-full w-[200%] max-w-none select-none object-fill"
+              className="absolute inset-y-0 left-0 h-full w-full object-cover object-left select-none"
             />
           </motion.div>
 
@@ -75,8 +75,7 @@ export default function Hero() {
               src={curtainImage}
               alt=""
               draggable={false}
-              className="absolute inset-y-0 h-full w-[200%] max-w-none select-none object-fill"
-              style={{ left: "-100%" }}
+              className="absolute inset-y-0 right-0 h-full w-full object-cover object-right select-none"
             />
           </motion.div>
         </div>
