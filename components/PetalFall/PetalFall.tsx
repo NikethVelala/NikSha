@@ -26,7 +26,7 @@ const petals = [
 export default function PetalFall() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[75] overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[95] overflow-hidden"
       aria-hidden="true"
     >
       {petals.map((petal, index) => (
