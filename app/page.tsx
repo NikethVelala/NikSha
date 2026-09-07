@@ -4,8 +4,6 @@ import Hero from "@/components/Hero/Hero";
 import Welcome from "@/components/Welcome/Welcome";
 import Story from "@/components/Story/Story";
 import Gallery from "@/components/Gallery/Gallery";
-import Timeline from "@/components/Timeline/Timeline";
-import Venue from "@/components/Venue/Venue";
 import Footer from "@/components/Footer/Footer";
 
 export default function Home() {
@@ -17,8 +15,6 @@ export default function Home() {
       <PetalFall />
       <Welcome />
       <Story />
-      <Timeline />
-      <Venue />
       <Gallery />
       <Footer />
     </>
