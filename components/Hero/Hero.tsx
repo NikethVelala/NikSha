@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
+const curtainImage = "/images/curtain-reference.webp";
+
 export default function Hero() {
   const [opening, setOpening] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -56,12 +58,11 @@ export default function Hero() {
             transition={{ duration: 2.75, ease: [0.76, 0, 0.24, 1] }}
             className="absolute inset-y-0 left-0 w-1/2 overflow-hidden bg-[#d4a66d] will-change-transform"
           >
-            <div
-              className="absolute inset-0 bg-cover bg-left bg-no-repeat"
-              style={{
-                backgroundImage: "url('/images/curtain-reference.webp')",
-                backgroundSize: "200% 100%",
-              }}
+            <img
+              src={curtainImage}
+              alt=""
+              draggable={false}
+              className="absolute inset-y-0 left-0 h-full w-[200%] max-w-none select-none object-fill"
             />
           </motion.div>
 
@@ -70,12 +71,12 @@ export default function Hero() {
             transition={{ duration: 2.75, ease: [0.76, 0, 0.24, 1] }}
             className="absolute inset-y-0 right-0 w-1/2 overflow-hidden bg-[#d4a66d] will-change-transform"
           >
-            <div
-              className="absolute inset-0 bg-cover bg-right bg-no-repeat"
-              style={{
-                backgroundImage: "url('/images/curtain-reference.webp')",
-                backgroundSize: "200% 100%",
-              }}
+            <img
+              src={curtainImage}
+              alt=""
+              draggable={false}
+              className="absolute inset-y-0 h-full w-[200%] max-w-none select-none object-fill"
+              style={{ left: "-100%" }}
             />
           </motion.div>
         </div>
