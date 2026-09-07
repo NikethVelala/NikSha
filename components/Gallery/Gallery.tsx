@@ -162,6 +162,7 @@ export default function Gallery() {
               <div className="mt-3 flex w-full max-w-3xl items-end justify-between gap-4 border-t border-ivory/10 pt-3 sm:mt-4 sm:pt-4">
                 <figcaption className="min-w-0 text-left">
                   <p className="mb-1 text-[8px] uppercase tracking-[0.28em] text-champagne/70">{String(selected + 1).padStart(2, "0")} <span className="text-ivory/25">/</span> {String(images.length).padStart(2, "0")}</p>
+                  <p className="mb-1 text-[8px] uppercase tracking-[0.28em] text-ivory/35">{images[selected].label}</p>
                   <span className="block font-heading text-base italic leading-snug text-ivory/85 sm:text-2xl">{images[selected].caption}</span>
                 </figcaption>
                 <p className="shrink-0 text-right text-[7px] uppercase tracking-[0.24em] text-ivory/30 sm:hidden">Swipe<br />to explore</p>
@@ -191,20 +192,27 @@ function GalleryImage({ image, index, className = "", aspect, onOpen }: GalleryI
       transition={{ duration: 0.95, delay: (index % 2) * 0.1, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
-      <button type="button" onClick={onOpen} className="group block w-full touch-manipulation text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose focus-visible:ring-offset-4 focus-visible:ring-offset-paper" aria-label={`Open memory ${index + 1}`}>
+      <button type="button" onClick={onOpen} className="group block w-full touch-manipulation text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose focus-visible:ring-offset-4 focus-visible:ring-offset-paper" aria-label={`Open memory ${index + 1}: ${image.label}`}>
         <div className={`relative overflow-hidden bg-[#eee8df] shadow-[0_16px_45px_rgba(73,55,35,0.08)] ${aspect === "hero" ? "aspect-[4/3] md:aspect-[16/8]" : aspect === "wide" ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-[4/5]"}`}>
           <motion.div className="absolute inset-0" whileHover={{ scale: 1.035 }} transition={{ duration: 1.4, ease: "easeOut" }}>
             <Image src={image.src} alt={`Niketh and Sirisha memory ${index + 1}`} fill sizes="(max-width: 768px) 100vw, 80vw" className="object-contain md:object-cover" />
           </motion.div>
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
           <div className="pointer-events-none absolute inset-3 border border-ivory/0 transition-colors duration-700 group-hover:border-ivory/45 sm:inset-5" />
-          <span className="pointer-events-none absolute left-4 top-4 text-[9px] uppercase tracking-[0.28em] text-ivory/0 transition-all duration-500 group-hover:text-ivory/80 sm:left-6 sm:top-6">{String(index + 1).padStart(2, "0")}</span>
+          <div className="pointer-events-none absolute left-4 top-4 flex items-center gap-2 opacity-0 transition-all duration-500 group-hover:opacity-100 sm:left-6 sm:top-6">
+            <span className="text-[9px] uppercase tracking-[0.28em] text-ivory/80">{String(index + 1).padStart(2, "0")}</span>
+            <span className="h-px w-5 bg-champagne/70" />
+            <span className="text-[8px] uppercase tracking-[0.2em] text-ivory/70">{image.label}</span>
+          </div>
           <span className="pointer-events-none absolute bottom-4 right-4 translate-y-2 border border-ivory/50 bg-charcoal/20 px-3 py-2 text-[8px] uppercase tracking-[0.25em] text-ivory opacity-0 backdrop-blur-sm transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 sm:bottom-6 sm:right-6">View Memory</span>
         </div>
       </button>
       <figcaption className="mt-3 flex gap-3 sm:mt-4">
         <span className="pt-1 text-[8px] font-medium tracking-[0.25em] text-champagne/80">{String(index + 1).padStart(2, "0")}</span>
-        <span className="max-w-lg font-heading text-lg leading-snug text-charcoal/70 sm:text-2xl">{image.caption}</span>
+        <span className="min-w-0">
+          <span className="block text-[8px] uppercase tracking-[0.24em] text-rose/80">{image.label}</span>
+          <span className="mt-1 block max-w-lg font-heading text-lg leading-snug text-charcoal/70 sm:text-2xl">{image.caption}</span>
+        </span>
       </figcaption>
     </motion.figure>
   );
