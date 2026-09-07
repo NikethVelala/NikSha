@@ -4,6 +4,12 @@ import { motion } from "framer-motion";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
 
+const chapters = [
+  { number: "01", title: "School Days", eyebrow: "Where it began" },
+  { number: "02", title: "A Friendship", eyebrow: "What grew between us" },
+  { number: "03", title: "Something More", eyebrow: "When friendship became love" },
+];
+
 function KolamOrnament() {
   return (
     <div aria-hidden="true" className="mx-auto mt-8 flex h-14 w-44 items-center justify-center text-champagne">
@@ -16,74 +22,104 @@ function KolamOrnament() {
   );
 }
 
+function ChapterMarker({ number, title, eyebrow }: (typeof chapters)[number]) {
+  return (
+    <div className="flex items-center gap-5 sm:gap-7">
+      <span className="font-heading text-5xl leading-none text-champagne/70 sm:text-6xl">{number}</span>
+      <span className="h-px w-10 bg-champagne/50 sm:w-16" />
+      <div>
+        <p className="text-[9px] uppercase tracking-[0.32em] text-rose sm:text-[10px]">{eyebrow}</p>
+        <p className="mt-1 font-heading text-2xl text-charcoal sm:text-3xl">{title}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function Story() {
   return (
     <Section id="story" className="relative overflow-hidden bg-ivory">
-      <div className="mx-auto max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
+      <div className="mx-auto max-w-6xl">
+        <motion.header
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-          className="max-w-3xl"
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="mx-auto max-w-4xl text-center"
         >
-          <p className="text-xs uppercase tracking-[0.45em] text-rose">Chapter II</p>
-          <div className="mt-5 h-px w-12 bg-champagne" />
-          <h2 className="mt-7 font-heading text-6xl leading-none text-charcoal sm:text-7xl">
+          <p className="text-[10px] uppercase tracking-[0.5em] text-rose sm:text-xs">Chapter II · Our Story</p>
+          <h2 className="mt-6 font-heading text-6xl leading-[0.9] text-charcoal sm:text-8xl">
             {wedding.story.title}
           </h2>
-          <p className="mt-10 max-w-2xl font-heading text-3xl leading-tight text-stone-700 sm:text-4xl">
+          <p className="mx-auto mt-8 max-w-2xl font-heading text-2xl leading-relaxed text-charcoal/65 sm:mt-10 sm:text-3xl">
             {wedding.story.intro}
           </p>
           <KolamOrnament />
-        </motion.div>
+        </motion.header>
 
         <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.15, ease: "easeOut" }}
-          className="relative mt-14 sm:mt-18"
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="relative mt-10 sm:mt-16"
         >
-          <div className="relative overflow-hidden border-y border-champagne/50 bg-paper py-2">
-            <img
+          <div className="relative overflow-hidden border-y border-champagne/45 bg-paper p-1 sm:p-2">
+            <motion.img
               src="/images/story.jpg"
               alt="Niketh and Sirisha through the years"
+              whileHover={{ scale: 1.015 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
               className="h-auto w-full object-contain"
             />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/25 via-transparent to-transparent" />
+            <p className="absolute bottom-4 left-4 text-[9px] uppercase tracking-[0.35em] text-ivory/80 sm:bottom-7 sm:left-7">
+              From then · to now
+            </p>
           </div>
         </motion.div>
 
-        <div className="mt-20 sm:mt-24">
-          <div className="grid gap-0 md:grid-cols-[auto_1fr] md:gap-12">
-            <div className="hidden md:block">
-              <div className="sticky top-28 flex items-center gap-3 text-xs uppercase tracking-[0.35em] text-stone-400 [writing-mode:vertical-rl]">
-                Our Story
-              </div>
-            </div>
-
-            <div className="space-y-0">
-              {wedding.story.paragraphs.map((paragraph, index) => (
-                <motion.div
+        <div className="relative mt-20 sm:mt-28">
+          <div className="absolute bottom-0 left-[25px] top-0 hidden w-px bg-champagne/30 md:block" />
+          <div className="space-y-16 sm:space-y-24">
+            {wedding.story.paragraphs.map((paragraph, index) => {
+              const chapter = chapters[index];
+              return (
+                <motion.article
                   key={index}
-                  initial={{ opacity: 0, x: 24 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.7, delay: index * 0.08 }}
-                  className="relative border-l border-champagne/70 pb-12 pl-8 last:pb-0 sm:pl-10"
+                  initial={{ opacity: 0, y: 45 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-120px" }}
+                  transition={{ duration: 0.9, ease: "easeOut" }}
+                  className="relative md:grid md:grid-cols-[280px_1fr] md:gap-14"
                 >
-                  <span className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-champagne ring-4 ring-ivory" />
-                  <p className="mb-4 text-xs uppercase tracking-[0.3em] text-rose">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <p className="max-w-2xl text-base leading-8 text-stone-600 sm:text-lg sm:leading-9">
-                    {paragraph}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
+                  <div className="relative z-10 bg-ivory pb-6 md:pb-0 md:pt-1">
+                    <ChapterMarker {...chapter} />
+                  </div>
+
+                  <div className="max-w-2xl border-l border-champagne/50 pl-7 sm:pl-10 md:border-l-0 md:pl-0">
+                    <p className="font-heading text-2xl leading-relaxed text-charcoal sm:text-3xl sm:leading-[1.55]">
+                      {paragraph}
+                    </p>
+                  </div>
+                </motion.article>
+              );
+            })}
           </div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1 }}
+          className="mt-24 border-t border-champagne/30 pt-12 text-center sm:mt-32 sm:pt-16"
+        >
+          <p className="text-[9px] uppercase tracking-[0.45em] text-rose">And now</p>
+          <p className="mx-auto mt-5 max-w-2xl font-heading text-4xl leading-tight text-charcoal sm:text-5xl">
+            The next chapter is the one we get to write together.
+          </p>
+          <div aria-hidden="true" className="mx-auto mt-7 h-px w-20 bg-champagne/60" />
+        </motion.div>
       </div>
     </Section>
   );
