@@ -29,7 +29,7 @@ export default function Footer() {
           transition={{ duration: 0.9 }}
           className="mx-auto max-w-4xl text-center"
         >
-          <p className="text-xs uppercase tracking-[0.4em] text-champagne">Chapter VII</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-champagne">Chapter IV</p>
           <ClosingOrnament />
 
           <p className="mt-8 font-heading text-2xl text-ivory/70 sm:text-3xl">And so, our forever begins.</p>
