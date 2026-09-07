@@ -20,20 +20,8 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
       }}
       animate={
         opening
-          ? {
-              x: isLeft ? "-103%" : "103%",
-              scaleX: 0.72,
-              rotateY: isLeft ? -14 : 14,
-              skewY: isLeft ? -1.2 : 1.2,
-              opacity: 0.98,
-            }
-          : {
-              x: [0, isLeft ? "0.22%" : "-0.22%", isLeft ? "-0.12%" : "0.12%", 0],
-              scaleX: [1, 0.998, 1.002, 1],
-              rotateY: [0, isLeft ? -0.5 : 0.5, isLeft ? 0.35 : -0.35, 0],
-              skewY: [0, isLeft ? -0.15 : 0.15, isLeft ? 0.1 : -0.1, 0],
-              opacity: 1,
-            }
+          ? { x: isLeft ? "-103%" : "103%", scaleX: 0.72, rotateY: isLeft ? -14 : 14, skewY: isLeft ? -1.2 : 1.2, opacity: 0.98 }
+          : { x: [0, isLeft ? "0.22%" : "-0.22%", isLeft ? "-0.12%" : "0.12%", 0], scaleX: [1, 0.998, 1.002, 1], rotateY: [0, isLeft ? -0.5 : 0.5, isLeft ? 0.35 : -0.35, 0], skewY: [0, isLeft ? -0.15 : 0.15, isLeft ? 0.1 : -0.1, 0], opacity: 1 }
       }
       transition={
         opening
@@ -62,12 +50,9 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
         />
       </picture>
 
-      {/* Deep inner shadow makes the curtain feel like fabric folding toward the opening. */}
       <div
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-y-0 w-24 opacity-70 blur-xl ${
-          isLeft ? "right-[-2rem] bg-gradient-to-l" : "left-[-2rem] bg-gradient-to-r"
-        } from-black/45 via-black/15 to-transparent`}
+        className={`pointer-events-none absolute inset-y-0 w-24 opacity-70 blur-xl ${isLeft ? "right-[-2rem] bg-gradient-to-l" : "left-[-2rem] bg-gradient-to-r"} from-black/45 via-black/15 to-transparent`}
       />
     </motion.div>
   );
@@ -83,7 +68,7 @@ function Tieback({ side, opening }: { side: "left" | "right"; opening: boolean }
       animate={opening ? { x: isLeft ? "-24vw" : "24vw", opacity: 0 } : { x: 0, opacity: 1 }}
       transition={{ duration: 2.7, delay: 0.35, ease: [0.65, 0, 0.2, 1] }}
     >
-      <div className={`absolute top-1/2 h-px w-12 bg-gradient-to-${isLeft ? "l" : "r"} from-[#f1d09f]/0 via-[#d2a15d] to-[#8b5a25]/40`} />
+      <div className={`absolute top-1/2 h-px w-12 ${isLeft ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-[#f1d09f]/0 via-[#d2a15d] to-[#8b5a25]/40`} />
       <div className="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-[#f0d1ad]/80 bg-[#8a5425] shadow-[0_2px_12px_rgba(0,0,0,0.28)]" />
       <div className="absolute left-1/2 top-[calc(50%+10px)] h-7 w-1 -translate-x-1/2 rounded-full bg-gradient-to-b from-[#e8c184] to-[#7d4f1b]" />
     </motion.div>
@@ -123,9 +108,7 @@ export default function Hero() {
       setVisible(false);
       document.body.style.overflow = "";
       document.body.style.touchAction = "";
-      requestAnimationFrame(() => {
-        document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+      requestAnimationFrame(() => document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" }));
     }, 5350);
 
     return () => {
