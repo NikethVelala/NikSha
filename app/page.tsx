@@ -6,11 +6,13 @@ import Story from "@/components/Story/Story";
 import Gallery from "@/components/Gallery/Gallery";
 import Footer from "@/components/Footer/Footer";
 import LuxuryInteractions from "@/components/LuxuryInteractions/LuxuryInteractions";
+import MobileExperience from "@/components/MobileExperience/MobileExperience";
 
 export default function Home() {
   return (
     <>
       <div id="top" />
+      <MobileExperience />
       <LuxuryInteractions />
       <Navigation />
       <Hero />
