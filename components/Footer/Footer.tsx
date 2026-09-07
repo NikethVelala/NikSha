@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, RotateCcw } from "lucide-react";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
 
@@ -19,6 +19,11 @@ function ClosingOrnament() {
 }
 
 export default function Footer() {
+  const reliveOpening = () => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    window.location.reload();
+  };
+
   return (
     <footer id="footer" className="bg-forest text-ivory">
       <Section id="forever" className="relative overflow-hidden bg-transparent px-6 py-24 sm:px-8 sm:py-32 lg:px-12 lg:py-40">
@@ -66,10 +71,16 @@ export default function Footer() {
             </div>
           </div>
 
-          <a href="#top" className="group mx-auto mt-14 inline-flex min-h-12 items-center gap-3 border-b border-ivory/30 pb-2 text-[10px] uppercase tracking-[0.26em] text-ivory transition-colors hover:border-champagne hover:text-champagne sm:text-xs">
-            Back to the beginning
-            <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" strokeWidth={1.5} />
-          </a>
+          <div className="mt-14 flex flex-col items-center gap-5 sm:flex-row sm:justify-center sm:gap-8">
+            <a href="#top" className="group inline-flex min-h-12 items-center gap-3 border-b border-ivory/30 pb-2 text-[10px] uppercase tracking-[0.26em] text-ivory transition-colors hover:border-champagne hover:text-champagne sm:text-xs">
+              Back to the beginning
+              <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" strokeWidth={1.5} />
+            </a>
+            <button type="button" onClick={reliveOpening} className="group inline-flex min-h-12 items-center gap-3 border-b border-champagne/35 pb-2 text-[10px] uppercase tracking-[0.26em] text-champagne/85 transition-colors hover:border-champagne hover:text-champagne sm:text-xs">
+              Relive the opening
+              <RotateCcw className="h-3.5 w-3.5 transition-transform duration-500 group-hover:rotate-[-90deg]" strokeWidth={1.35} />
+            </button>
+          </div>
 
           <p className="mt-20 text-[9px] uppercase tracking-[0.38em] text-ivory/30">With love, NikSha</p>
         </motion.div>
