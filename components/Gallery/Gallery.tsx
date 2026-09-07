@@ -120,38 +120,52 @@ export default function Gallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#171310]/96 px-3 py-4 backdrop-blur-xl sm:px-8 sm:py-10"
+            className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[#120f0d]/[0.98] px-3 py-3 backdrop-blur-2xl sm:px-8 sm:py-7"
             onClick={closeLightbox}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <div aria-hidden="true" className="pointer-events-none absolute inset-5 border border-champagne/15 sm:inset-8" />
-            <button type="button" onClick={closeLightbox} className="absolute right-3 top-3 z-10 inline-flex h-12 w-12 items-center justify-center border border-ivory/20 text-ivory/80 transition-colors hover:border-champagne hover:text-champagne sm:right-7 sm:top-7" aria-label="Close photo viewer">
-              <X className="h-5 w-5" strokeWidth={1.2} />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-3 border border-champagne/20 sm:inset-6" />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-5 border border-ivory/[0.04] sm:inset-8" />
+
+            <div className="absolute left-5 top-5 z-10 sm:left-9 sm:top-9">
+              <p className="text-[8px] uppercase tracking-[0.34em] text-champagne/75 sm:text-[9px]">Our Journey</p>
+              <p className="mt-1 font-heading text-lg italic text-ivory/75 sm:text-xl">Memory archive</p>
+            </div>
+
+            <div className="absolute right-5 top-5 z-10 flex items-center gap-3 sm:right-9 sm:top-9">
+              <span className="hidden text-[9px] uppercase tracking-[0.3em] text-ivory/45 sm:inline">Esc</span>
+              <button type="button" onClick={(event) => { event.stopPropagation(); closeLightbox(); }} className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/25 bg-[#120f0d]/40 text-ivory/80 backdrop-blur-md transition-all hover:border-champagne hover:text-champagne active:scale-95 sm:h-12 sm:w-12" aria-label="Close photo viewer">
+                <X className="h-5 w-5" strokeWidth={1.15} />
+              </button>
+            </div>
+
+            <button type="button" onClick={(event) => { event.stopPropagation(); previous(); }} className="absolute left-3 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-ivory/15 bg-[#120f0d]/30 text-ivory/65 backdrop-blur-md transition-all hover:border-champagne hover:text-champagne active:scale-95 sm:left-7 sm:inline-flex" aria-label="Previous photo">
+              <ChevronLeft className="h-5 w-5" strokeWidth={1.15} />
             </button>
-            <button type="button" onClick={(event) => { event.stopPropagation(); previous(); }} className="absolute left-1 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center border border-ivory/20 text-ivory/75 transition-colors hover:border-champagne hover:text-champagne sm:inline-flex sm:left-7" aria-label="Previous photo">
-              <ChevronLeft className="h-5 w-5" strokeWidth={1.2} />
-            </button>
-            <button type="button" onClick={(event) => { event.stopPropagation(); next(); }} className="absolute right-1 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center border border-ivory/20 text-ivory/75 transition-colors hover:border-champagne hover:text-champagne sm:inline-flex sm:right-7" aria-label="Next photo">
-              <ChevronRight className="h-5 w-5" strokeWidth={1.2} />
+            <button type="button" onClick={(event) => { event.stopPropagation(); next(); }} className="absolute right-3 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-ivory/15 bg-[#120f0d]/30 text-ivory/65 backdrop-blur-md transition-all hover:border-champagne hover:text-champagne active:scale-95 sm:right-7 sm:inline-flex" aria-label="Next photo">
+              <ChevronRight className="h-5 w-5" strokeWidth={1.15} />
             </button>
 
             <motion.figure
               key={selected}
-              initial={{ opacity: 0, scale: 0.97, y: 10 }}
+              initial={{ opacity: 0, scale: 0.975, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="relative flex max-h-full w-full max-w-5xl touch-pan-y flex-col items-center justify-center"
+              className="relative flex h-full max-h-full w-full max-w-5xl touch-pan-y flex-col items-center justify-center px-1 pb-4 pt-16 sm:px-8 sm:pb-3 sm:pt-14"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="relative h-[70svh] w-full sm:h-[75svh]">
+              <div className="relative min-h-0 w-full flex-1">
                 <Image src={images[selected].src} alt={`Niketh and Sirisha memory ${selected + 1}`} fill sizes="100vw" className="object-contain" priority />
               </div>
-              <div className="mt-3 flex items-center gap-3 text-[9px] uppercase tracking-[0.3em] text-champagne/70 sm:mt-4">
-                <span>{String(selected + 1).padStart(2, "0")}</span><span className="h-px w-8 bg-champagne/35" /><span>{String(images.length).padStart(2, "0")}</span>
+
+              <div className="mt-3 flex w-full max-w-3xl items-end justify-between gap-4 border-t border-ivory/10 pt-3 sm:mt-4 sm:pt-4">
+                <figcaption className="min-w-0 text-left">
+                  <p className="mb-1 text-[8px] uppercase tracking-[0.28em] text-champagne/70">{String(selected + 1).padStart(2, "0")} <span className="text-ivory/25">/</span> {String(images.length).padStart(2, "0")}</p>
+                  <span className="block font-heading text-base italic leading-snug text-ivory/85 sm:text-2xl">{images[selected].caption}</span>
+                </figcaption>
+                <p className="shrink-0 text-right text-[7px] uppercase tracking-[0.24em] text-ivory/30 sm:hidden">Swipe<br />to explore</p>
               </div>
-              <figcaption className="mt-2 max-w-2xl px-8 text-center font-heading text-lg italic text-ivory/80 sm:mt-3 sm:px-0 sm:text-2xl">{images[selected].caption}</figcaption>
-              <p className="mt-2 text-[8px] uppercase tracking-[0.3em] text-ivory/35 sm:hidden">Swipe to explore</p>
             </motion.figure>
           </motion.div>
         )}
