@@ -36,6 +36,7 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
 export default function Hero() {
   const [opening, setOpening] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [reveal, setReveal] = useState(false);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -57,13 +58,17 @@ export default function Hero() {
 
   useEffect(() => {
     if (!opening) return;
-    const timer = window.setTimeout(() => {
+    const revealTimer = window.setTimeout(() => setReveal(true), 2650);
+    const finishTimer = window.setTimeout(() => {
       setVisible(false);
       document.body.style.overflow = "";
       document.body.style.touchAction = "";
       requestAnimationFrame(() => document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" }));
-    }, 3450);
-    return () => window.clearTimeout(timer);
+    }, 5450);
+    return () => {
+      window.clearTimeout(revealTimer);
+      window.clearTimeout(finishTimer);
+    };
   }, [opening]);
 
   const open = () => { if (!opening) setOpening(true); };
@@ -86,7 +91,37 @@ export default function Hero() {
       <div className="absolute inset-0 overflow-hidden">
         <motion.div animate={opening ? { scale: 1.04, opacity: 1 } : { scale: 1, opacity: 0.18 }} transition={{ duration: 3.1, ease: [0.76, 0, 0.24, 1] }} className="absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-[#241205]/35" />
+
+        <motion.div
+          className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center"
+          initial={false}
+          animate={reveal ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+          transition={{ duration: 1.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="max-w-3xl">
+            <motion.p
+              className="text-[10px] uppercase tracking-[0.45em] text-champagne-light sm:text-xs"
+              animate={reveal ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+              transition={{ duration: 1, delay: 0.15 }}
+            >
+              Together Forever
+            </motion.p>
+            <motion.h1
+              className="mt-5 font-heading text-6xl leading-none text-white drop-shadow-[0_3px_18px_rgba(0,0,0,0.35)] sm:text-8xl lg:text-9xl"
+              animate={reveal ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
+              transition={{ duration: 1.4, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {wedding.couple.groom} <span className="text-champagne-light">&amp;</span> {wedding.couple.bride}
+            </motion.h1>
+            <motion.div
+              className="mx-auto mt-6 h-px w-20 bg-champagne-light/75"
+              animate={reveal ? { opacity: 1, scaleX: 1 } : { opacity: 0, scaleX: 0.2 }}
+              transition={{ duration: 1, delay: 0.65 }}
+            />
+          </div>
+        </motion.div>
       </div>
+
       {visible && (
         <div className="pointer-events-auto fixed inset-0 z-[90] h-[100dvh] w-[100vw] overflow-hidden" aria-hidden="true">
           <CurtainHalf side="left" opening={opening} />
