@@ -1,4 +1,5 @@
 import Navigation from "@/components/Navigation/Navigation";
+import PetalFall from "@/components/PetalFall/PetalFall";
 import Hero from "@/components/Hero/Hero";
 import Welcome from "@/components/Welcome/Welcome";
 import Story from "@/components/Story/Story";
@@ -14,6 +15,7 @@ export default function Home() {
       <div id="top" />
       <Navigation />
       <Hero />
+      <PetalFall />
       <Welcome />
       <Story />
       <Celebration />
