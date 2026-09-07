@@ -14,6 +14,7 @@ const links = [
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState("#welcome");
   const scrollYRef = useRef(0);
 
   useEffect(() => {
@@ -21,6 +22,30 @@ export default function Navigation() {
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = links
+      .map((link) => document.querySelector(link.href))
+      .filter((section): section is Element => Boolean(section));
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible[0]?.target.id) {
+          setActiveHref(`#${visible[0].target.id}`);
+        }
+      },
+      { rootMargin: "-18% 0px -62% 0px", threshold: [0.08, 0.2, 0.45, 0.7] },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -74,18 +99,29 @@ export default function Navigation() {
           </div>
 
           <nav className="grid border-y border-line" aria-label="Invitation index">
-            {links.map((link) => (
-              <a key={link.href} href={link.href} onClick={closeMenu} className="group grid min-h-[5.6rem] grid-cols-[2.1rem_1fr_auto] items-center gap-3 border-b border-line py-5 last:border-b-0 sm:min-h-[7rem] sm:grid-cols-[4rem_1fr_auto] sm:gap-5 sm:py-6">
-                <span className="self-start pt-1 text-[9px] tracking-[0.22em] text-muted sm:text-[10px] sm:tracking-[0.25em]">{link.number}</span>
-                <span className="min-w-0">
-                  <span className="block font-heading text-[2.15rem] leading-none text-charcoal transition-transform duration-300 group-hover:translate-x-1 sm:text-5xl lg:text-6xl">{link.label}</span>
-                  <span className="mt-2 block text-[9px] uppercase tracking-[0.2em] text-muted sm:text-[10px] sm:tracking-[0.25em]">{link.note}</span>
-                </span>
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-muted transition-all duration-300 group-hover:border-champagne group-hover:text-gold sm:h-10 sm:w-10">
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={1.25} />
-                </span>
-              </a>
-            ))}
+            {links.map((link) => {
+              const active = activeHref === link.href;
+
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMenu}
+                  aria-current={active ? "true" : undefined}
+                  className={`group relative grid min-h-[5.6rem] grid-cols-[2.1rem_1fr_auto] items-center gap-3 border-b border-line py-5 last:border-b-0 sm:min-h-[7rem] sm:grid-cols-[4rem_1fr_auto] sm:gap-5 sm:py-6 ${active ? "bg-champagne/[0.045]" : ""}`}
+                >
+                  <span className={`absolute inset-y-0 left-0 w-px origin-center transition-transform duration-500 ${active ? "scale-y-100 bg-champagne" : "scale-y-0 bg-transparent"}`} />
+                  <span className={`self-start pt-1 text-[9px] tracking-[0.22em] transition-colors duration-300 sm:text-[10px] sm:tracking-[0.25em] ${active ? "text-gold" : "text-muted"}`}>{link.number}</span>
+                  <span className="min-w-0">
+                    <span className={`block font-heading text-[2.15rem] leading-none transition-all duration-300 sm:text-5xl lg:text-6xl ${active ? "translate-x-1 text-charcoal" : "text-charcoal group-hover:translate-x-1"}`}>{link.label}</span>
+                    <span className={`mt-2 block text-[9px] uppercase tracking-[0.2em] transition-colors duration-300 sm:text-[10px] sm:tracking-[0.25em] ${active ? "text-gold/80" : "text-muted"}`}>{link.note}</span>
+                  </span>
+                  <span className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-300 sm:h-10 sm:w-10 ${active ? "border-champagne text-gold" : "border-line text-muted group-hover:border-champagne group-hover:text-gold"}`}>
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={1.25} />
+                  </span>
+                </a>
+              );
+            })}
           </nav>
 
           <div className="mt-8 flex items-center justify-between gap-5 sm:mt-10">
