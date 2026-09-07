@@ -7,10 +7,8 @@ import { wedding } from "@/data/wedding";
 const links = [
   { number: "01", label: "Invitation", href: "#welcome" },
   { number: "02", label: "Our Story", href: "#story" },
-  { number: "03", label: "The Day", href: "#timeline" },
-  { number: "04", label: "The Place", href: "#venue" },
-  { number: "05", label: "Memories", href: "#gallery" },
-  { number: "06", label: "Forever", href: "#forever" },
+  { number: "03", label: "Memories", href: "#gallery" },
+  { number: "04", label: "Forever", href: "#forever" },
 ];
 
 export default function Navigation() {
