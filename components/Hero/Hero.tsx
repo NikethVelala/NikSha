@@ -13,22 +13,8 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
   return (
     <motion.div
       className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} h-[100dvh] w-1/2 min-w-0 overflow-hidden will-change-transform`}
-      style={{
-        perspective: "1800px",
-        transformStyle: "preserve-3d",
-        transformOrigin: isLeft ? "right center" : "left center",
-      }}
-      animate={opening ? {
-        x: isLeft ? "-102%" : "102%",
-        scaleX: 0.78,
-        rotateY: isLeft ? -12 : 12,
-        skewY: isLeft ? -0.8 : 0.8,
-      } : {
-        x: [0, isLeft ? "0.22%" : "-0.22%", isLeft ? "-0.12%" : "0.12%", 0],
-        scaleX: [1, 0.998, 1.002, 1],
-        rotateY: [0, isLeft ? -0.5 : 0.5, isLeft ? 0.35 : -0.35, 0],
-        skewY: [0, isLeft ? -0.15 : 0.15, isLeft ? 0.1 : -0.1, 0],
-      }}
+      style={{ perspective: "1800px", transformStyle: "preserve-3d", transformOrigin: isLeft ? "right center" : "left center" }}
+      animate={opening ? { x: isLeft ? "-102%" : "102%", scaleX: 0.78, rotateY: isLeft ? -12 : 12, skewY: isLeft ? -0.8 : 0.8 } : { x: [0, isLeft ? "0.22%" : "-0.22%", isLeft ? "-0.12%" : "0.12%", 0], scaleX: [1, 0.998, 1.002, 1], rotateY: [0, isLeft ? -0.5 : 0.5, isLeft ? 0.35 : -0.35, 0], skewY: [0, isLeft ? -0.15 : 0.15, isLeft ? 0.1 : -0.1, 0] }}
       transition={opening ? { duration: 3.15, ease: [0.65, 0, 0.2, 1] } : { duration: 7.5, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
     >
       <picture>
@@ -52,9 +38,29 @@ export default function Hero() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    const previousTouchAction = document.body.style.touchAction;
+
+    if (!opening && visible) {
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+    } else {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.touchAction = previousTouchAction;
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.touchAction = previousTouchAction;
+    };
+  }, [opening, visible]);
+
+  useEffect(() => {
     if (!opening) return;
     const timer = window.setTimeout(() => {
       setVisible(false);
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
       requestAnimationFrame(() => document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" }));
     }, 3450);
     return () => window.clearTimeout(timer);
@@ -78,17 +84,25 @@ export default function Hero() {
     >
       <div className="absolute inset-0 bg-[#4a2b16]" />
       <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={opening ? { scale: 1.04, opacity: 1 } : { scale: 1, opacity: 0.18 }}
-          transition={{ duration: 3.1, ease: [0.76, 0, 0.24, 1] }}
-          className="absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center"
-        />
+        <motion.div animate={opening ? { scale: 1.04, opacity: 1 } : { scale: 1, opacity: 0.18 }} transition={{ duration: 3.1, ease: [0.76, 0, 0.24, 1] }} className="absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-[#241205]/35" />
       </div>
       {visible && (
-        <div className="pointer-events-none fixed inset-0 z-[90] h-[100dvh] w-[100vw] overflow-hidden" aria-hidden="true">
+        <div className="pointer-events-auto fixed inset-0 z-[90] h-[100dvh] w-[100vw] overflow-hidden" aria-hidden="true">
           <CurtainHalf side="left" opening={opening} />
           <CurtainHalf side="right" opening={opening} />
+          {!opening && (
+            <motion.div
+              className="pointer-events-none absolute inset-x-0 bottom-[10%] z-[100] flex justify-center px-6"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: [0.65, 1, 0.65], y: [8, 0, 8] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="rounded-full border border-white/55 bg-black/20 px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.28em] text-white backdrop-blur-[2px]">
+                Tap to Open
+              </div>
+            </motion.div>
+          )}
         </div>
       )}
       <div className="sr-only">{wedding.couple.groom} &amp; {wedding.couple.bride}. Tap anywhere to open the wedding invitation.</div>
