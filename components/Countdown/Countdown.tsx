@@ -33,29 +33,34 @@ export default function Countdown({ compact = false }: { compact?: boolean }) {
   if (compact) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-20px" }}
-        transition={{ duration: 0.7 }}
-        className="mx-auto mt-7 max-w-xl px-2 text-center sm:mt-9"
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="mx-auto mt-8 max-w-xl px-3 sm:mt-10"
       >
-        <div className="flex items-center justify-center gap-3 text-[#a8783f]/60 sm:gap-4">
-          <span className="h-px w-12 bg-[#a8783f]/30 sm:w-20" />
-          <span className="text-[9px]">✦</span>
-          <span className="h-px w-12 bg-[#a8783f]/30 sm:w-20" />
-        </div>
-        <p className="mt-4 text-[8px] uppercase tracking-[0.36em] text-[#756957] sm:text-[9px] sm:tracking-[0.42em]">Counting down to our forever</p>
-        <div className="mt-2 flex items-baseline justify-center gap-2 sm:gap-3">
-          <span className="font-heading text-5xl leading-none text-[#292622] sm:text-6xl">{timeLeft.days}</span>
-          <span className="font-heading text-lg italic text-[#8c6130] sm:text-xl">days to go</span>
-        </div>
-        <div className="mx-auto mt-3 flex items-center justify-center gap-4 text-[#6f665d] sm:gap-6">
-          {secondaryUnits.map((unit) => (
-            <div key={unit} className="flex items-baseline gap-1">
-              <span className="font-heading text-lg leading-none text-[#292622] sm:text-xl">{String(timeLeft[unit]).padStart(2, "0")}</span>
-              <span className="text-[7px] uppercase tracking-[0.18em] text-[#756957]">{unit.slice(0, 1)}</span>
+        <div className="relative overflow-hidden border-y border-[#a8783f]/25 py-5 sm:py-6">
+          <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 h-20 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#c49a60]/10 blur-2xl" />
+          <div className="relative text-center">
+            <div className="flex items-center justify-center gap-3 text-[#a8783f]/65 sm:gap-4">
+              <span className="h-px w-10 bg-[#a8783f]/30 sm:w-16" />
+              <span className="text-[8px]">✦</span>
+              <span className="h-px w-10 bg-[#a8783f]/30 sm:w-16" />
             </div>
-          ))}
+            <p className="mt-3 text-[8px] uppercase tracking-[0.4em] text-[#756957] sm:mt-4 sm:text-[9px] sm:tracking-[0.45em]">Until we say I do</p>
+            <div className="mt-2 flex items-baseline justify-center gap-2 sm:mt-1 sm:gap-3">
+              <span className="font-heading text-[3.4rem] leading-none text-[#292622] sm:text-6xl">{timeLeft.days}</span>
+              <span className="font-heading text-lg italic text-[#8c6130] sm:text-xl">days</span>
+            </div>
+            <div className="mx-auto mt-4 grid max-w-sm grid-cols-3 border-t border-[#a8783f]/18 pt-3 sm:mt-5 sm:pt-4">
+              {secondaryUnits.map((unit) => (
+                <div key={unit} className="border-r border-[#a8783f]/18 last:border-r-0">
+                  <p className="font-heading text-xl leading-none text-[#292622] sm:text-2xl">{String(timeLeft[unit]).padStart(2, "0")}</p>
+                  <p className="mt-1 text-[7px] uppercase tracking-[0.22em] text-[#756957] sm:text-[8px]">{unit}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </motion.div>
     );
