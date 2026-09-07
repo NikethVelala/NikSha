@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const petals = [
   { left: "2%", delay: 0, duration: 16, drift: 52, rotate: 24, size: 10, tone: "#a9152e", depth: "far" },
@@ -24,6 +25,14 @@ const petals = [
 ];
 
 export default function PetalFall() {
+  const [opening, setOpening] = useState(false);
+
+  useEffect(() => {
+    const handleOpen = () => setOpening(true);
+    window.addEventListener("niksha-curtain-open", handleOpen);
+    return () => window.removeEventListener("niksha-curtain-open", handleOpen);
+  }, []);
+
   return (
     <div
       className="pointer-events-none fixed inset-0 z-[95] overflow-hidden"
@@ -36,13 +45,19 @@ export default function PetalFall() {
           animate={{
             x: [0, petal.drift, petal.drift * -0.55, petal.drift * 0.8, 0],
             y: ["-12vh", "22vh", "52vh", "82vh", "116vh"],
-            opacity: [0, petal.depth === "near" ? 0.82 : 0.72, petal.depth === "near" ? 0.92 : 0.82, 0.62, 0],
+            opacity: [
+              0,
+              opening ? (petal.depth === "near" ? 0.82 : 0.68) : 0.22,
+              opening ? (petal.depth === "near" ? 0.92 : 0.78) : 0.26,
+              opening ? 0.62 : 0.2,
+              0,
+            ],
             rotate: [petal.rotate, petal.rotate + 100, petal.rotate + 210, petal.rotate + 310, petal.rotate + 420],
             scale: [0.78, 1, 0.92, 1.04, 0.8],
           }}
           transition={{
             duration: petal.duration,
-            delay: petal.delay,
+            delay: opening ? petal.delay * 0.18 : petal.delay,
             repeat: Infinity,
             ease: "linear",
           }}
