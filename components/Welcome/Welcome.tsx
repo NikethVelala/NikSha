@@ -53,8 +53,6 @@ export default function Welcome() {
 
     html.style.overflow = "hidden";
     body.style.overflow = "hidden";
-    html.style.touchAction = "none";
-    body.style.touchAction = "none";
     html.style.overscrollBehavior = "none";
     body.style.overscrollBehavior = "none";
 
@@ -85,118 +83,126 @@ export default function Welcome() {
   };
 
   return (
-    <Section id="welcome" className="relative overflow-hidden bg-[#f5eee2] py-14 sm:py-20">
+    <Section
+      id="welcome"
+      className="relative h-[calc(100dvh-5rem)] min-h-[calc(100svh-5rem)] overflow-hidden bg-[#f5eee2] py-4 sm:py-6"
+    >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(183,126,59,0.13),transparent_34%)]" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        className="relative mx-auto max-w-xl px-3 sm:max-w-2xl sm:px-6"
-      >
-        <div className="relative overflow-hidden border-[1.5px] border-[#a8783f]/65 bg-[#fcfaf4] px-6 py-8 shadow-[0_16px_55px_rgba(73,55,35,0.11)] sm:px-12 sm:py-11">
-          <div aria-hidden="true" className="pointer-events-none absolute inset-[5px] border border-[#a8783f]/35" />
-          <div aria-hidden="true" className="pointer-events-none absolute inset-[10px] border border-[#a8783f]/15" />
-          <CornerFlourish position="tl" />
-          <CornerFlourish position="tr" />
-          <CornerFlourish position="bl" />
-          <CornerFlourish position="br" />
+      <div className="relative h-[calc(100dvh-7rem)] min-h-[calc(100svh-7rem)] overflow-y-auto overscroll-y-contain touch-pan-y px-1 pb-10 pt-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:h-[calc(100dvh-7rem)] sm:min-h-[calc(100svh-7rem)] sm:px-2 sm:pb-12 sm:pt-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="mx-auto max-w-xl sm:max-w-2xl"
+        >
+          <div className="relative overflow-hidden border-[1.5px] border-[#a8783f]/65 bg-[#fcfaf4] px-6 py-8 shadow-[0_16px_55px_rgba(73,55,35,0.11)] sm:px-12 sm:py-11">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-[5px] border border-[#a8783f]/35" />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-[10px] border border-[#a8783f]/15" />
+            <CornerFlourish position="tl" />
+            <CornerFlourish position="tr" />
+            <CornerFlourish position="bl" />
+            <CornerFlourish position="br" />
 
-          <div className="relative text-center">
-            <p className="font-heading text-xl tracking-wide text-[#8c6130] sm:text-2xl">శ్రీ</p>
-            <p className="mt-1 font-heading text-xs tracking-[0.18em] text-[#8c6130] sm:text-sm">శుభమస్తు</p>
-            <p className="mx-auto mt-4 max-w-sm text-[8px] uppercase leading-5 tracking-[0.3em] text-[#756957] sm:text-[10px] sm:tracking-[0.4em]">
-              With the blessings of our parents &amp; elders
-            </p>
-
-            <div className="mt-5 flex justify-center sm:mt-6">
-              <CardOrnament />
-            </div>
-
-            <p className="mt-5 text-[8px] uppercase tracking-[0.34em] text-[#93673b] sm:text-[9px]">The Wedding Invitation</p>
-
-            <div className="mt-4 flex items-center justify-center gap-2.5 sm:gap-5">
-              <h1 className="font-heading text-[3rem] leading-none text-[#292622] sm:text-6xl">{wedding.couple.groom}</h1>
-              <span className="font-heading text-2xl text-[#a8783f] sm:text-3xl">&amp;</span>
-              <h1 className="font-heading text-[3rem] leading-none text-[#292622] sm:text-6xl">{wedding.couple.bride}</h1>
-            </div>
-
-            <p className="mx-auto mt-4 max-w-sm font-heading text-base italic leading-relaxed text-[#5e554c] sm:mt-5 sm:text-xl">
-              We cordially invite you to grace the occasion with your presence and blessings.
-            </p>
-
-            <div className="my-6 flex items-center justify-center gap-3 sm:my-7">
-              <span className="h-px w-10 bg-[#a8783f]/40 sm:w-16" />
-              <span className="text-[8px] text-[#a8783f]">✦</span>
-              <span className="h-px w-10 bg-[#a8783f]/40 sm:w-16" />
-            </div>
-
-            <div>
-              <p className="text-[8px] uppercase tracking-[0.34em] text-[#756957] sm:text-[9px]">Wednesday</p>
-              <p className="mt-1.5 font-heading text-3xl text-[#292622] sm:text-5xl">18 November 2026</p>
-            </div>
-
-            <div className="mx-auto mt-6 grid max-w-md grid-cols-2 border-y border-[#a8783f]/35">
-              <div className="border-r border-[#a8783f]/35 px-2 py-4 sm:px-5 sm:py-5">
-                <p className="text-[8px] uppercase tracking-[0.25em] text-[#756957] sm:text-[9px]">Dinner</p>
-                <p className="mt-1.5 font-heading text-2xl text-[#292622] sm:text-3xl">8:00 PM</p>
-                <p className="mt-0.5 text-[7px] uppercase tracking-[0.16em] text-[#93673b] sm:text-[8px]">onwards</p>
-              </div>
-              <div className="px-2 py-4 sm:px-5 sm:py-5">
-                <p className="text-[8px] uppercase tracking-[0.25em] text-[#756957] sm:text-[9px]">Muhurtham</p>
-                <p className="mt-1.5 font-heading text-2xl text-[#292622] sm:text-3xl">10:05 PM</p>
-                <p className="mt-0.5 text-[7px] uppercase tracking-[0.16em] text-[#93673b] sm:text-[8px]">auspicious time</p>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <p className="text-[8px] uppercase tracking-[0.3em] text-[#756957] sm:text-[9px]">Venue</p>
-              <p className="mt-1.5 font-heading text-3xl text-[#292622] sm:text-4xl">SB Square</p>
-              <p className="mx-auto mt-1.5 max-w-sm text-[11px] leading-5 text-[#6f665d] sm:text-sm sm:leading-6">
-                Chinna Bazaar · Rushikonda · Visakhapatnam, Andhra Pradesh
+            <div className="relative text-center">
+              <p className="font-heading text-xl tracking-wide text-[#8c6130] sm:text-2xl">శ్రీ</p>
+              <p className="mt-1 font-heading text-xs tracking-[0.18em] text-[#8c6130] sm:text-sm">శుభమస్తు</p>
+              <p className="mx-auto mt-4 max-w-sm text-[8px] uppercase leading-5 tracking-[0.3em] text-[#756957] sm:text-[10px] sm:tracking-[0.4em]">
+                With the blessings of our parents &amp; elders
               </p>
 
-              <a
-                href={wedding.ceremony.venue.maps}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex min-h-10 items-center gap-2 border border-[#8c6130] bg-[#8c6130] px-5 py-2 text-[8px] font-medium uppercase tracking-[0.23em] text-white transition-colors hover:bg-[#714b24] sm:mt-5 sm:px-6 sm:text-[9px]"
-              >
-                Open in Google Maps
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
+              <div className="mt-5 flex justify-center sm:mt-6">
+                <CardOrnament />
+              </div>
 
-            <div className="mt-6 flex justify-center sm:mt-7">
-              <CardOrnament />
+              <p className="mt-5 text-[8px] uppercase tracking-[0.34em] text-[#93673b] sm:text-[9px]">The Wedding Invitation</p>
+
+              <div className="mt-4 flex items-center justify-center gap-2.5 sm:gap-5">
+                <h1 className="font-heading text-[3rem] leading-none text-[#292622] sm:text-6xl">{wedding.couple.groom}</h1>
+                <span className="font-heading text-2xl text-[#a8783f] sm:text-3xl">&amp;</span>
+                <h1 className="font-heading text-[3rem] leading-none text-[#292622] sm:text-6xl">{wedding.couple.bride}</h1>
+              </div>
+
+              <p className="mx-auto mt-4 max-w-sm font-heading text-base italic leading-relaxed text-[#5e554c] sm:mt-5 sm:text-xl">
+                We cordially invite you to grace the occasion with your presence and blessings.
+              </p>
+
+              <div className="my-6 flex items-center justify-center gap-3 sm:my-7">
+                <span className="h-px w-10 bg-[#a8783f]/40 sm:w-16" />
+                <span className="text-[8px] text-[#a8783f]">✦</span>
+                <span className="h-px w-10 bg-[#a8783f]/40 sm:w-16" />
+              </div>
+
+              <div>
+                <p className="text-[8px] uppercase tracking-[0.34em] text-[#756957] sm:text-[9px]">Wednesday</p>
+                <p className="mt-1.5 font-heading text-3xl text-[#292622] sm:text-5xl">18 November 2026</p>
+              </div>
+
+              <div className="mx-auto mt-6 grid max-w-md grid-cols-2 border-y border-[#a8783f]/35">
+                <div className="border-r border-[#a8783f]/35 px-2 py-4 sm:px-5 sm:py-5">
+                  <p className="text-[8px] uppercase tracking-[0.25em] text-[#756957] sm:text-[9px]">Dinner</p>
+                  <p className="mt-1.5 font-heading text-2xl text-[#292622] sm:text-3xl">8:00 PM</p>
+                  <p className="mt-0.5 text-[7px] uppercase tracking-[0.16em] text-[#93673b] sm:text-[8px]">onwards</p>
+                </div>
+                <div className="px-2 py-4 sm:px-5 sm:py-5">
+                  <p className="text-[8px] uppercase tracking-[0.25em] text-[#756957] sm:text-[9px]">Muhurtham</p>
+                  <p className="mt-1.5 font-heading text-2xl text-[#292622] sm:text-3xl">10:05 PM</p>
+                  <p className="mt-0.5 text-[7px] uppercase tracking-[0.16em] text-[#93673b] sm:text-[8px]">auspicious time</p>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <p className="text-[8px] uppercase tracking-[0.3em] text-[#756957] sm:text-[9px]">Venue</p>
+                <p className="mt-1.5 font-heading text-3xl text-[#292622] sm:text-4xl">SB Square</p>
+                <p className="mx-auto mt-1.5 max-w-sm text-[11px] leading-5 text-[#6f665d] sm:text-sm sm:leading-6">
+                  Chinna Bazaar · Rushikonda · Visakhapatnam, Andhra Pradesh
+                </p>
+
+                <a
+                  href={wedding.ceremony.venue.maps}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex min-h-10 items-center gap-2 border border-[#8c6130] bg-[#8c6130] px-5 py-2 text-[8px] font-medium uppercase tracking-[0.23em] text-white transition-colors hover:bg-[#714b24] sm:mt-5 sm:px-6 sm:text-[9px]"
+                >
+                  Open in Google Maps
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+
+              <div className="mt-6 flex justify-center sm:mt-7">
+                <CardOrnament />
+              </div>
             </div>
           </div>
-        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-20px" }}
-          transition={{ duration: 0.8, delay: 0.15 }}
-          className="px-4 pt-8 text-center sm:pt-10"
-        >
-          <p className="font-heading text-lg italic text-charcoal/60 sm:text-2xl">
-            If you would like to know how our story began…
-          </p>
-          <a
-            href="#story"
-            onClick={(event) => {
-              event.preventDefault();
-              openStory();
-            }}
-            className="mt-3 inline-flex min-h-11 items-center gap-2 border-b border-champagne/70 pb-1 text-[9px] font-medium uppercase tracking-[0.28em] text-charcoal transition-colors hover:text-rose sm:mt-4 sm:text-[10px]"
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="px-3 pb-3 pt-7 text-center sm:pb-4 sm:pt-9"
           >
-            Discover Our Story
-            <span aria-hidden="true">↓</span>
-          </a>
+            <p className="text-[8px] font-medium uppercase tracking-[0.32em] text-[#756957] sm:text-[9px]">
+              There&apos;s more to our story
+            </p>
+            <p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">
+              If you&apos;d like to stay a little longer…
+            </p>
+            <a
+              href="#story"
+              onClick={(event) => {
+                event.preventDefault();
+                openStory();
+              }}
+              className="group mx-auto mt-5 flex min-h-14 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-4 text-[10px] font-medium uppercase tracking-[0.24em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]"
+            >
+              Discover Our Story
+              <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span>
+            </a>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </Section>
   );
 }
