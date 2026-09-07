@@ -11,8 +11,12 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
 
   return (
     <motion.div
-      className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} w-1/2 overflow-hidden will-change-transform`}
-      style={{ perspective: "1800px", transformStyle: "preserve-3d", transformOrigin: isLeft ? "right center" : "left center" }}
+      className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} h-full w-[50vw] overflow-hidden will-change-transform`}
+      style={{
+        perspective: "1800px",
+        transformStyle: "preserve-3d",
+        transformOrigin: isLeft ? "right center" : "left center",
+      }}
       animate={opening ? {
         x: isLeft ? "-102%" : "102%",
         scaleX: 0.78,
@@ -30,8 +34,8 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
         src={curtainImage}
         alt=""
         draggable={false}
-        className="absolute inset-y-0 max-w-none select-none object-fill"
-        style={{ width: "200%", left: isLeft ? "0" : "-100%" }}
+        className="absolute inset-y-0 h-full w-[100vw] max-w-none select-none object-fill"
+        style={{ left: isLeft ? "0" : "-50vw" }}
         animate={opening ? { scale: 1.025, x: isLeft ? "-1.5%" : "1.5%" } : { scale: [1, 1.006, 1], x: [0, isLeft ? "0.3%" : "-0.3%", 0] }}
         transition={opening ? { duration: 3.15, ease: [0.65, 0, 0.2, 1] } : { duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
       />
@@ -55,10 +59,34 @@ export default function Hero() {
   const open = () => { if (!opening) setOpening(true); };
 
   return (
-    <section className="relative min-h-[100svh] w-full overflow-hidden bg-[#4a2b16] text-white" onClick={open} role="button" tabIndex={0} aria-label="Open the wedding invitation" onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); } }}>
+    <section
+      className="relative h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-[#4a2b16] text-white"
+      onClick={open}
+      role="button"
+      tabIndex={0}
+      aria-label="Open the wedding invitation"
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          open();
+        }
+      }}
+    >
       <div className="absolute inset-0 bg-[#4a2b16]" />
-      <div className="absolute inset-0 overflow-hidden"><motion.div animate={opening ? { scale: 1.04, opacity: 1 } : { scale: 1, opacity: 0.18 }} transition={{ duration: 3.1, ease: [0.76, 0, 0.24, 1] }} className="absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center" /><div className="absolute inset-0 bg-[#241205]/35" /></div>
-      {visible && <div className="pointer-events-none fixed inset-0 z-[90] overflow-hidden" aria-hidden="true"><CurtainHalf side="left" opening={opening} /><CurtainHalf side="right" opening={opening} /></div>}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          animate={opening ? { scale: 1.04, opacity: 1 } : { scale: 1, opacity: 0.18 }}
+          transition={{ duration: 3.1, ease: [0.76, 0, 0.24, 1] }}
+          className="absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center"
+        />
+        <div className="absolute inset-0 bg-[#241205]/35" />
+      </div>
+      {visible && (
+        <div className="pointer-events-none absolute inset-0 z-[90] h-[100dvh] overflow-hidden" aria-hidden="true">
+          <CurtainHalf side="left" opening={opening} />
+          <CurtainHalf side="right" opening={opening} />
+        </div>
+      )}
       <div className="sr-only">{wedding.couple.groom} &amp; {wedding.couple.bride}. Tap anywhere to open the wedding invitation.</div>
     </section>
   );
