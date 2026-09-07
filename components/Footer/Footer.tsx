@@ -21,39 +21,52 @@ function ClosingOrnament() {
 export default function Footer() {
   return (
     <footer id="footer" className="bg-forest text-ivory">
-      <Section id="forever" className="bg-transparent px-6 py-24 sm:px-8 sm:py-32 lg:px-12 lg:py-40">
+      <Section id="forever" className="relative overflow-hidden bg-transparent px-6 py-24 sm:px-8 sm:py-32 lg:px-12 lg:py-40">
+        <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(210,165,115,0.13),transparent_68%)]" />
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.9 }}
-          className="mx-auto max-w-4xl text-center"
+          className="relative mx-auto max-w-4xl text-center"
         >
-          <p className="text-xs uppercase tracking-[0.4em] text-champagne">Chapter IV</p>
-          <ClosingOrnament />
+          <p className="text-[10px] uppercase tracking-[0.45em] text-champagne sm:text-xs">Chapter IV · Forever</p>
+          <div className="mt-7"><ClosingOrnament /></div>
 
-          <p className="mt-8 font-heading text-2xl text-ivory/70 sm:text-3xl">And so, our forever begins.</p>
+          <p className="mt-9 font-heading text-2xl italic text-ivory/65 sm:text-3xl">And so, our forever begins.</p>
 
-          <h2 className="mt-8 font-heading text-7xl leading-none text-ivory sm:text-8xl lg:text-9xl">
-            {wedding.couple.monogram}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto mt-7 flex h-32 w-32 items-center justify-center rounded-full border border-champagne/35 bg-[radial-gradient(circle_at_35%_30%,rgba(255,245,220,0.13),transparent_62%)] sm:h-40 sm:w-40"
+          >
+            <span className="font-heading text-4xl italic tracking-[-0.06em] text-champagne sm:text-5xl">{wedding.couple.monogram}</span>
+          </motion.div>
+
+          <h2 className="mt-9 font-heading text-6xl leading-none text-ivory sm:text-8xl lg:text-9xl">
+            {wedding.couple.groom} <span className="text-champagne/70">&amp;</span> {wedding.couple.bride}
           </h2>
 
-          <p className="mt-7 text-sm uppercase tracking-[0.28em] text-ivory/60 sm:text-base">
-            {wedding.couple.groom} &amp; {wedding.couple.bride}
-          </p>
-
-          <div className="mx-auto my-12 h-px w-24 bg-ivory/20" />
+          <div className="mx-auto my-12 h-px w-20 bg-champagne/35" />
 
           <p className="mx-auto max-w-xl font-heading text-xl leading-relaxed text-ivory/75 sm:text-2xl">
             Thank you for being part of our journey and for making this celebration even more special with your presence and blessings.
           </p>
 
-          <div className="mt-12 flex flex-col items-center gap-3 text-sm uppercase tracking-[0.22em] text-ivory/55">
-            <span>{wedding.ceremony.date}</span>
-            <span>{wedding.ceremony.venue.name} · Visakhapatnam</span>
+          <div className="mx-auto mt-12 grid max-w-md grid-cols-2 border-y border-ivory/15">
+            <div className="px-4 py-5 sm:py-6">
+              <p className="text-[8px] uppercase tracking-[0.3em] text-ivory/40">The date</p>
+              <p className="mt-2 font-heading text-lg text-ivory/80 sm:text-xl">18 · 11 · 2026</p>
+            </div>
+            <div className="border-l border-ivory/15 px-4 py-5 sm:py-6">
+              <p className="text-[8px] uppercase tracking-[0.3em] text-ivory/40">The place</p>
+              <p className="mt-2 font-heading text-lg text-ivory/80 sm:text-xl">SB Square</p>
+            </div>
           </div>
 
-          <a href="#top" className="group mx-auto mt-14 inline-flex items-center gap-3 border-b border-ivory/30 pb-2 text-xs uppercase tracking-[0.24em] text-ivory transition-colors hover:border-champagne hover:text-champagne">
+          <a href="#top" className="group mx-auto mt-14 inline-flex min-h-12 items-center gap-3 border-b border-ivory/30 pb-2 text-[10px] uppercase tracking-[0.26em] text-ivory transition-colors hover:border-champagne hover:text-champagne sm:text-xs">
             Back to the beginning
             <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" strokeWidth={1.5} />
           </a>
