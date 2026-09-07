@@ -4,14 +4,14 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
-const curtainImage = "/images/curtain-final.png";
+const curtainImage = "/images/curtain-clean.png";
 
 function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boolean }) {
   const isLeft = side === "left";
 
   return (
     <motion.div
-      className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} h-full w-[50vw] overflow-hidden will-change-transform`}
+      className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} h-[100dvh] w-1/2 min-w-0 overflow-hidden will-change-transform`}
       style={{
         perspective: "1800px",
         transformStyle: "preserve-3d",
@@ -34,7 +34,7 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
         src={curtainImage}
         alt=""
         draggable={false}
-        className="absolute inset-y-0 h-full w-[100vw] max-w-none select-none object-fill"
+        className="absolute left-0 top-0 h-[100dvh] w-[100vw] max-w-none select-none object-fill"
         style={{ left: isLeft ? "0" : "-50vw" }}
         animate={opening ? { scale: 1.025, x: isLeft ? "-1.5%" : "1.5%" } : { scale: [1, 1.006, 1], x: [0, isLeft ? "0.3%" : "-0.3%", 0] }}
         transition={opening ? { duration: 3.15, ease: [0.65, 0, 0.2, 1] } : { duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
@@ -82,7 +82,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-[#241205]/35" />
       </div>
       {visible && (
-        <div className="pointer-events-none absolute inset-0 z-[90] h-[100dvh] overflow-hidden" aria-hidden="true">
+        <div className="pointer-events-none fixed inset-0 z-[90] h-[100dvh] w-[100vw] overflow-hidden" aria-hidden="true">
           <CurtainHalf side="left" opening={opening} />
           <CurtainHalf side="right" opening={opening} />
         </div>
