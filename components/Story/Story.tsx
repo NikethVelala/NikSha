@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
 
@@ -22,20 +23,41 @@ function KolamOrnament() {
   );
 }
 
-function ChapterMarker({ number, title, eyebrow }: (typeof chapters)[number]) {
+function ChapterMarker({ number, title, eyebrow, active }: (typeof chapters)[number] & { active: boolean }) {
   return (
     <div className="flex items-center gap-5 sm:gap-7">
-      <span className="font-heading text-5xl leading-none text-champagne/70 sm:text-6xl">{number}</span>
-      <span className="h-px w-10 bg-champagne/50 sm:w-16" />
+      <span className={`font-heading text-5xl leading-none transition-colors duration-500 sm:text-6xl ${active ? "text-champagne" : "text-champagne/45"}`}>{number}</span>
+      <span className={`h-px transition-all duration-500 sm:w-16 ${active ? "w-14 bg-champagne" : "w-10 bg-champagne/30"}`} />
       <div>
-        <p className="text-[9px] uppercase tracking-[0.32em] text-rose sm:text-[10px]">{eyebrow}</p>
-        <p className="mt-1 font-heading text-2xl text-charcoal sm:text-3xl">{title}</p>
+        <p className={`text-[9px] uppercase tracking-[0.32em] transition-colors duration-500 sm:text-[10px] ${active ? "text-rose" : "text-rose/55"}`}>{eyebrow}</p>
+        <p className={`mt-1 font-heading text-2xl transition-colors duration-500 sm:text-3xl ${active ? "text-charcoal" : "text-charcoal/55"}`}>{title}</p>
       </div>
     </div>
   );
 }
 
 export default function Story() {
+  const [activeChapter, setActiveChapter] = useState(0);
+
+  useEffect(() => {
+    const articles = Array.from(document.querySelectorAll<HTMLElement>("[data-story-chapter]"));
+    if (!articles.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const index = visible[0]?.target.getAttribute("data-story-chapter");
+        if (index !== null && index !== undefined) setActiveChapter(Number(index));
+      },
+      { rootMargin: "-24% 0px -58% 0px", threshold: [0.12, 0.35, 0.6] },
+    );
+
+    articles.forEach((article) => observer.observe(article));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <Section id="story" className="relative overflow-hidden bg-ivory">
       <div className="mx-auto max-w-6xl">
@@ -83,9 +105,11 @@ export default function Story() {
           <div className="space-y-16 sm:space-y-24">
             {wedding.story.paragraphs.map((paragraph, index) => {
               const chapter = chapters[index];
+              const active = activeChapter === index;
               return (
                 <motion.article
                   key={index}
+                  data-story-chapter={index}
                   initial={{ opacity: 0, y: 45 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-120px" }}
@@ -93,11 +117,11 @@ export default function Story() {
                   className="relative md:grid md:grid-cols-[280px_1fr] md:gap-14"
                 >
                   <div className="relative z-10 bg-ivory pb-6 md:pb-0 md:pt-1">
-                    <ChapterMarker {...chapter} />
+                    <ChapterMarker {...chapter} active={active} />
                   </div>
 
-                  <div className="max-w-2xl border-l border-champagne/50 pl-7 sm:pl-10 md:border-l-0 md:pl-0">
-                    <p className="font-heading text-2xl leading-relaxed text-charcoal sm:text-3xl sm:leading-[1.55]">
+                  <div className={`max-w-2xl border-l pl-7 transition-colors duration-500 sm:pl-10 md:border-l-0 md:pl-0 ${active ? "border-champagne" : "border-champagne/35"}`}>
+                    <p className={`font-heading text-2xl leading-relaxed transition-colors duration-500 sm:text-3xl sm:leading-[1.55] ${active ? "text-charcoal" : "text-charcoal/65"}`}>
                       {paragraph}
                     </p>
                   </div>
