@@ -5,69 +5,70 @@ import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
 const curtainImage = "/images/curtain-reference-800.jpg";
-const FOLD_COUNT = 8;
 
 function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boolean }) {
   const isLeft = side === "left";
 
   return (
-    <div
-      className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} w-1/2 overflow-hidden`}
-      style={{ perspective: "1400px" }}
-    >
-      {Array.from({ length: FOLD_COUNT }, (_, index) => {
-        const sourceIndex = isLeft ? index : FOLD_COUNT + index;
-        const distanceFromCenter = isLeft ? FOLD_COUNT - index : index + 1;
-        const direction = isLeft ? -1 : 1;
-        const travel = 5 + distanceFromCenter * 2.7;
-        const rotation = direction * (2 + distanceFromCenter * 0.8);
-
-        return (
-          <motion.div
-            key={`${side}-${index}`}
-            initial={{ x: 0, rotateY: 0, scaleX: 1 }}
-            animate={
-              opening
-                ? {
-                    x: `${direction * travel}vw`,
-                    rotateY: rotation,
-                    scaleX: 0.96,
-                  }
-                : { x: 0, rotateY: 0, scaleX: 1 }
+    <motion.div
+      className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} w-1/2 overflow-hidden will-change-transform`}
+      style={{
+        perspective: "1600px",
+        transformStyle: "preserve-3d",
+        transformOrigin: isLeft ? "right center" : "left center",
+      }}
+      animate={
+        opening
+          ? {
+              x: isLeft ? "-96%" : "96%",
+              scaleX: 0.72,
+              rotateY: isLeft ? -16 : 16,
+              skewY: isLeft ? -1.2 : 1.2,
+              borderRadius: isLeft ? "0 38% 38% 0" : "38% 0 0 38%",
             }
-            transition={{
-              duration: 2.8,
-              delay: index * 0.035,
-              ease: [0.76, 0, 0.24, 1],
-            }}
-            className="absolute inset-y-0 overflow-hidden will-change-transform"
-            style={{
-              left: `${index * 12.5}%`,
-              width: "12.5%",
-              transformOrigin: isLeft ? "right center" : "left center",
-              transformStyle: "preserve-3d",
-              zIndex: FOLD_COUNT - index,
-            }}
-          >
-            <img
-              src={curtainImage}
-              alt=""
-              draggable={false}
-              className="absolute inset-y-0 h-full max-w-none select-none object-fill"
-              style={{
-                width: "1600%",
-                left: `${-sourceIndex * 100}%`,
-              }}
-            />
-            <div
-              className={`pointer-events-none absolute inset-y-0 w-1/2 ${
-                isLeft ? "right-0 bg-gradient-to-l" : "left-0 bg-gradient-to-r"
-              } from-black/20 to-transparent`}
-            />
-          </motion.div>
-        );
-      })}
-    </div>
+          : {
+              x: [0, isLeft ? "0.18%" : "-0.18%", 0, isLeft ? "-0.12%" : "0.12%", 0],
+              scaleX: [1, 0.996, 1.002, 0.997, 1],
+              rotateY: [0, isLeft ? -0.7 : 0.7, 0, isLeft ? 0.55 : -0.55, 0],
+              skewY: [0, isLeft ? -0.22 : 0.22, 0, isLeft ? 0.18 : -0.18, 0],
+              borderRadius: "0",
+            }
+      }
+      transition={
+        opening
+          ? { duration: 2.9, ease: [0.65, 0, 0.2, 1] }
+          : { duration: 6.5, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }
+      }
+    >
+      <motion.img
+        src={curtainImage}
+        alt=""
+        draggable={false}
+        className="absolute inset-y-0 max-w-none select-none object-fill"
+        style={{
+          width: "200%",
+          left: isLeft ? "0" : "-100%",
+          filter: `url(#niksha-curtain-fabric-${side})`,
+        }}
+        animate={opening ? { scale: 1.03 } : { scale: [1, 1.008, 1] }}
+        transition={
+          opening
+            ? { duration: 2.9, ease: [0.65, 0, 0.2, 1] }
+            : { duration: 7, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }
+        }
+      />
+
+      <div
+        className={`pointer-events-none absolute inset-y-0 w-[18%] ${
+          isLeft ? "right-0 bg-gradient-to-l" : "left-0 bg-gradient-to-r"
+        } from-black/25 via-black/7 to-transparent`}
+      />
+      <div
+        className={`pointer-events-none absolute inset-y-0 w-[12%] ${
+          isLeft ? "right-[9%]" : "left-[9%]"
+        } bg-gradient-to-r from-white/10 via-transparent to-black/10 mix-blend-soft-light`}
+      />
+    </motion.div>
   );
 }
 
@@ -82,7 +83,7 @@ export default function Hero() {
       requestAnimationFrame(() => {
         document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
-    }, 3000);
+    }, 3200);
     return () => window.clearTimeout(timer);
   }, [opening]);
 
@@ -104,6 +105,23 @@ export default function Hero() {
         }
       }}
     >
+      <svg aria-hidden="true" className="pointer-events-none absolute h-0 w-0 overflow-hidden">
+        <defs>
+          <filter id="niksha-curtain-fabric-left" x="-8%" y="-4%" width="116%" height="108%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.018 0.055" numOctaves="2" seed="11" result="noise">
+              <animate attributeName="baseFrequency" values="0.018 0.055;0.021 0.061;0.018 0.055" dur="7s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+          <filter id="niksha-curtain-fabric-right" x="-8%" y="-4%" width="116%" height="108%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.018 0.055" numOctaves="2" seed="23" result="noise">
+              <animate attributeName="baseFrequency" values="0.018 0.055;0.021 0.061;0.018 0.055" dur="7.5s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
       <div className="absolute inset-0 bg-[#4a2b16]" />
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
