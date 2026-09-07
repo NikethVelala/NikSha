@@ -7,14 +7,45 @@ import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
 const bells = [
-  { left: "14%", delay: 0, height: "72px" },
-  { left: "30%", delay: 0.35, height: "92px" },
-  { left: "46%", delay: 0.15, height: "70px" },
-  { left: "62%", delay: 0.45, height: "94px" },
-  { left: "78%", delay: 0.2, height: "72px" },
+  { left: "15%", delay: 0, height: "76px" },
+  { left: "28%", delay: 0.55, height: "96px" },
+  { left: "42%", delay: 0.2, height: "72px" },
+  { left: "57%", delay: 0.75, height: "98px" },
+  { left: "72%", delay: 0.35, height: "74px" },
+  { left: "86%", delay: 0.9, height: "88px" },
 ];
 
-const garlandDots = Array.from({ length: 38 });
+const flowers = Array.from({ length: 48 }, (_, index) => ({
+  left: `${(index / 47) * 100}%`,
+  top: `${4 + (index % 5) * 5}px`,
+  size: 12 + (index % 3) * 4,
+  delay: (index % 9) * 0.08,
+}));
+
+const sideFlowers = Array.from({ length: 14 }, (_, index) => ({
+  top: `${8 + index * 6}%`,
+  left: `${4 + (index % 3) * 5}%`,
+  size: 13 + (index % 3) * 3,
+  delay: (index % 6) * 0.12,
+}));
+
+function JasmineFlower({ size, delay }: { size: number; delay: number }) {
+  return (
+    <motion.span
+      initial={{ opacity: 0.82, y: 0 }}
+      animate={{ opacity: [0.82, 1, 0.82], y: [0, 2, 0] }}
+      transition={{ duration: 3.8 + delay, repeat: Infinity, ease: "easeInOut", delay }}
+      className="relative block shrink-0"
+      style={{ width: size, height: size }}
+    >
+      <span className="absolute inset-[28%] rounded-full bg-[#d49a45] shadow-[0_1px_3px_rgba(102,54,12,.45)]" />
+      <span className="absolute left-1/2 top-0 h-[58%] w-[38%] -translate-x-1/2 rounded-full bg-gradient-to-b from-[#fffdf3] to-[#f1d39d]" />
+      <span className="absolute bottom-0 left-1/2 h-[58%] w-[38%] -translate-x-1/2 rotate-180 rounded-full bg-gradient-to-b from-[#fffdf3] to-[#f1d39d]" />
+      <span className="absolute left-0 top-1/2 h-[38%] w-[58%] -translate-y-1/2 rounded-full bg-gradient-to-r from-[#fffdf3] to-[#f1d39d]" />
+      <span className="absolute right-0 top-1/2 h-[38%] w-[58%] -translate-y-1/2 rotate-180 rounded-full bg-gradient-to-r from-[#fffdf3] to-[#f1d39d]" />
+    </motion.span>
+  );
+}
 
 export default function Hero() {
   const [opening, setOpening] = useState(false);
@@ -29,7 +60,7 @@ export default function Hero() {
       requestAnimationFrame(() => {
         document.getElementById("welcome")?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
-    }, 2300);
+    }, 2550);
     return () => window.clearTimeout(timer);
   }, [opening]);
 
@@ -59,137 +90,165 @@ export default function Hero() {
         sizes="100vw"
         className="object-cover object-[center_35%] sm:object-center"
       />
-      <div className="absolute inset-0 bg-[#2a170b]/35" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,226,177,.08),rgba(48,23,8,.48)_72%)]" />
 
       {visible && (
         <div className="pointer-events-none fixed inset-0 z-[70] overflow-hidden" aria-hidden="true">
-          {/* Full-width floral canopy: the reference has a dense jasmine ceiling rather than a simple bar. */}
+          {/* Dense jasmine canopy: this is deliberately irregular and layered so it reads as real wedding florals rather than dots. */}
           <motion.div
-            animate={opening ? { y: "-108%", opacity: 0 } : { y: 0, opacity: 1 }}
-            transition={{ duration: 2.05, ease: [0.76, 0, 0.24, 1] }}
-            className="absolute inset-x-0 top-0 h-[18vh] min-h-[108px]"
+            animate={opening ? { y: "-112%", opacity: 0 } : { y: 0, opacity: 1 }}
+            transition={{ duration: 2.35, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-x-0 top-0 z-40 h-[20vh] min-h-[112px]"
           >
-            <div className="absolute inset-x-0 top-0 h-[58px] bg-gradient-to-b from-[#5d371b] via-[#b47739] to-transparent" />
-            <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-[#fff2d0] via-[#d6a15d] to-transparent opacity-90 blur-[1px]" />
-            <div className="absolute inset-x-0 top-1 flex justify-between px-1 sm:px-2">
-              {garlandDots.map((_, index) => (
-                <span
-                  key={index}
-                  className="relative h-5 w-5 shrink-0 rounded-full bg-gradient-to-br from-[#fffaf0] via-[#f4d7a0] to-[#c58d4a] shadow-[0_2px_7px_rgba(255,235,185,.65)] sm:h-7 sm:w-7"
-                  style={{ marginTop: `${(index % 5) * 5}px` }}
-                >
-                  <span className="absolute -bottom-2 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-[#fff5dc]" />
+            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#4b2b13] via-[#a86d32]/80 to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#fff4d5] via-[#d7a25b]/90 to-transparent blur-[2px]" />
+            <div className="absolute inset-x-0 top-0 flex items-start justify-between overflow-hidden px-[-4px]">
+              {flowers.map((flower, index) => (
+                <span key={index} className="relative shrink-0" style={{ marginTop: flower.top }}>
+                  <JasmineFlower size={flower.size} delay={flower.delay} />
                 </span>
               ))}
             </div>
-            <div className="absolute inset-x-0 top-[50px] flex justify-around">
+
+            <div className="absolute inset-x-0 top-12 flex justify-around px-[7%] sm:top-14 sm:px-[8%]">
               {bells.map((bell, index) => (
                 <motion.div
                   key={index}
                   className="relative flex flex-col items-center"
                   style={{ height: bell.height }}
                   animate={{ y: [-2, 2, -2], rotate: [-1, 1, -1] }}
-                  transition={{ duration: 4 + index * 0.25, delay: bell.delay, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{ duration: 4.5 + index * 0.22, delay: bell.delay, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <div className="h-8 w-px bg-gradient-to-b from-[#e7c886] to-[#8a561f]" />
-                  <div className="h-6 w-5 rounded-b-[55%] border border-[#e4bd70] bg-gradient-to-b from-[#e3bd6e] via-[#9a6529] to-[#57320f] shadow-[0_3px_8px_rgba(50,25,7,.35)] sm:h-8 sm:w-7" />
-                  <div className="h-1.5 w-6 rounded-full bg-[#5c3714] shadow-[0_2px_4px_rgba(0,0,0,.3)] sm:w-8" />
-                  <span className="mt-0.5 h-2 w-2 rounded-full bg-[#e4bd70]" />
+                  <div className="h-9 w-px bg-gradient-to-b from-[#f5d68f] to-[#83501c]" />
+                  <div className="relative h-7 w-6 rounded-b-[55%] border border-[#e8c477] bg-gradient-to-b from-[#efca76] via-[#a76c2a] to-[#57310d] shadow-[0_4px_9px_rgba(45,20,4,.42)] sm:h-9 sm:w-8">
+                    <span className="absolute left-1/2 top-1 h-1 w-3 -translate-x-1/2 rounded-full bg-[#ffe1a0]/70" />
+                  </div>
+                  <div className="h-1.5 w-7 rounded-full bg-[#5b3411] shadow-[0_2px_4px_rgba(0,0,0,.35)] sm:w-9" />
+                  <span className="mt-0.5 h-2 w-2 rounded-full bg-[#e5bd6c]" />
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
-          {/* Deep centre curtain. It stays completely straight at the middle, with a single fine seam. */}
+          {/* Side foliage. It sits above the fabric and gives the opening the dense botanical frame from the reference. */}
           <motion.div
-            animate={opening ? { x: "-103%" } : { x: 0 }}
-            transition={{ duration: 2.15, ease: [0.76, 0, 0.24, 1] }}
-            className="absolute inset-y-0 left-0 z-10 w-1/2 overflow-hidden"
+            animate={opening ? { x: "-108%", opacity: 0 } : { x: 0, opacity: 1 }}
+            transition={{ duration: 2.35, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-y-0 left-0 z-50 w-[21%] min-w-[92px] overflow-hidden"
+          >
+            <div className="absolute -left-[12%] top-[2%] h-[32vh] w-[62%] rotate-[14deg] rounded-[60%] bg-[#30462a]/95 blur-[1px]" />
+            <div className="absolute -left-[8%] top-[19%] h-[42vh] w-[48%] -rotate-[18deg] rounded-[60%] bg-[#425c31]/90" />
+            <div className="absolute left-[7%] top-[6%] h-[22vh] w-[26%] rotate-[26deg] rounded-[60%] bg-[#617142]/75" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#274027]/30 via-transparent to-[#4a2b12]/10" />
+            {sideFlowers.map((flower, index) => (
+              <span key={index} className="absolute" style={{ top: flower.top, left: flower.left }}>
+                <JasmineFlower size={flower.size} delay={flower.delay} />
+              </span>
+            ))}
+            <div className="absolute bottom-[7%] left-[3%] h-28 w-8 rotate-[17deg] rounded-full bg-gradient-to-b from-[#d3a15b] via-[#94602b] to-[#55300f] shadow-[0_5px_14px_rgba(40,19,5,.5)]" />
+          </motion.div>
+
+          <motion.div
+            animate={opening ? { x: "108%", opacity: 0 } : { x: 0, opacity: 1 }}
+            transition={{ duration: 2.35, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-y-0 right-0 z-50 w-[21%] min-w-[92px] scale-x-[-1] overflow-hidden"
+          >
+            <div className="absolute -left-[12%] top-[2%] h-[32vh] w-[62%] rotate-[14deg] rounded-[60%] bg-[#30462a]/95 blur-[1px]" />
+            <div className="absolute -left-[8%] top-[19%] h-[42vh] w-[48%] -rotate-[18deg] rounded-[60%] bg-[#425c31]/90" />
+            <div className="absolute left-[7%] top-[6%] h-[22vh] w-[26%] rotate-[26deg] rounded-[60%] bg-[#617142]/75" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#274027]/30 via-transparent to-[#4a2b12]/10" />
+            {sideFlowers.map((flower, index) => (
+              <span key={index} className="absolute" style={{ top: flower.top, left: flower.left }}>
+                <JasmineFlower size={flower.size} delay={flower.delay} />
+              </span>
+            ))}
+          </motion.div>
+
+          {/* Rich gathered outer drapes. The broad folds, tie-backs and tassel silhouettes are the key change from the previous flat side panels. */}
+          <motion.div
+            animate={opening ? { x: "-112%" } : { x: 0 }}
+            transition={{ duration: 2.4, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-y-0 left-0 z-30 w-[22%] min-w-[100px] overflow-hidden"
             style={{
-              background: "linear-gradient(90deg,#9b6631 0%,#d6a15c 7%,#f5d7a1 13%,#b77c3e 20%,#e9c78f 28%,#b47738 36%,#f7dfad 44%,#c18a49 51%,#f1d09a 59%,#a66e35 68%,#edc98f 77%,#b5793a 86%,#e9c48a 94%,#8d592b 100%)",
-              boxShadow: "inset -34px 0 62px rgba(66,35,10,.38), 18px 0 48px rgba(49,26,8,.24)",
+              background: "linear-gradient(108deg,#62401f 0%,#c08b4f 11%,#f6dba9 25%,#a66e37 39%,#f1cf96 53%,#895729 67%,#efd09d 81%,#8a5526 100%)",
+              boxShadow: "inset -16px 0 28px rgba(61,31,8,.42), 20px 0 48px rgba(49,24,7,.3)",
             }}
           >
-            <div className="absolute inset-0 opacity-70 [background:repeating-linear-gradient(88deg,transparent_0%,rgba(255,246,219,.42)_5%,rgba(95,53,17,.2)_10%,transparent_17%)]" />
-            <div className="absolute inset-0 opacity-35 [background:repeating-linear-gradient(90deg,transparent_0_72px,rgba(255,244,211,.16)_74px,transparent_78px)]" />
-            <div className="absolute inset-y-0 right-0 w-px bg-[#f9e5bd]/80" />
+            <div className="absolute inset-0 opacity-70 [background:repeating-linear-gradient(102deg,transparent_0_24px,rgba(255,246,218,.3)_32px,rgba(87,45,13,.22)_47px,transparent_58px)]" />
+            <div className="absolute inset-y-0 right-0 w-[14%] bg-gradient-to-l from-[#4f2d10] via-[#e2b874] to-transparent opacity-80" />
+            <div className="absolute bottom-[36%] left-0 h-5 w-[115%] rotate-[-2deg] bg-gradient-to-r from-[#6b3d16] via-[#e5b76d] to-[#6b3d16] shadow-[0_3px_6px_rgba(54,25,7,.35)]" />
+            <div className="absolute bottom-[31%] left-[5%] h-7 w-16 rotate-[-3deg] rounded-full border border-[#f1d39a]/80 bg-gradient-to-b from-[#c9944e] via-[#8c5826] to-[#5a3211] shadow-[0_4px_12px_rgba(49,23,6,.4)]" />
+            <div className="absolute bottom-[24%] left-[9%] h-24 w-12 rounded-b-[48%] bg-gradient-to-b from-[#d5a05a] via-[#93602c] to-[#53300f] shadow-[0_7px_16px_rgba(48,22,6,.48)]" />
+            <div className="absolute bottom-[20%] left-[7%] h-10 w-16 rounded-b-[60%] bg-gradient-to-b from-[#e0b36d] via-[#9b632d] to-[#5b3412]" />
           </motion.div>
 
           <motion.div
-            animate={opening ? { x: "103%" } : { x: 0 }}
-            transition={{ duration: 2.15, ease: [0.76, 0, 0.24, 1] }}
-            className="absolute inset-y-0 right-0 z-10 w-1/2 overflow-hidden"
+            animate={opening ? { x: "112%" } : { x: 0 }}
+            transition={{ duration: 2.4, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-y-0 right-0 z-30 w-[22%] min-w-[100px] scale-x-[-1] overflow-hidden"
             style={{
-              background: "linear-gradient(90deg,#8d592b 0%,#e9c48a 6%,#b5793a 14%,#edc98f 23%,#a66e35 32%,#f1d09a 41%,#c18a49 50%,#f7dfad 58%,#b47738 66%,#e9c78f 74%,#b77c3e 82%,#f5d7a1 89%,#d6a15c 95%,#9b6631 100%)",
-              boxShadow: "inset 34px 0 62px rgba(66,35,10,.38), -18px 0 48px rgba(49,26,8,.24)",
+              background: "linear-gradient(108deg,#62401f 0%,#c08b4f 11%,#f6dba9 25%,#a66e37 39%,#f1cf96 53%,#895729 67%,#efd09d 81%,#8a5526 100%)",
+              boxShadow: "inset -16px 0 28px rgba(61,31,8,.42), 20px 0 48px rgba(49,24,7,.3)",
             }}
           >
-            <div className="absolute inset-0 opacity-70 [background:repeating-linear-gradient(92deg,transparent_0%,rgba(255,246,219,.42)_5%,rgba(95,53,17,.2)_10%,transparent_17%)]" />
-            <div className="absolute inset-0 opacity-35 [background:repeating-linear-gradient(90deg,transparent_0_72px,rgba(255,244,211,.16)_74px,transparent_78px)]" />
-            <div className="absolute inset-y-0 left-0 w-px bg-[#f9e5bd]/80" />
+            <div className="absolute inset-0 opacity-70 [background:repeating-linear-gradient(102deg,transparent_0_24px,rgba(255,246,218,.3)_32px,rgba(87,45,13,.22)_47px,transparent_58px)]" />
+            <div className="absolute inset-y-0 right-0 w-[14%] bg-gradient-to-l from-[#4f2d10] via-[#e2b874] to-transparent opacity-80" />
+            <div className="absolute bottom-[36%] left-0 h-5 w-[115%] rotate-[-2deg] bg-gradient-to-r from-[#6b3d16] via-[#e5b76d] to-[#6b3d16] shadow-[0_3px_6px_rgba(54,25,7,.35)]" />
+            <div className="absolute bottom-[31%] left-[5%] h-7 w-16 rotate-[-3deg] rounded-full border border-[#f1d39a]/80 bg-gradient-to-b from-[#c9944e] via-[#8c5826] to-[#5a3211] shadow-[0_4px_12px_rgba(49,23,6,.4)]" />
+            <div className="absolute bottom-[24%] left-[9%] h-24 w-12 rounded-b-[48%] bg-gradient-to-b from-[#d5a05a] via-[#93602c] to-[#53300f] shadow-[0_7px_16px_rgba(48,22,6,.48)]" />
+            <div className="absolute bottom-[20%] left-[7%] h-10 w-16 rounded-b-[60%] bg-gradient-to-b from-[#e0b36d] via-[#9b632d] to-[#5b3412]" />
           </motion.div>
 
-          {/* Ornate side drapes: wide folded panels gathered at mid-height, like the reference. */}
+          {/* The central curtain is lighter, patterned and narrower than the previous version. This creates the same stage proportion as the reference. */}
           <motion.div
-            animate={opening ? { x: "-105%" } : { x: 0 }}
-            transition={{ duration: 2.2, ease: [0.76, 0, 0.24, 1] }}
-            className="absolute inset-y-0 left-0 z-20 w-[19%] min-w-[92px] origin-left overflow-hidden"
-            style={{ background: "linear-gradient(105deg,#6e401c 0%,#d0a064 14%,#f7deb0 29%,#9d6834 43%,#eac68e 58%,#8a562a 72%,#f2d39f 87%,#7a481f 100%)", boxShadow: "inset -12px 0 25px rgba(53,27,8,.35), 14px 0 35px rgba(50,25,8,.24)" }}
+            animate={opening ? { x: "-108%" } : { x: 0 }}
+            transition={{ duration: 2.5, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-y-0 left-[16%] z-20 w-[34%] overflow-hidden"
+            style={{
+              background: "linear-gradient(90deg,#815126 0%,#c28a4d 7%,#f4d7a5 15%,#b5793d 24%,#f7dfb2 34%,#a96e34 44%,#f5d6a0 54%,#bc8246 65%,#f8dfb0 75%,#a36a33 85%,#f2d09a 94%,#805025 100%)",
+              boxShadow: "inset -22px 0 38px rgba(69,34,9,.3), 12px 0 30px rgba(61,30,8,.2)",
+            }}
           >
-            <div className="absolute inset-0 [background:repeating-linear-gradient(100deg,transparent_0_22px,rgba(255,241,207,.22)_27px,rgba(82,42,12,.18)_40px,transparent_48px)]" />
-            <div className="absolute bottom-[38%] left-0 h-4 w-full rotate-[-3deg] bg-gradient-to-r from-[#6d401b] via-[#e7bc78] to-[#71431f]" />
-            <div className="absolute bottom-[34%] left-[5%] h-14 w-8 rounded-b-full bg-gradient-to-b from-[#d4a25b] via-[#95602b] to-[#5c3513] shadow-[0_5px_12px_rgba(50,25,8,.35)]" />
-            <div className="absolute bottom-[29%] left-[9%] h-20 w-10 rounded-b-full border border-[#e2b96f]/60 bg-gradient-to-b from-[#c6924b] via-[#8a5525] to-[#55300f]" />
+            <div className="absolute inset-0 opacity-80 [background:repeating-linear-gradient(88deg,transparent_0_34px,rgba(255,247,225,.24)_40px,rgba(100,54,17,.15)_58px,transparent_70px)]" />
+            <div className="absolute inset-0 opacity-35 [background:repeating-linear-gradient(90deg,transparent_0_86px,rgba(255,246,218,.2)_88px,transparent_94px)]" />
+            <div className="absolute inset-y-0 right-0 w-px bg-[#f8e2b8]/80" />
           </motion.div>
 
           <motion.div
-            animate={opening ? { x: "105%" } : { x: 0 }}
-            transition={{ duration: 2.2, ease: [0.76, 0, 0.24, 1] }}
-            className="absolute inset-y-0 right-0 z-20 w-[19%] min-w-[92px] origin-right overflow-hidden"
-            style={{ background: "linear-gradient(75deg,#7a481f 0%,#f2d39f 13%,#8a562a 28%,#eac68e 43%,#9d6834 57%,#f7deb0 72%,#d0a064 87%,#6e401c 100%)", boxShadow: "inset 12px 0 25px rgba(53,27,8,.35), -14px 0 35px rgba(50,25,8,.24)" }}
+            animate={opening ? { x: "108%" } : { x: 0 }}
+            transition={{ duration: 2.5, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-y-0 right-[16%] z-20 w-[34%] overflow-hidden"
+            style={{
+              background: "linear-gradient(90deg,#805025 0%,#f2d09a 6%,#a36a33 15%,#f8dfb0 25%,#bc8246 35%,#f5d6a0 46%,#a96e34 56%,#f7dfb2 66%,#b5793d 76%,#f4d7a5 85%,#c28a4d 94%,#815126 100%)",
+              boxShadow: "inset 22px 0 38px rgba(69,34,9,.3), -12px 0 30px rgba(61,30,8,.2)",
+            }}
           >
-            <div className="absolute inset-0 [background:repeating-linear-gradient(80deg,transparent_0_22px,rgba(255,241,207,.22)_27px,rgba(82,42,12,.18)_40px,transparent_48px)]" />
-            <div className="absolute bottom-[38%] right-0 h-4 w-full rotate-[3deg] bg-gradient-to-r from-[#71431f] via-[#e7bc78] to-[#6d401b]" />
-            <div className="absolute bottom-[34%] right-[5%] h-14 w-8 rounded-b-full bg-gradient-to-b from-[#d4a25b] via-[#95602b] to-[#5c3513] shadow-[0_5px_12px_rgba(50,25,8,.35)]" />
-            <div className="absolute bottom-[29%] right-[9%] h-20 w-10 rounded-b-full border border-[#e2b96f]/60 bg-gradient-to-b from-[#c6924b] via-[#8a5525] to-[#55300f]" />
+            <div className="absolute inset-0 opacity-80 [background:repeating-linear-gradient(92deg,transparent_0_34px,rgba(255,247,225,.24)_40px,rgba(100,54,17,.15)_58px,transparent_70px)]" />
+            <div className="absolute inset-0 opacity-35 [background:repeating-linear-gradient(90deg,transparent_0_86px,rgba(255,246,218,.2)_88px,transparent_94px)]" />
+            <div className="absolute inset-y-0 left-0 w-px bg-[#f8e2b8]/80" />
           </motion.div>
 
-          {/* Jasmine + greenery frame the top corners and the outer edges. */}
-          <div className="absolute left-0 top-0 z-30 h-[34vh] w-[16vw] min-w-[92px]">
-            <div className="absolute -left-5 -top-4 h-32 w-32 rounded-full bg-[#50613a]/85 blur-[1px]" />
-            <div className="absolute left-1 top-12 h-24 w-16 rounded-[55%] bg-[#354a2d]/90" />
-            <div className="absolute left-4 top-5 h-7 w-7 rounded-full bg-[#fff8e9] shadow-[0_0_10px_rgba(255,239,194,.7)]" />
-            <div className="absolute left-9 top-14 h-8 w-8 rounded-full bg-[#fff8e9] shadow-[0_0_10px_rgba(255,239,194,.7)]" />
-            <div className="absolute left-2 top-24 h-6 w-6 rounded-full bg-[#fff8e9] shadow-[0_0_10px_rgba(255,239,194,.7)]" />
-          </div>
-          <div className="absolute right-0 top-0 z-30 h-[34vh] w-[16vw] min-w-[92px] scale-x-[-1]">
-            <div className="absolute -left-5 -top-4 h-32 w-32 rounded-full bg-[#50613a]/85 blur-[1px]" />
-            <div className="absolute left-1 top-12 h-24 w-16 rounded-[55%] bg-[#354a2d]/90" />
-            <div className="absolute left-4 top-5 h-7 w-7 rounded-full bg-[#fff8e9] shadow-[0_0_10px_rgba(255,239,194,.7)]" />
-            <div className="absolute left-9 top-14 h-8 w-8 rounded-full bg-[#fff8e9] shadow-[0_0_10px_rgba(255,239,194,.7)]" />
-            <div className="absolute left-2 top-24 h-6 w-6 rounded-full bg-[#fff8e9] shadow-[0_0_10px_rgba(255,239,194,.7)]" />
-          </div>
+          {/* Fine gold frame lines make the centre feel like a real stage rather than two rectangles. */}
+          <div className="absolute inset-y-[13%] left-[16%] z-25 w-px bg-gradient-to-b from-transparent via-[#f5d8a4]/55 to-transparent" />
+          <div className="absolute inset-y-[13%] right-[16%] z-25 w-px bg-gradient-to-b from-transparent via-[#f5d8a4]/55 to-transparent" />
 
-          {/* Exact-style centre seam and floral emblem above the opening control. */}
-          <div className="absolute inset-y-[18%] left-1/2 z-40 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-[#5c3518]/80 to-transparent" />
+          {/* Small floral medallion at the seam — no monogram, no N seal. */}
           {!opening && (
             <motion.div
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.45 }}
-              className="absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, delay: 0.5 }}
+              className="absolute left-1/2 top-1/2 z-[60] flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
             >
-              <div className="mb-2 text-[#fff3d7] text-sm">♧</div>
-              <div className="flex h-[78px] w-[78px] items-center justify-center rounded-full border border-[#f7e2b7]/80 bg-[#6b451f]/10 text-[9px] uppercase tracking-[0.38em] text-[#fff5df] shadow-[0_0_0_1px_rgba(255,240,202,.08)] sm:h-[88px] sm:w-[88px]">
+              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full border border-[#f6dfb4]/70 bg-[#6c421b]/20 shadow-[0_0_18px_rgba(255,222,165,.15)]">
+                <span className="text-[#fff3d4] text-sm">✽</span>
+              </div>
+              <div className="flex h-[78px] w-[78px] items-center justify-center rounded-full border border-[#f6dfb4]/75 bg-[#6d421b]/10 text-[9px] uppercase tracking-[0.42em] text-[#fff6df] shadow-[0_0_24px_rgba(255,224,172,.1)] sm:h-[88px] sm:w-[88px]">
                 Open
               </div>
-              <p className="mt-5 text-[8px] uppercase tracking-[0.43em] text-[#fff1d5]/85">Tap anywhere to open</p>
+              <p className="mt-5 text-[8px] uppercase tracking-[0.42em] text-[#fff0d2]/90">Tap anywhere to open</p>
             </motion.div>
           )}
-
-          <div className="absolute bottom-4 left-5 z-50 flex h-9 w-9 items-center justify-center rounded-full border border-[#f3d7a2]/45 bg-[#2a1b11]/70 font-heading text-base text-[#fff2d3] shadow-lg sm:bottom-5 sm:left-5">
-            N
-          </div>
         </div>
       )}
     </section>
