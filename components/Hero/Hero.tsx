@@ -34,7 +34,7 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
         src={curtainImage}
         alt=""
         draggable={false}
-        className="absolute left-0 top-0 h-[100dvh] w-[100vw] max-w-none select-none object-fill"
+        className="absolute left-0 top-0 h-[100dvh] w-[100vw] max-w-none select-none object-cover md:object-fill"
         style={{ left: isLeft ? "0" : "-50vw" }}
         animate={opening ? { scale: 1.025, x: isLeft ? "-1.5%" : "1.5%" } : { scale: [1, 1.006, 1], x: [0, isLeft ? "0.3%" : "-0.3%", 0] }}
         transition={opening ? { duration: 3.15, ease: [0.65, 0, 0.2, 1] } : { duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
