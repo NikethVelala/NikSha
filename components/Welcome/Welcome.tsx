@@ -20,21 +20,11 @@ function CornerFlourish({ position }: { position: "tl" | "tr" | "bl" | "br" }) {
 export default function Welcome() {
   const gateActive = useRef(false);
   const gateReleased = useRef(false);
-  const previousOverflow = useRef({ html: "", body: "" });
 
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
-    const previous = {
-      htmlOverflow: html.style.overflow,
-      bodyOverflow: body.style.overflow,
-      htmlTouch: html.style.touchAction,
-      bodyTouch: body.style.touchAction,
-      htmlOverscroll: html.style.overscrollBehavior,
-      bodyOverscroll: body.style.overscrollBehavior,
-    };
-    previousOverflow.current = { html: previous.htmlOverflow, body: previous.bodyOverflow };
-
+    const previous = { htmlOverflow: html.style.overflow, bodyOverflow: body.style.overflow, htmlTouch: html.style.touchAction, bodyTouch: body.style.touchAction, htmlOverscroll: html.style.overscrollBehavior, bodyOverscroll: body.style.overscrollBehavior };
     html.style.overflow = "auto";
     body.style.overflow = "auto";
     html.style.touchAction = "auto";
@@ -42,36 +32,24 @@ export default function Welcome() {
     html.style.overscrollBehavior = "auto";
     body.style.overscrollBehavior = "auto";
 
-    const lockAtStoryBoundary = () => {
-      if (gateReleased.current || gateActive.current) return;
-
+    const clampStoryBoundary = () => {
+      if (gateReleased.current) return;
       const section = document.getElementById("welcome");
       if (!section) return;
-
       const sectionTop = section.getBoundingClientRect().top + window.scrollY;
       const sectionBottom = sectionTop + section.offsetHeight;
       const maxScroll = Math.max(sectionTop, sectionBottom - window.innerHeight);
-
-      if (window.scrollY >= maxScroll - 2) {
+      if (window.scrollY > maxScroll) {
         gateActive.current = true;
-        window.scrollTo(0, maxScroll);
-        html.style.overflow = "hidden";
-        body.style.overflow = "hidden";
-        html.style.touchAction = "none";
-        body.style.touchAction = "none";
+        window.scrollTo({ top: maxScroll, behavior: "auto" });
       }
     };
 
-    const handleResize = () => {
-      if (!gateActive.current && !gateReleased.current) lockAtStoryBoundary();
-    };
-
-    window.addEventListener("scroll", lockAtStoryBoundary, { passive: true });
-    window.addEventListener("resize", handleResize);
-
+    window.addEventListener("scroll", clampStoryBoundary, { passive: true });
+    window.addEventListener("resize", clampStoryBoundary);
     return () => {
-      window.removeEventListener("scroll", lockAtStoryBoundary);
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", clampStoryBoundary);
+      window.removeEventListener("resize", clampStoryBoundary);
       html.style.overflow = previous.htmlOverflow;
       body.style.overflow = previous.bodyOverflow;
       html.style.touchAction = previous.htmlTouch;
@@ -84,12 +62,6 @@ export default function Welcome() {
   const openStory = () => {
     gateReleased.current = true;
     gateActive.current = false;
-    const html = document.documentElement;
-    const body = document.body;
-    html.style.overflow = previousOverflow.current.html || "auto";
-    body.style.overflow = previousOverflow.current.body || "auto";
-    html.style.touchAction = "auto";
-    body.style.touchAction = "auto";
     requestAnimationFrame(() => document.getElementById("story")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
