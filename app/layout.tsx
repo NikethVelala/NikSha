@@ -14,8 +14,30 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://nik-sha.vercel.app"),
   title: "NikSha | Niketh & Sirisha",
-  description: "Official wedding website of Niketh & Sirisha.",
+  description: "The wedding invitation of Niketh & Sirisha — 18 November 2026, Visakhapatnam.",
+  openGraph: {
+    type: "website",
+    title: "NikSha | Niketh & Sirisha",
+    description: "The wedding invitation of Niketh & Sirisha — 18 November 2026, Visakhapatnam.",
+    url: "https://nik-sha.vercel.app",
+    siteName: "NikSha",
+    images: [
+      {
+        url: "/images/hero.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Niketh & Sirisha — NikSha wedding invitation",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NikSha | Niketh & Sirisha",
+    description: "The wedding invitation of Niketh & Sirisha — 18 November 2026, Visakhapatnam.",
+    images: ["/images/hero.jpg"],
+  },
 };
 
 export default function RootLayout({
