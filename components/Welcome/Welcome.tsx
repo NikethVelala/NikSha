@@ -15,12 +15,19 @@ function CardOrnament({ className = "" }: { className?: string }) {
   );
 }
 
-function CornerFlourish({ flip = false }: { flip?: boolean }) {
+function CornerFlourish({ position }: { position: "tl" | "tr" | "bl" | "br" }) {
+  const transforms = {
+    tl: "left-0 top-0",
+    tr: "right-0 top-0 scale-x-[-1]",
+    bl: "left-0 bottom-0 scale-y-[-1]",
+    br: "right-0 bottom-0 scale-[-1]",
+  };
+
   return (
     <svg
       viewBox="0 0 90 90"
       aria-hidden="true"
-      className={`absolute h-20 w-20 text-[#a8783f]/80 sm:h-24 sm:w-24 ${flip ? "right-0 top-0 rotate-90" : "left-0 top-0"}`}
+      className={`absolute h-20 w-20 text-[#a8783f]/80 sm:h-24 sm:w-24 ${transforms[position]}`}
       fill="none"
     >
       <path d="M2 2h42c24 0 44 20 44 44v42" stroke="currentColor" strokeWidth="1" />
@@ -34,7 +41,7 @@ function CornerFlourish({ flip = false }: { flip?: boolean }) {
 
 export default function Welcome() {
   return (
-    <Section id="welcome" className="relative overflow-hidden bg-[#f5eee2] py-14 sm:py-22">
+    <Section id="welcome" className="relative overflow-hidden bg-[#f5eee2] py-14 sm:py-20">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(183,126,59,0.13),transparent_34%)]" />
 
       <motion.div
@@ -47,12 +54,15 @@ export default function Welcome() {
         <div className="relative overflow-hidden border-[1.5px] border-[#a8783f]/65 bg-[#fcfaf4] px-6 py-8 shadow-[0_16px_55px_rgba(73,55,35,0.11)] sm:px-12 sm:py-11">
           <div aria-hidden="true" className="pointer-events-none absolute inset-[5px] border border-[#a8783f]/35" />
           <div aria-hidden="true" className="pointer-events-none absolute inset-[10px] border border-[#a8783f]/15" />
-          <CornerFlourish />
-          <CornerFlourish flip />
+          <CornerFlourish position="tl" />
+          <CornerFlourish position="tr" />
+          <CornerFlourish position="bl" />
+          <CornerFlourish position="br" />
 
           <div className="relative text-center">
             <p className="font-heading text-xl tracking-wide text-[#8c6130] sm:text-2xl">శ్రీ</p>
-            <p className="mt-3 text-[8px] uppercase tracking-[0.32em] text-[#756957] sm:text-[10px] sm:tracking-[0.4em]">
+            <p className="mt-1 font-heading text-xs tracking-[0.18em] text-[#8c6130] sm:text-sm">శుభమస్తు</p>
+            <p className="mx-auto mt-4 max-w-sm text-[8px] uppercase leading-5 tracking-[0.3em] text-[#756957] sm:text-[10px] sm:tracking-[0.4em]">
               With the blessings of our parents &amp; elders
             </p>
 
@@ -69,7 +79,7 @@ export default function Welcome() {
             </div>
 
             <p className="mx-auto mt-4 max-w-sm font-heading text-base italic leading-relaxed text-[#5e554c] sm:mt-5 sm:text-xl">
-              request the pleasure of your company as we begin our life together.
+              We cordially invite you to grace the occasion with your presence and blessings.
             </p>
 
             <div className="my-6 flex items-center justify-center gap-3 sm:my-7">
