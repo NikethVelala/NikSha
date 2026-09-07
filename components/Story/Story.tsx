@@ -16,7 +16,7 @@ function KolamOrnament() {
     <div aria-hidden="true" className="mx-auto mt-8 flex h-14 w-44 items-center justify-center text-champagne">
       <svg viewBox="0 0 176 56" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth="1">
         <path d="M88 7c-7 8-7 14 0 21 7-7 7-13 0-21ZM88 49c7-8 7-14 0-21-7 7-7 13-7 21ZM39 28c8-7 14-7 21 0-7 7-13 7-21 0ZM137 28c-8 7-14 7-21 0 7-7 13-7 21 0Z" />
-        <path d="M58 14c10 0 18 5 24 14-6 9-14 14-24 14 4-8 4-20 0-28ZM118 14c-10 0-18 5-24 14 6 9 14 14 24 14-4-8-4-20 0-28Z" />
+        <path d="M58 14c10 0 18 5 24 14-6 9-14 14-24 14 4-8 4-20 0-28ZM118 14c-10 0-18 5-24 14 6 9 14 14 24 14-4-8 4-20 0-28Z" />
         <circle cx="88" cy="28" r="3" />
       </svg>
     </div>
@@ -45,9 +45,7 @@ export default function Story() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         const index = visible[0]?.target.getAttribute("data-story-chapter");
         if (index !== null && index !== undefined) setActiveChapter(Number(index));
       },
