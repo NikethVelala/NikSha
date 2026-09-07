@@ -37,6 +37,7 @@
 html {
   scroll-behavior: smooth;
   background: var(--ivory);
+  overflow-x: clip;
 }
 
 body {
@@ -45,6 +46,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   font-feature-settings: "kern" 1, "liga" 1;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body::before {
@@ -66,15 +70,14 @@ body::before {
   font-family: var(--font-heading), Georgia, serif;
 }
 
-/* Warm grade for the photographic curtain artwork. */
 section[role="button"] > div[aria-hidden="true"] {
   filter: saturate(0.86) contrast(1.07) sepia(0.045);
 }
 
-/* Keep interactive controls feeling tactile without making motion feel busy. */
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 button:focus-visible,
@@ -86,6 +89,22 @@ a:focus-visible {
 .niksha-petal {
   will-change: transform, opacity;
   backface-visibility: hidden;
+}
+
+@media (max-width: 767px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body::before {
+    opacity: 0.018;
+  }
+
+  .niksha-petal {
+    will-change: transform;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
