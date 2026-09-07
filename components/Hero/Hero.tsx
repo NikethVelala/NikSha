@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 
-const curtainImage = "/images/curtain-hq.webp";
+const curtainImage = "/images/curtain-final.webp";
 
 function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boolean }) {
   const isLeft = side === "left";
