@@ -29,7 +29,7 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
 function Tieback({ side, opening }: { side: "left" | "right"; opening: boolean }) {
   const isLeft = side === "left";
   return (
-    <motion.div aria-hidden="true" className={`pointer-events-none absolute top-[57%] z-[108] hidden h-16 w-12 sm:block ${isLeft ? "left-[calc(50%-3rem)]" : "right-[calc(50%-3rem)]"}`} animate={opening ? { x: isLeft ? "-24vw" : "24vw", opacity: 0 } : { x: 0, opacity: 1 }} transition={{ duration: 2.5, delay: 0.25, ease: [0.65, 0, 0.2, 1] }}>
+    <motion.div aria-hidden="true" className={`pointer-events-none absolute top-[57%] z-[108] hidden h-16 w-12 sm:block ${isLeft ? "left-[calc(50%-3rem)]" : "right-[calc(50%-3rem)]"}`} animate={opening ? { x: isLeft ? "-24vw" : "24vw", opacity: 0 } : { x: 0, opacity: 1 }} transition={{ duration: 3.05, delay: 0.05, ease: [0.65, 0, 0.2, 1] }}>
       <div className={`absolute top-1/2 h-px w-12 ${isLeft ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-[#f1d09f]/0 via-[#d2a15d] to-[#8b5a25]/40`} />
       <div className="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-[#f0d1ad]/80 bg-[#8a5425] shadow-[0_2px_12px_rgba(0,0,0,0.28)]" />
       <div className="absolute left-1/2 top-[calc(50%+10px)] h-7 w-1 -translate-x-1/2 rounded-full bg-gradient-to-b from-[#e8c184] to-[#7d4f1b]" />
