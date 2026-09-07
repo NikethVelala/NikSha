@@ -14,88 +14,93 @@ export default function OpenGraphImage() {
           height: "100%",
           display: "flex",
           position: "relative",
-          alignItems: "center",
+          alignItems: "flex-end",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #f8f4ee 0%, #fcfaf7 52%, #efe4d5 100%)",
-          color: "#292622",
-          fontFamily: "serif",
+          overflow: "hidden",
+          background: "#292622",
         }}
       >
+        <img
+          src="https://nik-sha.vercel.app/images/hero.jpg"
+          alt=""
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            background: "linear-gradient(180deg, rgba(25,20,16,0.06) 15%, rgba(25,20,16,0.18) 42%, rgba(25,20,16,0.86) 100%)",
+          }}
+        />
+
         <div
           style={{
             position: "absolute",
             inset: 28,
-            border: "1px solid rgba(194,138,73,0.55)",
             display: "flex",
+            border: "1px solid rgba(255,239,211,0.72)",
           }}
         />
         <div
           style={{
             position: "absolute",
             inset: 42,
-            border: "1px solid rgba(194,138,73,0.18)",
             display: "flex",
+            border: "1px solid rgba(255,239,211,0.28)",
           }}
         />
 
         <div
           style={{
+            width: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
-            padding: "40px 90px",
+            padding: "0 80px 58px",
+            color: "#fffaf2",
           }}
         >
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              gap: 18,
-              color: "#b6978f",
-              fontSize: 18,
-              letterSpacing: "0.32em",
+              fontSize: 17,
+              letterSpacing: "0.34em",
               textTransform: "uppercase",
+              color: "#f0d1ad",
             }}
           >
-            <span>Together with our families</span>
+            The NikSha Wedding
           </div>
 
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              gap: 22,
-              marginTop: 28,
-              color: "#c28a49",
-              fontSize: 22,
-            }}
-          >
-            <span>✦</span>
-            <span>✦</span>
-            <span>✦</span>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              marginTop: 20,
-              fontSize: 82,
+              marginTop: 16,
+              fontSize: 70,
               lineHeight: 1,
-              letterSpacing: "0.02em",
+              letterSpacing: "0.015em",
             }}
           >
-            Niketh <span style={{ color: "#c28a49", margin: "0 20px" }}>&amp;</span> Sirisha
+            Niketh <span style={{ color: "#f0d1ad", margin: "0 18px" }}>&amp;</span> Sirisha
           </div>
 
           <div
             style={{
               display: "flex",
-              marginTop: 28,
-              color: "#756f68",
-              fontSize: 24,
+              marginTop: 17,
+              fontSize: 21,
               letterSpacing: "0.16em",
               textTransform: "uppercase",
+              color: "rgba(255,250,242,0.86)",
             }}
           >
             18 November 2026 · Visakhapatnam
@@ -104,10 +109,10 @@ export default function OpenGraphImage() {
           <div
             style={{
               display: "flex",
-              marginTop: 32,
-              fontSize: 25,
-              color: "#7d4f1b",
+              marginTop: 16,
+              fontSize: 23,
               fontStyle: "italic",
+              color: "#f0d1ad",
             }}
           >
             Our forever begins here.
