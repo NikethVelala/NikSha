@@ -29,7 +29,7 @@ export default function Footer() {
           transition={{ duration: 0.9 }}
           className="mx-auto max-w-4xl text-center"
         >
-          <p className="text-xs uppercase tracking-[0.4em] text-champagne">Chapter VII</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-champagne">Chapter IV</p>
           <ClosingOrnament />
 
           <p className="mt-8 font-heading text-2xl text-ivory/70 sm:text-3xl">And so, our forever begins.</p>
@@ -53,10 +53,7 @@ export default function Footer() {
             <span>{wedding.ceremony.venue.name} · Visakhapatnam</span>
           </div>
 
-          <a
-            href="#top"
-            className="group mx-auto mt-14 inline-flex items-center gap-3 border-b border-ivory/30 pb-2 text-xs uppercase tracking-[0.24em] text-ivory transition-colors hover:border-champagne hover:text-champagne"
-          >
+          <a href="#top" className="group mx-auto mt-14 inline-flex items-center gap-3 border-b border-ivory/30 pb-2 text-xs uppercase tracking-[0.24em] text-ivory transition-colors hover:border-champagne hover:text-champagne">
             Back to the beginning
             <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" strokeWidth={1.5} />
           </a>
