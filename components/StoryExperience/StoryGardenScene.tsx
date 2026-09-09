@@ -1,8 +1,9 @@
 "use client";
 
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { gardenMoments, type GardenMoment, type GardenMomentId } from "./content";
 
 type StoryGardenSceneProps = {
@@ -12,14 +13,16 @@ type StoryGardenSceneProps = {
   onSelect: (moment: GardenMoment) => void;
 };
 
+import { BotanicalPalette, GardenPlant, JasmineSwag, PetalBed } from "./GardenBotanicals";
+
 type CameraMark = { position: [number, number, number]; target: [number, number, number] };
 
 const desktopMarks: Record<"garden" | "finale" | GardenMomentId, CameraMark> = {
-  garden: { position: [0, 4.5, 17.5], target: [0, 2.6, -3] },
-  "school-days": { position: [-4.5, 3.1, 5.7], target: [-3.6, 1.15, -0.3] },
-  friendship: { position: [4.8, 3.2, 6.8], target: [3.45, 1.7, -0.5] },
-  "something-more": { position: [0.7, 3.5, 4.8], target: [0, 2, -4.45] },
-  finale: { position: [0, 3.4, 8.4], target: [0, 3.2, -6] },
+  garden: { position: [0.4, 3.5, 15.5], target: [0, 3.1, -4] },
+  "school-days": { position: [-5.1, 2.65, 5.5], target: [-3.55, 1.2, -0.5] },
+  friendship: { position: [5.0, 2.7, 6.0], target: [3.45, 1.65, -0.5] },
+  "something-more": { position: [0.6, 2.9, 4.0], target: [0, 2.4, -4.45] },
+  finale: { position: [0, 3.7, 13.2], target: [0, 3.3, -6] },
 };
 
 const mobileMarks: Record<"garden" | "finale" | GardenMomentId, CameraMark> = {
@@ -40,22 +43,24 @@ const palette = {
   rose: "#791e2c",
   crimson: "#9b2132",
   stone: "#74644e",
-  night: "#0b1711",
+  night: "#091b20",
 };
 
 export default function StoryGardenScene({ activeMoment, finale, isMobile, onSelect }: StoryGardenSceneProps) {
   const focalX = isMobile ? 0 : activeMoment?.id === "school-days" ? -3.6 : activeMoment?.id === "friendship" ? 3.45 : 0;
   return (
-    <>
+    <BotanicalPalette>
       <color attach="background" args={[palette.night]} />
-      <fog attach="fog" args={[palette.night, 12, 33]} />
-      <ambientLight intensity={0.45} color="#e8d8b3" />
-      <hemisphereLight args={["#d3dfd9", "#102319", 1.05]} />
-      <directionalLight position={[-5, 9, 3]} intensity={1.6} color="#ffe5b7" />
-      <pointLight position={[focalX, 3.8, isMobile ? 2 : -0.2]} intensity={finale ? 18 : 12} distance={12} decay={2} color="#f8cb87" />
+      <fog attach="fog" args={[palette.night, 17, 38]} />
+      <ambientLight intensity={0.24} color="#bcccd3" />
+      <hemisphereLight args={["#8cabbf", "#152c20", 0.85]} />
+      <directionalLight position={[-6, 8, -4]} intensity={1.8} color="#aec8dd" />
+      <directionalLight position={[2, 7, 5]} intensity={1.1} color="#f4ddb3" castShadow shadow-mapSize-width={isMobile ? 512 : 1024} shadow-mapSize-height={isMobile ? 512 : 1024} shadow-camera-left={-10} shadow-camera-right={10} shadow-camera-top={10} shadow-camera-bottom={-8} shadow-camera-far={30} shadow-bias={-0.0005} shadow-normalBias={0.03} />
+      <pointLight position={[focalX, 3.8, isMobile ? 2 : -0.2]} intensity={finale ? 23 : 19} distance={12} decay={2} color="#f8cb87" />
 
       <CameraDirector activeMoment={activeMoment} finale={finale} isMobile={isMobile} />
-      <GardenBackdrop />
+      <MaterialReflections />
+      <GardenBackdrop isMobile={isMobile} />
       <GroundPath />
       {isMobile ? <PortraitStage activeMoment={activeMoment} finale={finale} onSelect={onSelect} /> : <>
       <SilkWing side="left" />
@@ -68,6 +73,7 @@ export default function StoryGardenScene({ activeMoment, finale, isMobile, onSel
       <PlantMass position={[5.3, 0, -4.7]} scale={[1.5, 3.1, 1.3]} seed={12} />
       <PlantMass position={[-3.7, 0, -2.7]} scale={[1.3, 1, 1]} seed={16} />
       <PlantMass position={[3.8, 0, -2.7]} scale={[1.3, 1, 1]} seed={18} />
+      {[-1, 1].flatMap((side) => [5.5, 2.5, -1].map((z, i) => <PlantMass key={`${side}-${z}`} position={[side * (2.6 - i * 0.2), 0, z]} scale={[1.6, 0.75 + i * 0.15, 1]} seed={42 + i} />))}
 
       <GardenLantern position={[-6.15, 4.8, -2.3]} scale={1.1} phase={0.4} lit />
       <GardenLantern position={[6.15, 4.65, -2.8]} scale={1.04} phase={1.1} lit />
@@ -80,10 +86,8 @@ export default function StoryGardenScene({ activeMoment, finale, isMobile, onSel
       <FriendshipLanterns moment={gardenMoments[1]} active={activeMoment?.id === "friendship"} onSelect={onSelect} />
       <PromiseArch moment={gardenMoments[2]} active={activeMoment?.id === "something-more"} onSelect={onSelect} />
       </>}
-      <AtmosphericPollen count={isMobile ? 12 : 30} />
-      {!isMobile && <ForegroundPetals count={3} />}
       {finale && <FinaleGlow />}
-    </>
+    </BotanicalPalette>
   );
 }
 
@@ -101,57 +105,61 @@ function PortraitStage({ activeMoment, finale, onSelect }: Pick<StoryGardenScene
   </>;
 }
 
-function PlantMass({ position, scale, seed }: { position: [number, number, number]; scale: [number, number, number]; seed: number }) {
-  return <group position={position}>
-    <mesh position={[0, scale[1] * 0.46, 0]} scale={scale}><sphereGeometry args={[0.62, 10, 8]} /><meshStandardMaterial color="#183d28" roughness={1} /></mesh>
-    <FoliageField count={42} center={[0, scale[1] * 0.6, 0]} spread={[scale[0] * 1.25, scale[1], scale[2] * 1.25]} seed={seed} />
-  </group>;
-}
+const PlantMass = GardenPlant;
 
 function CameraDirector({ activeMoment, finale, isMobile }: Pick<StoryGardenSceneProps, "activeMoment" | "finale" | "isMobile">) {
-  const camera = useThree((state) => state.camera);
   const pointer = useThree((state) => state.pointer);
   const size = useThree((state) => state.size);
-  const currentTarget = useRef(new THREE.Vector3(0, 3, -2));
-  const desiredPosition = useMemo(() => new THREE.Vector3(), []);
-  const desiredTarget = useMemo(() => new THREE.Vector3(), []);
-  const lastLayout = useRef<boolean | null>(null);
-
-  useFrame((_, delta) => {
-    const marks = isMobile ? mobileMarks : desktopMarks;
-    const mark = finale ? marks.finale : activeMoment ? marks[activeMoment.id] : marks.garden;
-    const parallax = isMobile ? 0 : 0.15;
-    const aspect = size.width / Math.max(1, size.height);
-    const extraDistance = isMobile ? Math.max(0, 1.1 - aspect) * 3 : Math.max(0, 1.1 - aspect) * 7;
-    desiredPosition.set(mark.position[0] + pointer.x * parallax, mark.position[1] + pointer.y * parallax * 0.18, mark.position[2] + extraDistance);
-    desiredTarget.set(mark.target[0] + pointer.x * parallax * 0.3, mark.target[1] + pointer.y * parallax * 0.12, mark.target[2]);
-    if (lastLayout.current !== isMobile) {
-      camera.position.copy(desiredPosition);
-      currentTarget.current.copy(desiredTarget);
-      lastLayout.current = isMobile;
+  const motion = useRef({ key: "", elapsed: 0, from: new THREE.Vector3(), fromTarget: new THREE.Vector3(), target: new THREE.Vector3(), destination: new THREE.Vector3(), look: new THREE.Vector3() });
+  const chapter = finale ? "finale" : activeMoment?.id ?? "garden";
+  useFrame(({ camera }, delta) => {
+    const m = motion.current;
+    const mark = (isMobile ? mobileMarks : desktopMarks)[chapter];
+    const key = chapter + isMobile + size.width + size.height;
+    const extra = Math.max(0, 1.1 - size.width / Math.max(1, size.height)) * (isMobile ? 3 : 7);
+    if (key !== m.key) {
+      m.destination.set(mark.position[0], mark.position[1], mark.position[2] + extra);
+      m.look.set(...mark.target);
+      if (!m.key) { camera.position.copy(m.destination); m.target.copy(m.look); }
+      m.from.copy(camera.position); m.fromTarget.copy(m.target); m.elapsed = 0; m.key = key;
     }
-    const easing = 1 - Math.exp(-Math.min(delta, 0.05) * (isMobile ? 3 : 1.8));
-    camera.position.lerp(desiredPosition, easing);
-    currentTarget.current.lerp(desiredTarget, easing);
-    camera.lookAt(currentTarget.current);
+    m.elapsed = Math.min(1, m.elapsed + Math.min(delta, 0.05) / (isMobile ? 0.85 : 1.65));
+    const t = m.elapsed;
+    const eased = t * t * t * (t * (t * 6 - 15) + 10);
+    camera.position.lerpVectors(m.from, m.destination, eased);
+    camera.position.x += Math.sin(t * Math.PI) * (isMobile ? 0.06 : 0.38);
+    camera.position.z += Math.sin(t * Math.PI) * (isMobile ? 0.12 : 0.45);
+    camera.position.x += isMobile ? 0 : pointer.x * 0.045;
+    m.target.lerpVectors(m.fromTarget, m.look, eased);
+    camera.lookAt(m.target);
   });
-
   return null;
 }
 
-function GardenBackdrop() {
+function GardenBackdrop({ isMobile }: { isMobile: boolean }) {
   const backdrop = useMemo(() => makeBackdropTexture(), []);
   useEffect(() => () => backdrop.dispose(), [backdrop]);
+  useEffect(() => {
+    const image = new Image();
+    image.decoding = "async";
+    image.onload = () => {
+      const canvas = backdrop.image as HTMLCanvasElement;
+      canvas.getContext("2d")?.drawImage(image, 0, 0, canvas.width, canvas.height);
+      backdrop.needsUpdate = true;
+    };
+    image.src = isMobile ? "/images/garden/blue-hour-mobile.webp" : "/images/garden/blue-hour.webp";
+    return () => { image.onload = null; image.onerror = null; image.src = ""; };
+  }, [backdrop, isMobile]);
 
   return (
     <group>
-      <mesh position={[0, 7.5, -13.8]}>
-        <planeGeometry args={[36, 20]} />
+      <mesh position={[0, 6.8, -13.8]}>
+        <planeGeometry args={[36, 24]} />
         <meshBasicMaterial map={backdrop} transparent toneMapped={false} />
       </mesh>
       <mesh position={[0, 8, -12.9]}>
         <planeGeometry args={[30, 15]} />
-        <meshBasicMaterial color="#13261a" transparent opacity={0.32} />
+        <meshBasicMaterial color="#13261a" transparent opacity={0.08} />
       </mesh>
       <HazeSprite position={[-6.8, 4.8, -8.7]} scale={6.5} opacity={0.12} />
       <HazeSprite position={[7.1, 5.5, -9.2]} scale={7.5} opacity={0.1} />
@@ -162,29 +170,27 @@ function GardenBackdrop() {
 
 function GroundPath() {
   const stone = useMemo(() => new THREE.MeshStandardMaterial({ color: "#1c2d22", roughness: 0.88, metalness: 0.02 }), []);
-  const path = useMemo(() => new THREE.MeshStandardMaterial({ color: "#665440", roughness: 0.68, metalness: 0.06 }), []);
-  const inlay = useMemo(() => new THREE.MeshStandardMaterial({ color: "#d2a573", roughness: 0.4, metalness: 0.5, emissive: "#5c3817", emissiveIntensity: 0.28 }), []);
-  useEffect(() => () => { stone.dispose(); path.dispose(); inlay.dispose(); }, [stone, path, inlay]);
+  const texture = useMemo(() => makeStoneTexture(), []);
+  const path = useMemo(() => new THREE.MeshStandardMaterial({ color: "#a29780", roughness: 0.83, metalness: 0.04, map: texture, bumpMap: texture, bumpScale: 0.025 }), [texture]);
+  useEffect(() => () => { stone.dispose(); path.dispose(); texture.dispose(); }, [stone, path, texture]);
 
   return (
     <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.06, -2]} material={stone}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.06, -2]} material={stone}>
         <planeGeometry args={[35, 36]} />
       </mesh>
       {Array.from({ length: 12 }, (_, index) => {
         const z = 10 - index * 1.7;
-        const x = Math.sin(index * 0.48) * 0.45;
+        const x = Math.sin(index * 0.32) * 0.2;
         const width = 3.2 - index * 0.085;
         return <group key={index} position={[x, -0.025, z]}>
-          <mesh material={path}><boxGeometry args={[width, 0.06, 1.66]} /></mesh>
+          {index % 3 === 0 && <PetalBed position={[width * 0.4, 0.065, 0]} width={0.5} seed={index} />}
+          <mesh receiveShadow material={path}><boxGeometry args={[width, 0.06, 1.66]} /></mesh>
           {[-1, 1].map((side) => <mesh key={side} position={[side * (width / 2 + 0.05), 0.04, 0]} material={stone}><boxGeometry args={[0.1, 0.13, 1.66]} /></mesh>)}
         </group>;
       })}
       {[-3.6, 3.45].map((x) => <ContactShade key={x} position={[x, 0.013, -0.3]} scale={[3, 1.9, 1]} />)}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, -1.2]}>
-        <ringGeometry args={[7.8, 8.1, 72, 1, 0.1, Math.PI - 0.2]} />
-        <meshStandardMaterial color="#b88951" transparent opacity={0.2} roughness={0.55} metalness={0.35} />
-      </mesh>
+
     </group>
   );
 }
@@ -202,7 +208,7 @@ function SilkWing({ side }: { side: "left" | "right" }) {
 
   return (
     <mesh position={[side === "left" ? -10.4 : 10.4, 6.3, 3.1]} rotation={[0.04, side === "left" ? -0.3 : 0.3, side === "left" ? 0.08 : -0.08]} geometry={geometry}>
-      <meshStandardMaterial map={texture} color="#c58c4e" roughness={0.52} metalness={0.08} side={THREE.DoubleSide} transparent opacity={0.92} />
+      <meshStandardMaterial map={texture} color="#e4dac2" roughness={0.86} metalness={0} side={THREE.DoubleSide} transparent opacity={0.92} />
     </mesh>
   );
 }
@@ -212,8 +218,10 @@ function GardenGate({ finale }: { finale: boolean }) {
   const vineGeometry = useMemo(() => makeVineGeometry(), []);
   useEffect(() => () => { archGeometry.dispose(); vineGeometry.dispose(); }, [archGeometry, vineGeometry]);
 
-  const stone = useMemo(() => new THREE.MeshStandardMaterial({ color: "#826c50", roughness: 0.74, metalness: 0.08 }), []);
-  const gold = useMemo(() => new THREE.MeshStandardMaterial({ color: "#d9ad6e", roughness: 0.38, metalness: 0.62, emissive: finale ? "#7d4f1b" : "#1e1209", emissiveIntensity: finale ? 0.65 : 0.1 }), [finale]);
+  const plaster = useMemo(() => makeStoneTexture(), []);
+  useEffect(() => () => plaster.dispose(), [plaster]);
+  const stone = useMemo(() => new THREE.MeshStandardMaterial({ color: "#c4b898", roughness: 0.91, metalness: 0, map: plaster, bumpMap: plaster, bumpScale: 0.012 }), [plaster]);
+  const gold = useMemo(() => new THREE.MeshStandardMaterial({ color: "#d9ad6e", roughness: 0.38, metalness: 0.62, emissive: finale ? "#7d4f1b" : "#1e1209", emissiveIntensity: 0.08 }), [finale]);
   useEffect(() => () => stone.dispose(), [stone]);
   useEffect(() => () => gold.dispose(), [gold]);
 
@@ -221,76 +229,31 @@ function GardenGate({ finale }: { finale: boolean }) {
     <group position={[0, 0, -5.1]}>
       {[-5.1, 5.1].map((x) => (
         <group key={x} position={[x, 0, 0]}>
-          <mesh position={[0, 2.5, 0]} material={stone}><boxGeometry args={[0.72, 5, 0.85]} /></mesh>
+          <mesh castShadow receiveShadow position={[0, 2.5, 0]} material={stone}><boxGeometry args={[0.72, 5, 0.85]} /></mesh>
+          <mesh position={[0, 0.32, 0]} material={stone}><boxGeometry args={[0.96, 0.64, 1.05]} /></mesh>
+          <mesh position={[0, 4.75, 0]} material={stone}><boxGeometry args={[1, 0.2, 1.1]} /></mesh>
           <mesh position={[0, 5.48, 0]} material={gold}><cylinderGeometry args={[0.55, 0.48, 0.25, 12]} /></mesh>
           <mesh position={[0, 0.18, 0]} material={gold}><cylinderGeometry args={[0.7, 0.82, 0.3, 12]} /></mesh>
         </group>
       ))}
-      <mesh geometry={archGeometry} material={stone} />
+      <mesh castShadow receiveShadow geometry={archGeometry} material={stone} />
       <mesh geometry={archGeometry} material={stone} position={[0, 0, -2.1]} />
       <mesh position={[0, 7.36, -0.8]} material={stone}><boxGeometry args={[10.8, 0.22, 2.8]} /></mesh>
-      <mesh position={[0, 0.08, -0.8]} material={stone}><boxGeometry args={[10.9, 0.16, 3]} /></mesh>
+      <mesh receiveShadow position={[0, 0.08, -0.8]} material={stone}><boxGeometry args={[10.9, 0.16, 3]} /></mesh>
       <mesh geometry={vineGeometry} position={[0, 0, 0.12]}>
         <meshStandardMaterial color="#264832" roughness={0.7} metalness={0.02} />
       </mesh>
-      <FlowerGarland position={[0, 6.3, 0.3]} scale={1.15} />
-      <FlowerGarland position={[-4.9, 4.9, 0.28]} scale={0.88} rotation={0.7} />
-      <FlowerGarland position={[4.9, 4.9, 0.28]} scale={0.88} rotation={-0.7} />
-      <HazeSprite position={[0, 4.2, 0.25]} scale={finale ? 6.8 : 5.6} opacity={finale ? 0.25 : 0.12} />
+      <FlowerGarland position={[0, 6.75, 0.5]} scale={1.9} />
+      <GardenPlant position={[-4.9, 0.1, 0.5]} scale={[1.6, 4.8, 1]} seed={21} />
+      <GardenPlant position={[4.9, 0.1, 0.5]} scale={[1.7, 4.5, 1]} seed={24} />
+      <PavilionSilk finale={finale} />
+      <PetalBed position={[0, 0.18, 0]} width={3.5} />
+      <pointLight position={[0, 4.7, -0.7]} intensity={14} distance={9} decay={2} color="#f7d2a0" />
     </group>
   );
 }
 
-function FlowerGarland({ position, scale, rotation = 0 }: { position: [number, number, number]; scale: number; rotation?: number }) {
-  const flowers = useMemo(() => Array.from({ length: 12 }, (_, index) => ({
-    x: (index - 5.5) * 0.43,
-    y: Math.sin(index * 1.9) * 0.17,
-    z: Math.cos(index * 1.4) * 0.16,
-    scale: 0.5 + ((index * 13) % 5) * 0.07,
-    tone: index % 4 === 0 ? palette.rose : index % 3 === 0 ? palette.champagne : "#efe1bd",
-  })), []);
-  return <group position={position} scale={scale} rotation={[0, 0, rotation]}>{flowers.map((flower, index) => <Blossom key={index} position={[flower.x, flower.y, flower.z]} scale={flower.scale} color={flower.tone} />)}</group>;
-}
-
-function Blossom({ position, scale, color }: { position: [number, number, number]; scale: number; color: string }) {
-  return (
-    <group position={position} scale={scale} rotation={[Math.PI / 2, 0, 0]}>
-      {Array.from({ length: 5 }, (_, index) => <mesh key={index} rotation={[0, 0, (index / 5) * Math.PI * 2]} position={[0, 0.21, 0]}><circleGeometry args={[0.26, 8, 0, Math.PI]} /><meshStandardMaterial color={color} roughness={0.62} metalness={0.04} side={THREE.DoubleSide} /></mesh>)}
-      <mesh position={[0, 0, 0.02]}><circleGeometry args={[0.11, 10]} /><meshStandardMaterial color="#b98443" emissive="#543213" emissiveIntensity={0.2} /></mesh>
-    </group>
-  );
-}
-
-function FoliageField({ count, center, spread, seed }: { count: number; center: [number, number, number]; spread: [number, number, number]; seed: number }) {
-  const ref = useRef<THREE.InstancedMesh>(null);
-  const geometry = useMemo(() => makeLeafGeometry(), []);
-  const material = useMemo(() => new THREE.MeshStandardMaterial({ color: "#ffffff", roughness: 0.88, metalness: 0, side: THREE.DoubleSide }), []);
-  useEffect(() => () => { geometry.dispose(); material.dispose(); }, [geometry, material]);
-
-  useLayoutEffect(() => {
-    const mesh = ref.current;
-    if (!mesh) return;
-    const random = seeded(seed);
-    const dummy = new THREE.Object3D();
-    const colors = ["#173b28", "#244c2d", "#315c38", "#3a6138", "#20452b"];
-    for (let index = 0; index < count; index += 1) {
-      const x = center[0] + (random() - 0.5) * spread[0];
-      const y = center[1] + (random() - 0.5) * spread[1];
-      const z = center[2] + (random() - 0.5) * spread[2];
-      const scale = 0.28 + random() * 0.7;
-      dummy.position.set(x, y, z);
-      dummy.rotation.set((random() - 0.5) * 0.8, random() * Math.PI, (random() - 0.5) * 2.2);
-      dummy.scale.set(scale * (0.7 + random() * 0.55), scale, scale);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(index, dummy.matrix);
-      mesh.setColorAt(index, new THREE.Color(colors[Math.floor(random() * colors.length)]));
-    }
-    mesh.instanceMatrix.needsUpdate = true;
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }, [center, count, seed, spread]);
-
-  return <instancedMesh ref={ref} args={[geometry, material, count]} frustumCulled={false} />;
-}
+const FlowerGarland = JasmineSwag;
 
 function GardenLantern({ position, scale, phase, lit = false }: { position: [number, number, number]; scale: number; phase: number; lit?: boolean }) {
   const group = useRef<THREE.Group>(null);
@@ -298,17 +261,19 @@ function GardenLantern({ position, scale, phase, lit = false }: { position: [num
   useEffect(() => () => glow.dispose(), [glow]);
   useFrame(({ clock }) => {
     if (!group.current) return;
-    group.current.rotation.z = Math.sin(clock.getElapsedTime() * 0.45 + phase) * 0.045;
+    group.current.rotation.z = Math.sin(clock.getElapsedTime() * 0.45 + phase) * 0.008;
   });
 
   return (
     <group ref={group} position={position} scale={scale}>
-      <mesh position={[0, -0.1, 0]}><cylinderGeometry args={[0.23, 0.28, 0.55, 10]} /><meshStandardMaterial color="#b98243" roughness={0.34} metalness={0.68} /></mesh>
+      <mesh position={[0, -0.12, 0]}><cylinderGeometry args={[0.26, 0.29, 0.065, 12]} /><meshStandardMaterial color="#b98243" roughness={0.34} metalness={0.68} /></mesh>
       <mesh position={[0, 0.28, 0]}><cylinderGeometry args={[0.32, 0.24, 0.18, 10]} /><meshStandardMaterial color="#c89553" roughness={0.32} metalness={0.7} /></mesh>
-      <mesh position={[0, 0.68, 0]}><coneGeometry args={[0.3, 0.25, 10]} /><meshStandardMaterial color="#b67b39" roughness={0.32} metalness={0.72} /></mesh>
-      <mesh position={[0, 0.12, 0]}><cylinderGeometry args={[0.15, 0.15, 0.36, 10]} /><meshStandardMaterial color="#ffd98a" emissive="#f6a943" emissiveIntensity={2.4} transparent opacity={0.93} /></mesh>
-      <sprite position={[0, 0.12, 0]} scale={[1.6, 1.6, 1]}><spriteMaterial map={glow} color="#f5b45e" transparent opacity={0.46} depthWrite={false} blending={THREE.AdditiveBlending} /></sprite>
-      {lit && <pointLight position={[0, 0.15, 0.35]} intensity={7.5} distance={6.5} decay={2} color="#f4b45d" />}
+      <mesh position={[0, 0.43, 0]}><coneGeometry args={[0.3, 0.25, 10]} /><meshStandardMaterial color="#b67b39" roughness={0.32} metalness={0.72} /></mesh>
+      <mesh position={[0, 1.23, 0]}><cylinderGeometry args={[0.009, 0.009, 1.4, 4]} /><meshStandardMaterial color="#9d8452" metalness={0.55} roughness={0.46} /></mesh>
+      {[-1, 1].flatMap((x) => [-1, 1].map((z) => <mesh key={`${x}-${z}`} position={[x * 0.16, 0.08, z * 0.16]}><boxGeometry args={[0.022, 0.39, 0.022]} /><meshStandardMaterial color="#b99861" metalness={0.65} roughness={0.35} /></mesh>))}
+      <mesh position={[0, 0.12, 0]}><cylinderGeometry args={[0.09, 0.09, 0.28, 10]} /><meshStandardMaterial color="#ffd98a" emissive="#f6a943" emissiveIntensity={1.4} transparent opacity={0.93} /></mesh>
+      <sprite position={[0, 0.12, 0]} scale={[1.6, 1.6, 1]}><spriteMaterial map={glow} color="#f5b45e" transparent opacity={0.18} depthWrite={false} blending={THREE.AdditiveBlending} /></sprite>
+      {lit && <pointLight position={[0, 0.15, 0.35]} intensity={3.5} distance={6.5} decay={2} color="#f4c58b" />}
     </group>
   );
 }
@@ -316,14 +281,18 @@ function GardenLantern({ position, scale, phase, lit = false }: { position: [num
 type MemoryProp = { moment: GardenMoment; active: boolean; position?: [number, number, number]; onSelect: (moment: GardenMoment) => void };
 
 function SchoolDesk({ moment, active, position = [-3.6, 0.16, -0.3], onSelect }: MemoryProp) {
+  const grain = useMemo(() => makeWoodTexture(), []);
+  useEffect(() => () => grain.dispose(), [grain]);
   return (
     <group position={position} onClick={(event: ThreeEvent<MouseEvent>) => { event.stopPropagation(); onSelect(moment); }}>
-      <mesh position={[0, 0.75, 0]}><boxGeometry args={[2.35, 0.16, 1.22]} /><meshStandardMaterial color="#68442d" roughness={0.58} metalness={0.1} /></mesh>
+      <mesh castShadow receiveShadow position={[0, 0.75, 0]}><boxGeometry args={[2.35, 0.16, 1.22]} /><meshStandardMaterial map={grain} bumpMap={grain} bumpScale={0.008} color="#99744c" roughness={0.68} metalness={0} /></mesh>
       {[-0.92, 0.92].flatMap((x) => [-0.4, 0.4].map((z) => <mesh key={`${x}-${z}`} position={[x, 0.28, z]}><boxGeometry args={[0.15, 0.88, 0.15]} /><meshStandardMaterial color="#5b3825" roughness={0.62} /></mesh>))}
       <mesh position={[0, 0.85, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[1.48, 0.9]} /><meshStandardMaterial color="#efe3c7" roughness={0.72} /></mesh>
-      <mesh position={[0, 0.86, 0.01]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[1.15, 0.65]} /><meshStandardMaterial color="#faf3df" roughness={0.82} /></mesh>
+      {[-1, 1].map((side) => <mesh key={side} position={[side * 0.3, 0.869, 0.01]} rotation={[0, 0, side * 0.035]}><boxGeometry args={[0.6, 0.024, 0.7]} /><meshStandardMaterial color="#eee6d3" roughness={0.98} /></mesh>)}
       <mesh position={[0, 0.875, -0.02]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[0.02, 0.67]} /><meshStandardMaterial color="#b58042" metalness={0.4} roughness={0.44} /></mesh>
-      <HazeSprite position={[0, 1.25, -0.1]} scale={active ? 2.8 : 1.6} opacity={active ? 0.32 : 0.11} />
+      <GardenLantern position={[-1.1, 1.55, -0.5]} scale={0.48} phase={0} lit={active} />
+      <GardenPlant position={[-1.8, -0.15, -0.7]} scale={[1.4, 2.2, 1.2]} seed={32} />
+      <GardenPlant position={[1.6, -0.15, -1]} scale={[1.1, 1.4, 1]} seed={36} />
       <ContactShade position={[0, -0.145, 0]} scale={[3, 2.1, 1]} />
     </group>
   );
@@ -335,7 +304,10 @@ function FriendshipLanterns({ moment, active, position = [3.45, 0.1, -0.5], onSe
       <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}><circleGeometry args={[1.7, 32]} /><meshStandardMaterial color="#284532" roughness={0.9} /></mesh>
       <GardenLantern position={[-0.72, 1.4, 0.2]} scale={1.2} phase={1.4} lit={active} />
       <GardenLantern position={[0.72, 1.85, -0.25]} scale={1.2} phase={2.4} />
-      <mesh position={[0, 2.45, 0]}><torusGeometry args={[0.9, 0.04, 8, 32, Math.PI]} /><meshStandardMaterial color="#c38b4c" metalness={0.65} roughness={0.35} /></mesh>
+      <GardenPlant position={[-1.3, 0, -0.5]} scale={[1.6, 1.8, 1]} seed={17} />
+      <GardenPlant position={[1.2, 0, -0.7]} scale={[1.2, 2.1, 1]} seed={19} />
+      <FlowerGarland position={[0, 3.15, -0.5]} scale={0.64} />
+      <ContactShade position={[0, 0.001, 0]} scale={[3.3, 2, 1]} />
     </group>
   );
 }
@@ -343,64 +315,15 @@ function FriendshipLanterns({ moment, active, position = [3.45, 0.1, -0.5], onSe
 function PromiseArch({ moment, active, position = [0, 0, -4.45], onSelect }: MemoryProp) {
   return (
     <group position={position} onClick={(event: ThreeEvent<MouseEvent>) => { event.stopPropagation(); onSelect(moment); }}>
-      <mesh position={[0, 0.48, 0.45]}><cylinderGeometry args={[0.95, 1.1, 0.75, 12]} /><meshStandardMaterial color="#766149" roughness={0.75} metalness={0.08} /></mesh>
-      <mesh position={[0, 0.89, 0.45]}><cylinderGeometry args={[0.72, 0.88, 0.14, 16]} /><meshStandardMaterial color="#c4904d" roughness={0.34} metalness={0.55} /></mesh>
-      <Blossom position={[-0.44, 1.1, 0.55]} scale={0.8} color="#ece0bd" />
-      <Blossom position={[0.35, 1.2, 0.6]} scale={0.75} color="#8f2230" />
-      <Blossom position={[0.02, 1.26, 0.75]} scale={0.62} color="#d6a25e" />
-      {active && <HazeSprite position={[0, 1.1, -0.3]} scale={2.5} opacity={0.13} />}
+      <mesh castShadow receiveShadow position={[0, 0.18, 0.45]}><boxGeometry args={[2.3, 0.32, 1.1]} /><meshStandardMaterial color="#b8ad91" roughness={0.9} metalness={0} /></mesh>
+      <FlowerGarland position={[0, 3.55, 0]} scale={0.9} />
+      <GardenPlant position={[-1.6, 0, 0]} scale={[1.5, 3.2, 1.4]} seed={29} />
+      <GardenPlant position={[1.6, 0, -0.25]} scale={[1.6, 3.5, 1.3]} seed={31} />
+      <FlowerGarland position={[0, 0.49, 0.95]} scale={0.38} />
+      <PetalBed position={[0, 0.015, 1]} width={1.5} />
+      {active && <pointLight position={[0, 2.2, 1.5]} intensity={6} distance={4} color="#f7d9ae" />}
     </group>
   );
-}
-
-function AtmosphericPollen({ count }: { count: number }) {
-  const ref = useRef<THREE.Points>(null);
-  const data = useMemo(() => {
-    const random = seeded(78);
-    const base = Array.from({ length: count }, () => ({ x: (random() - 0.5) * 18, y: random() * 8.5, z: -7 + random() * 13, phase: random() * Math.PI * 2, speed: 0.06 + random() * 0.13 }));
-    const positions = new Float32Array(count * 3);
-    return { base, positions };
-  }, [count]);
-  useFrame(({ clock }) => {
-    const geometry = ref.current?.geometry;
-    if (!geometry) return;
-    const elapsed = clock.getElapsedTime();
-    data.base.forEach((particle, index) => {
-      data.positions[index * 3] = particle.x + Math.sin(elapsed * particle.speed + particle.phase) * 0.35;
-      data.positions[index * 3 + 1] = particle.y + Math.cos(elapsed * particle.speed * 0.8 + particle.phase) * 0.18;
-      data.positions[index * 3 + 2] = particle.z;
-    });
-    geometry.attributes.position.needsUpdate = true;
-  });
-  return <points ref={ref}><bufferGeometry><bufferAttribute attach="attributes-position" args={[data.positions, 3]} /></bufferGeometry><pointsMaterial color="#f6d49e" size={0.035} transparent opacity={0.58} sizeAttenuation depthWrite={false} /></points>;
-}
-
-function ForegroundPetals({ count }: { count: number }) {
-  const geometry = useMemo(() => makePetalGeometry(), []);
-  useEffect(() => () => geometry.dispose(), [geometry]);
-  const petals = useMemo(() => {
-    const random = seeded(119);
-    return Array.from({ length: count }, (_, index) => ({
-      position: [(random() - 0.5) * 16, 1 + random() * 8, 2 + random() * 4] as [number, number, number],
-      scale: 0.16 + random() * 0.25,
-      phase: random() * Math.PI * 2,
-      speed: 0.22 + random() * 0.24,
-      color: index % 3 === 0 ? "#e5c184" : index % 2 === 0 ? "#a71e32" : "#dcb27c",
-    }));
-  }, [count]);
-  return <>{petals.map((petal, index) => <DriftingPetal key={index} geometry={geometry} {...petal} />)}</>;
-}
-
-function DriftingPetal({ geometry, position, scale, phase, speed, color }: { geometry: THREE.BufferGeometry; position: [number, number, number]; scale: number; phase: number; speed: number; color: string }) {
-  const mesh = useRef<THREE.Mesh>(null);
-  useFrame(({ clock }) => {
-    if (!mesh.current) return;
-    const time = clock.getElapsedTime() * speed + phase;
-    mesh.current.position.x = position[0] + Math.sin(time) * 0.8;
-    mesh.current.position.y = position[1] + Math.cos(time * 1.2) * 0.5;
-    mesh.current.rotation.set(time * 0.7, time * 0.45, time * 0.9);
-  });
-  return <mesh ref={mesh} geometry={geometry} position={position} scale={scale}><meshStandardMaterial color={color} roughness={0.62} side={THREE.DoubleSide} /></mesh>;
 }
 
 function HazeSprite({ position, scale, opacity }: { position: [number, number, number]; scale: number; opacity: number }) {
@@ -413,7 +336,7 @@ function FinaleGlow() {
   const glow = useMemo(() => makeGlowTexture(), []);
   useEffect(() => () => glow.dispose(), [glow]);
   return <group position={[0, 3.8, -4.75]}>
-    <sprite scale={[8.2, 8.2, 1]}><spriteMaterial map={glow} color="#f1bd68" transparent opacity={0.35} depthWrite={false} blending={THREE.AdditiveBlending} /></sprite>
+    <sprite scale={[8.2, 8.2, 1]}><spriteMaterial map={glow} color="#f1bd68" transparent opacity={0.1} depthWrite={false} blending={THREE.AdditiveBlending} /></sprite>
     <pointLight intensity={13} distance={10} color="#f7c36d" />
   </group>;
 }
@@ -448,22 +371,6 @@ function makeDrapeGeometry() {
   return geometry;
 }
 
-function makeLeafGeometry() {
-  const shape = new THREE.Shape();
-  shape.moveTo(0, -0.5);
-  shape.bezierCurveTo(0.55, -0.28, 0.62, 0.25, 0, 0.62);
-  shape.bezierCurveTo(-0.62, 0.25, -0.55, -0.28, 0, -0.5);
-  return new THREE.ShapeGeometry(shape, 5);
-}
-
-function makePetalGeometry() {
-  const shape = new THREE.Shape();
-  shape.moveTo(0, -0.46);
-  shape.bezierCurveTo(0.38, -0.28, 0.44, 0.14, 0, 0.54);
-  shape.bezierCurveTo(-0.44, 0.14, -0.38, -0.28, 0, -0.46);
-  return new THREE.ShapeGeometry(shape, 5);
-}
-
 function makeGlowTexture() {
   const canvas = document.createElement("canvas");
   canvas.width = 128;
@@ -490,11 +397,11 @@ function makeSilkTexture(side: "left" | "right") {
   const context = canvas.getContext("2d");
   if (context) {
     const gradient = context.createLinearGradient(0, 0, 512, 0);
-    gradient.addColorStop(0, "#4e2513");
-    gradient.addColorStop(0.2, "#9f5d2d");
-    gradient.addColorStop(0.48, "#edbc72");
-    gradient.addColorStop(0.7, "#935023");
-    gradient.addColorStop(1, "#422010");
+    gradient.addColorStop(0, "#706b5d");
+    gradient.addColorStop(0.2, "#b0a88e");
+    gradient.addColorStop(0.48, "#efe6cb");
+    gradient.addColorStop(0.7, "#b8ad92");
+    gradient.addColorStop(1, "#706951");
     context.fillStyle = gradient;
     context.fillRect(0, 0, 512, 1024);
     for (let x = 0; x < 512; x += 13) {
@@ -576,4 +483,76 @@ function seeded(seed: number) {
     result ^= result + Math.imul(result ^ (result >>> 7), result | 61);
     return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+function PavilionSilk({ finale }: { finale: boolean }) {
+  const geometry = useMemo(() => {
+    const geometry = new THREE.PlaneGeometry(2.8, 5.6, 24, 12);
+    const p = geometry.attributes.position;
+    for (let i = 0; i < p.count; i++) p.setZ(i, Math.cos(p.getX(i) * 8) * 0.12 + Math.sin(p.getY(i)) * 0.05);
+    geometry.computeVertexNormals(); return geometry;
+  }, []);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  const group = useRef<THREE.Group>(null);
+  useFrame((_, delta) => {
+    if (!group.current) return;
+    group.current.children.forEach((child, i) => {
+      const destination = (i === 0 ? -1 : 1) * (finale ? 4.05 : 3.45);
+      child.position.x = THREE.MathUtils.damp(child.position.x, destination, 2.4, Math.min(delta, 0.05));
+    });
+  });
+  return <group ref={group}>{[-1, 1].map((side) => <mesh key={side} position={[side * 3.45, 3, -0.9]} geometry={geometry} rotation={[0, side * 0.1, side * -0.04]}><meshStandardMaterial color="#dfd4b7" roughness={0.93} side={THREE.DoubleSide} /></mesh>)}</group>;
+}
+
+function makeStoneTexture() {
+  const canvas = document.createElement("canvas"); canvas.width = 256; canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    ctx.fillStyle = "#c9c1b0"; ctx.fillRect(0, 0, 256, 256);
+    const random = seeded(920);
+    for (let i = 0; i < 5500; i++) {
+      ctx.fillStyle = i % 2 ? "rgba(60,48,35,.035)" : "rgba(255,255,240,.09)";
+      ctx.fillRect(random() * 256, random() * 256, random() * 7 + 1, random() * 2 + 1);
+    }
+    for (let i = 0; i < 12; i++) {
+      const x = random() * 256, y = random() * 256;
+      const g = ctx.createRadialGradient(x, y, 1, x, y, 45);
+      g.addColorStop(0, "rgba(101,83,59,.1)"); g.addColorStop(1, "rgba(101,83,59,0)"); ctx.fillStyle = g; ctx.fillRect(0, 0, 256, 256);
+    }
+  }
+  const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; return texture;
+}
+
+/** A small local reflection probe adds brass highlights without another network asset. */
+function MaterialReflections() {
+  const get = useThree((state) => state.get);
+  useEffect(() => {
+    const { gl, scene } = get();
+    const room = new RoomEnvironment();
+    const generator = new THREE.PMREMGenerator(gl);
+    const previous = scene.environment;
+    const intensity = scene.environmentIntensity;
+    const target = generator.fromScene(room, 0.08, 0.1, 100, { size: 128 });
+    scene.environment = target.texture;
+    scene.environmentIntensity = 0.22;
+    room.dispose(); generator.dispose();
+    return () => { scene.environment = previous; scene.environmentIntensity = intensity; target.dispose(); };
+  }, [get]);
+  return null;
+}
+
+function makeWoodTexture() {
+  const canvas = document.createElement("canvas"); canvas.width = 256; canvas.height = 128;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    ctx.fillStyle = "#9c7757"; ctx.fillRect(0, 0, 256, 128);
+    const random = seeded(192);
+    for (let row = 0; row < 190; row++) {
+      const y = random() * 128;
+      ctx.strokeStyle = row % 3 === 0 ? "rgba(233,195,135,.13)" : "rgba(42,22,14,.14)";
+      ctx.lineWidth = random() * 0.7 + 0.2;
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.bezierCurveTo(80, y + Math.sin(row) * 6, 160, y - 3, 256, y + Math.cos(row) * 4); ctx.stroke();
+    }
+  }
+  const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; return texture;
 }

@@ -70,3 +70,42 @@
 .story-still[data-scene=finale] .still-light{inset:0;width:100%;height:100%;background:radial-gradient(ellipse at 50% 38%,#edce9777,transparent 62%)}
 @media(prefers-reduced-motion:reduce){.story-experience *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media(max-height:520px){.story-experience[data-layout=portrait] .story-stage{flex-basis:100px}.story-experience[data-layout=portrait] .story-header{padding-top:6px;padding-bottom:6px}.story-experience[data-layout=portrait] .story-wordmark{display:none}}
+
+/* The photographs remain DOM content; the set supplies depth around them. */
+.story-experience{background:#0b1919;--story-gold:#c8ad79}
+.story-header,.story-footer{background:#0b1919}
+.story-header{border-bottom-color:#d2a57318}
+.story-content{background:radial-gradient(ellipse at 25% 12%,#29443566,transparent 65%),linear-gradient(150deg,#142b26,#0b1919 85%);border-left-color:#d2a57328}
+.story-content-inner{animation:story-reveal 1.1s cubic-bezier(.2,.6,.2,1) both}
+.story-copy{color:#efe5d2cf}
+.story-content h2{color:#f3ead8}
+.story-stage-shade{background:linear-gradient(180deg,#07191e0d,transparent 62%,#071817bd),linear-gradient(90deg,#07191e38,transparent 22%,transparent 80%,#07191e48)}
+.story-foreground{position:absolute;inset:-3%;pointer-events:none;opacity:.72;transform:scale(1.02);transition:transform 1.65s cubic-bezier(.22,.61,.36,1),opacity 1.65s;filter:blur(1.2px)}
+.story-foreground::before,.story-foreground::after{content:"";position:absolute;bottom:-14%;width:30%;height:55%;background:url('/images/garden/jasmine-branch.webp') center/contain no-repeat;filter:brightness(.48)}
+.story-foreground::before{left:-14%;transform:rotate(24deg)}
+.story-foreground::after{right:-16%;transform:rotate(-28deg) scaleX(-1)}
+.story-experience[data-chapter=school-days] .story-foreground{transform:scale(1.09) translateX(-1.5%);opacity:.6}
+.story-experience[data-chapter=friendship] .story-foreground{transform:scale(1.06) translateX(1%)}
+.story-experience[data-chapter=something-more] .story-foreground{transform:scale(1.02);opacity:.85}
+.story-experience[data-chapter=finale] .story-foreground{transform:scale(1.22);opacity:.4}
+.story-photo{height:clamp(240px,36vh,350px);max-width:330px;margin:0 auto;background:linear-gradient(120deg,#d8ccb0,#f1e8d3 38%,#b9aa8a);border:1px solid #d9c69b;box-shadow:0 18px 40px #0006,0 0 0 4px #d2a5730c;isolation:isolate}
+.story-photo img{inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);background:#172722;box-shadow:0 0 0 1px #4c493d}
+.story-photo::after{content:"";position:absolute;inset:7px;pointer-events:none;border:1px solid #84715155}
+.story-photo figcaption{color:#21372d}.story-photo figcaption span{color:#715f3c}
+.story-experience[data-chapter=school-days] .story-photo{transform:rotate(-.8deg);border-right:8px solid #c6b693;box-shadow:3px 2px 0 #e9dec5,6px 4px 0 #8e7951,0 18px 40px #0006}
+.story-experience[data-chapter=friendship] .story-photo{box-shadow:0 0 0 4px #0d201c,0 0 0 5px #c8ad7966,0 20px 40px #0007}
+.story-experience[data-chapter=something-more] .story-photo{border-color:#b39a67;background:linear-gradient(130deg,#9c824d,#d4bf8e 30%,#806c45);box-shadow:0 0 36px #b88b5212,0 20px 40px #0007}
+.story-still{background:linear-gradient(#06171c44,#06171055),url('/images/garden/blue-hour.webp') center/cover}
+.still-wing{opacity:.35}.still-pavilion{border-color:#c8b88d66;box-shadow:0 0 0 3px #d2a57333,0 20px 60px #0003}
+.story-experience[data-layout=portrait] .story-stage{flex-basis:clamp(140px,25dvh,240px)}
+.story-experience[data-layout=portrait] .story-foreground{filter:none}
+.story-experience[data-layout=portrait] .story-still{background-image:linear-gradient(#06171c44,#06171055),url('/images/garden/blue-hour-mobile.webp')}
+.story-experience[data-layout=portrait] .story-content{padding:20px 24px 28px}
+.story-experience[data-layout=portrait] .story-content h2{font-size:34px;margin:6px 0 18px}
+.story-experience[data-layout=portrait] .story-photo{float:none;width:min(100%,240px);height:clamp(190px,27dvh,250px);margin:0 auto 22px}
+.story-experience[data-layout=portrait] .story-copy{font-size:20px;line-height:1.5}
+.story-experience[data-layout=portrait] .story-stage-caption{font-size:16px;bottom:9px;text-shadow:0 2px 8px #000}
+.story-experience[data-layout=portrait][data-chapter=garden] .story-stage,.story-experience[data-layout=portrait][data-chapter=finale] .story-stage{flex-basis:clamp(180px,34dvh,340px)}
+@keyframes story-reveal{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
+@media(prefers-reduced-motion:reduce){.story-experience .story-content-inner{animation:none}.story-experience .story-foreground{transition:none;transform:none}}
+@media(max-height:640px){.story-experience[data-layout=portrait] .story-stage{flex-basis:140px}.story-experience[data-layout=portrait] .story-content{padding-top:14px}.story-experience[data-layout=portrait] .story-photo{height:200px}}

@@ -32,7 +32,7 @@ type Props = {
 class SceneBoundary extends Component<{ children: ReactNode; onFailure: Props["onFailure"] }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
-  componentDidCatch() { this.props.onFailure("scene-error"); }
+  componentDidCatch(error: Error) { console.error("Garden scene error", error); this.props.onFailure("scene-error"); }
   render() { return this.state.failed ? null : this.props.children; }
 }
 
@@ -106,6 +106,7 @@ export default function StoryGardenCanvas(props: Props) {
       root = createRoot(canvas);
       void root.configure({
         gl: renderer,
+        shadows: { type: THREE.PCFShadowMap },
         events,
         size: size(),
         dpr: Math.min(window.devicePixelRatio, profile.mobile ? 1.2 : 1.5),

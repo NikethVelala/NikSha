@@ -90,6 +90,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
             <StoryGardenCanvas chapter={chapter} activeMoment={activeMoment} profile={profile} isMobile={isMobile} onReady={ready} onFailure={fail} onSelect={(moment) => setChapter(moment.id)} />
           </RendererBoundary></div>}
           <div className="story-stage-shade" aria-hidden="true" />
+          <div className="story-foreground" aria-hidden="true" />
           {mode === "loading" && <div className="story-loading" role="status"><span>Opening the garden…</span><button type="button" onClick={() => fail("visitor-choice")}>Read the story now</button></div>}
           <p className="story-stage-caption" aria-hidden="true">{activeMoment?.eyebrow ?? (chapter === "finale" ? "Together, into forever" : "Three memories. One beautiful beginning.")}</p>
         </div>
