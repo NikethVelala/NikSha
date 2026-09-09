@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
+import StoryExperienceEntry from "@/components/StoryExperience/StoryExperienceEntry";
 
 const chapters = [
   { number: "01", title: "School Days", eyebrow: "Where it began" },
@@ -97,6 +98,8 @@ export default function Story() {
           <p className="mx-auto mt-5 max-w-2xl font-heading text-4xl leading-tight text-charcoal sm:text-5xl">The next chapter is the one we get to write together.</p>
           <div aria-hidden="true" className="mx-auto mt-7 h-px w-20 bg-champagne/60" />
         </motion.div>
+
+        <StoryExperienceEntry />
       </div>
     </Section>
   );
