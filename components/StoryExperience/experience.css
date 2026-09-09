@@ -109,3 +109,15 @@
 @keyframes story-reveal{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
 @media(prefers-reduced-motion:reduce){.story-experience .story-content-inner{animation:none}.story-experience .story-foreground{transition:none;transform:none}}
 @media(max-height:640px){.story-experience[data-layout=portrait] .story-stage{flex-basis:140px}.story-experience[data-layout=portrait] .story-content{padding-top:14px}.story-experience[data-layout=portrait] .story-photo{height:200px}}
+
+/* Arrival is reported by the camera, so the readable view follows the physical memory. */
+.story-content-inner{animation:none;opacity:1;transform:translateY(0);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.6,.2,1)}
+.story-experience[data-journey=travelling] .story-content-inner{opacity:0;transform:translateY(10px);transition-duration:.18s}
+.story-experience[data-journey=travelling] .story-content:focus-visible .story-content-inner,.story-experience[data-journey=travelling] .story-content-inner:has(button:focus-visible){opacity:1;transform:none;transition:none}
+.story-experience[data-journey=travelling] .story-foreground{transform:scale(1.13) translateX(-2%)}
+.story-memory-caption{text-align:center;font-family:var(--font-cormorant),Georgia,serif;font-size:15px;font-style:italic;color:#d8c5a2b8;margin:15px 0 0}
+.story-experience[data-layout=portrait] .story-memory-caption{margin:-8px 0 18px;font-size:15px}
+.story-experience[data-layout=portrait] .story-stage{flex-basis:clamp(155px,27dvh,250px)}
+.story-experience[data-layout=portrait]:is([data-chapter=school-days],[data-chapter=friendship],[data-chapter=something-more]) .story-stage-caption{display:none}
+@media(max-height:640px){.story-experience[data-layout=portrait] .story-stage{flex-basis:155px}}
+@media(prefers-reduced-motion:reduce){.story-experience .story-content-inner{opacity:1;transform:none;transition:none}.story-experience .story-foreground{transform:none}}

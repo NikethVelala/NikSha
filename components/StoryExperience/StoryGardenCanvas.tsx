@@ -27,6 +27,7 @@ type Props = {
   onReady: () => void;
   onFailure: (reason: string) => void;
   onSelect: (moment: GardenMoment) => void;
+  onArrive: (chapter: GardenChapter) => void;
 };
 
 class SceneBoundary extends Component<{ children: ReactNode; onFailure: Props["onFailure"] }, { failed: boolean }> {
@@ -86,7 +87,7 @@ export default function StoryGardenCanvas(props: Props) {
     const size = () => ({ width: host.clientWidth, height: host.clientHeight, top: 0, left: 0 });
     const draw = (next: Props) => root?.render(
       <SceneBoundary onFailure={report}>
-        <StoryGardenScene activeMoment={next.activeMoment} finale={next.chapter === "finale"} isMobile={next.isMobile} onSelect={next.onSelect} />
+        <StoryGardenScene activeMoment={next.activeMoment} finale={next.chapter === "finale"} isMobile={next.isMobile} onSelect={next.onSelect} onArrive={next.onArrive} />
         <RenderFrame onReady={next.onReady} onFailure={report} />
       </SceneBoundary>,
     );

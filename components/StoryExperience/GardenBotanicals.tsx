@@ -54,10 +54,11 @@ export function GardenPlant({ position, scale, seed }: { position: Point; scale:
     return { leaves, geometry };
   }, [seed]);
   useEffect(() => () => data.geometry.dispose(), [data]);
+  const bed = scale[1] < 1.3;
   if (atlas) return <group position={position} scale={scale}>
-    {[0, 1, 2].map((branch) => <mesh key={branch} position={[(branch - 1) * 0.22, 0.43 + (branch % 2) * 0.12, (branch - 1) * 0.16]} rotation={[0, (branch - 1) * 0.75 + (seed % 3 - 1) * 0.15, (branch - 1) * -0.22]} scale={[Math.min(scale[1], scale[0] * 1.7) / scale[0], 0.95, 1]}>
+    {[0, 1, 2].map((branch) => <mesh key={branch} position={[(branch - 1) * (bed ? 0.42 : 0.22), 0.42 + ((seed + branch) % 3) * 0.065, (branch - 1) * 0.16]} rotation={[0.02 * (seed % 4), (branch - 1) * 0.64 + (seed % 5 - 2) * 0.17, (branch - 1) * (bed ? -0.48 : -0.19)]} scale={[(bed ? 0.8 : Math.min(scale[1], scale[0] * 1.7) / scale[0]) * ((seed + branch) % 2 ? -1 : 1), 0.84 + ((seed * 7 + branch * 3) % 5) * 0.045, 1]}>
       <planeGeometry args={[1, 1]} />
-      <meshStandardMaterial map={atlas} alphaTest={0.45} side={THREE.DoubleSide} color="#b5c1a7" roughness={0.84} />
+      <meshStandardMaterial map={atlas} alphaTest={0.45} side={THREE.DoubleSide} color={["#a5b49b", "#bac1a4", "#96ad9d"][(seed + branch) % 3]} roughness={0.84} />
     </mesh>)}
   </group>;
   return <group position={position} scale={scale}>

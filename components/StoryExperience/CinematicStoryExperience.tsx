@@ -29,6 +29,8 @@ class RendererBoundary extends Component<{ children: ReactNode; onFailure: (reas
 type Props = { profile: GardenProfile; onExit: () => void; onContinue: () => void };
 export default function CinematicStoryExperience({ profile, onExit, onContinue }: Props) {
   const [chapter, setChapter] = useState<GardenChapter>("garden");
+  const [arrived, setArrived] = useState<GardenChapter>("garden");
+  const arrive = useCallback((destination: GardenChapter) => setArrived(destination), []);
   const [mode, setMode] = useState<"loading" | "ready" | "fallback">(profile.webgl ? "loading" : "fallback");
   const [reason, setReason] = useState(profile.reducedMotion ? "reduced-motion" : "unsupported");
   const isMobile = useSyncExternalStore(subscribePortrait, getPortrait, () => profile.mobile);
@@ -78,7 +80,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
   const previous = () => setChapter(chapter === "finale" ? "something-more" : gardenMoments[index - 1]?.id ?? "garden");
   const title = activeMoment?.title ?? (chapter === "finale" ? "Our forever is just beginning." : "The Garden of Becoming");
   return createPortal(
-    <section ref={root} role="dialog" aria-modal="true" aria-labelledby="garden-title" className="story-experience" data-layout={isMobile ? "portrait" : "landscape"} data-chapter={chapter} data-renderer={mode} data-fallback-reason={mode === "fallback" ? reason : undefined}>
+    <section ref={root} role="dialog" aria-modal="true" aria-labelledby="garden-title" className="story-experience" data-layout={isMobile ? "portrait" : "landscape"} data-chapter={chapter} data-journey={mode === "ready" && arrived !== chapter ? "travelling" : "arrived"} data-renderer={mode} data-fallback-reason={mode === "fallback" ? reason : undefined}>
       <header className="story-header">
         <div><p className="story-eyebrow">NikSha presents</p><p className="story-wordmark">A garden of becoming</p></div>
         <button data-story-exit type="button" onClick={onExit} className="story-exit" aria-label="Exit the garden and return to Our Story"><X size={16} strokeWidth={1.25} /><span>Exit</span></button>
@@ -87,7 +89,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
         <div className="story-stage" role="group" aria-label={`${title} garden composition`}>
           <ExperienceFallback chapter={chapter} />
           {mode !== "fallback" && <div className="story-canvas" aria-hidden="true"><RendererBoundary onFailure={fail}>
-            <StoryGardenCanvas chapter={chapter} activeMoment={activeMoment} profile={profile} isMobile={isMobile} onReady={ready} onFailure={fail} onSelect={(moment) => setChapter(moment.id)} />
+            <StoryGardenCanvas chapter={chapter} activeMoment={activeMoment} profile={profile} isMobile={isMobile} onReady={ready} onFailure={fail} onSelect={(moment) => setChapter(moment.id)} onArrive={arrive} />
           </RendererBoundary></div>}
           <div className="story-stage-shade" aria-hidden="true" />
           <div className="story-foreground" aria-hidden="true" />
@@ -99,6 +101,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
             <p className="story-eyebrow">{activeMoment ? `Chapter ${activeMoment.number} · ${activeMoment.eyebrow}` : chapter === "finale" ? "Forever" : "Step into our story"}</p>
             <h2 id="garden-title" ref={heading} tabIndex={-1}>{title}</h2>
             {activeMoment ? <MemoryImage key={activeMoment.id} moment={activeMoment} /> : <div className="story-rule" aria-hidden="true" />}
+            {activeMoment && <p className="story-memory-caption">{chapter === "school-days" ? "From the pages of our beginning" : chapter === "friendship" ? "A memory held between two lights" : "Held close, among the jasmine"}</p>}
             <p className="story-copy">{activeMoment?.story ?? (chapter === "finale" ? "With grateful hearts, we begin the most beautiful chapter of our lives together." : "A flower-lit garden, three memories, and the journey that brought us here. Stay a little longer, and let us show you.")}</p>
             {chapter === "garden" && <button type="button" onClick={next} className="story-primary">Begin our story <ArrowRight size={16} /></button>}
             {chapter === "finale" && <button type="button" onClick={onContinue} className="story-primary">Continue to the celebration <ArrowDown size={16} /></button>}

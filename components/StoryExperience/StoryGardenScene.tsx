@@ -4,34 +4,20 @@ import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { gardenMoments, type GardenMoment, type GardenMomentId } from "./content";
+import { gardenMoments, type GardenMoment, type GardenChapter } from "./content";
 
 type StoryGardenSceneProps = {
   activeMoment: GardenMoment | null;
   finale: boolean;
   isMobile: boolean;
   onSelect: (moment: GardenMoment) => void;
+  onArrive: (chapter: GardenChapter) => void;
 };
 
 import { BotanicalPalette, GardenPlant, JasmineSwag, PetalBed } from "./GardenBotanicals";
 
-type CameraMark = { position: [number, number, number]; target: [number, number, number] };
-
-const desktopMarks: Record<"garden" | "finale" | GardenMomentId, CameraMark> = {
-  garden: { position: [0.4, 3.5, 15.5], target: [0, 3.1, -4] },
-  "school-days": { position: [-5.1, 2.65, 5.5], target: [-3.55, 1.2, -0.5] },
-  friendship: { position: [5.0, 2.7, 6.0], target: [3.45, 1.65, -0.5] },
-  "something-more": { position: [0.6, 2.9, 4.0], target: [0, 2.4, -4.45] },
-  finale: { position: [0, 3.7, 13.2], target: [0, 3.3, -6] },
-};
-
-const mobileMarks: Record<"garden" | "finale" | GardenMomentId, CameraMark> = {
-  garden: { position: [0, 3.2, 10], target: [0, 2, -1.8] },
-  "school-days": { position: [0.3, 2.6, 6], target: [0, 0.9, 0] },
-  friendship: { position: [0, 2.4, 6.7], target: [0, 1.6, 0] },
-  "something-more": { position: [0, 2.2, 7], target: [0, 1.6, -1] },
-  finale: { position: [0, 2.8, 8.2], target: [0, 2.5, -2] },
-};
+import PhysicalMemory, { PhysicalMemoryLibrary } from "./PhysicalMemory";
+import { desktopMarks, mobileMarks, portraitPlaces, journeyDuration } from "./journey";
 
 const palette = {
   gold: "#d6a25e",
@@ -46,19 +32,18 @@ const palette = {
   night: "#091b20",
 };
 
-export default function StoryGardenScene({ activeMoment, finale, isMobile, onSelect }: StoryGardenSceneProps) {
-  const focalX = isMobile ? 0 : activeMoment?.id === "school-days" ? -3.6 : activeMoment?.id === "friendship" ? 3.45 : 0;
+export default function StoryGardenScene({ activeMoment, finale, isMobile, onSelect, onArrive }: StoryGardenSceneProps) {
   return (
-    <BotanicalPalette>
+    <PhysicalMemoryLibrary><BotanicalPalette>
       <color attach="background" args={[palette.night]} />
       <fog attach="fog" args={[palette.night, 17, 38]} />
       <ambientLight intensity={0.24} color="#bcccd3" />
       <hemisphereLight args={["#8cabbf", "#152c20", 0.85]} />
       <directionalLight position={[-6, 8, -4]} intensity={1.8} color="#aec8dd" />
       <directionalLight position={[2, 7, 5]} intensity={1.1} color="#f4ddb3" castShadow shadow-mapSize-width={isMobile ? 512 : 1024} shadow-mapSize-height={isMobile ? 512 : 1024} shadow-camera-left={-10} shadow-camera-right={10} shadow-camera-top={10} shadow-camera-bottom={-8} shadow-camera-far={30} shadow-bias={-0.0005} shadow-normalBias={0.03} />
-      <pointLight position={[focalX, 3.8, isMobile ? 2 : -0.2]} intensity={finale ? 23 : 19} distance={12} decay={2} color="#f8cb87" />
+      <MemoryLighting activeMoment={activeMoment} finale={finale} isMobile={isMobile} />
 
-      <CameraDirector activeMoment={activeMoment} finale={finale} isMobile={isMobile} />
+      <CameraDirector activeMoment={activeMoment} finale={finale} isMobile={isMobile} onArrive={onArrive} />
       <MaterialReflections />
       <GardenBackdrop isMobile={isMobile} />
       <GroundPath />
@@ -86,54 +71,79 @@ export default function StoryGardenScene({ activeMoment, finale, isMobile, onSel
       <FriendshipLanterns moment={gardenMoments[1]} active={activeMoment?.id === "friendship"} onSelect={onSelect} />
       <PromiseArch moment={gardenMoments[2]} active={activeMoment?.id === "something-more"} onSelect={onSelect} />
       </>}
-      {finale && <FinaleGlow />}
-    </BotanicalPalette>
+      {finale && <group position={[0, 0, isMobile ? -6 : 0]}><FinaleGlow /></group>}
+    </BotanicalPalette></PhysicalMemoryLibrary>
   );
 }
 
-/** Portrait vignettes have their own object layout, scale and framing. */
+/** Persistent portrait route: independently framed destinations share landmarks and path. */
 function PortraitStage({ activeMoment, finale, onSelect }: Pick<StoryGardenSceneProps, "activeMoment" | "finale" | "onSelect">) {
-  const chapter = activeMoment?.id;
   return <>
-    <group position={[0, 0, chapter === "school-days" ? -2.5 : 0]} scale={chapter === "school-days" ? 0.5 : 0.65}><GardenGate finale={finale} /></group>
-    <PlantMass position={[-3.1, 0, -0.6]} scale={[1, 2.6, 1]} seed={26} />
-    <PlantMass position={[3.1, 0, -1.1]} scale={[1, 2.2, 1]} seed={34} />
-    {chapter === "school-days" && <SchoolDesk position={[0, 0.16, 0]} moment={gardenMoments[0]} active onSelect={onSelect} />}
-    {chapter === "friendship" && <FriendshipLanterns position={[0, 0.1, 0]} moment={gardenMoments[1]} active onSelect={onSelect} />}
-    {chapter === "something-more" && <PromiseArch position={[0, 0, -0.7]} moment={gardenMoments[2]} active onSelect={onSelect} />}
-    {!chapter && <><GardenLantern position={[-1.5, 1.5, -1]} scale={0.9} phase={0.4} /><GardenLantern position={[1.5, 1.8, -1.5]} scale={0.9} phase={1.2} /></>}
+    <group position={[0, 0, -6.7]} scale={0.65}><GardenGate finale={finale} /></group>
+    <SchoolDesk position={portraitPlaces.school} moment={gardenMoments[0]} active={activeMoment?.id === "school-days"} onSelect={onSelect} />
+    <FriendshipLanterns position={portraitPlaces.friendship} moment={gardenMoments[1]} active={activeMoment?.id === "friendship"} onSelect={onSelect} />
+    <PromiseArch position={portraitPlaces.more} moment={gardenMoments[2]} active={activeMoment?.id === "something-more"} onSelect={onSelect} />
+    <PlantMass position={[-3.7, 0, 6.3]} scale={[1.4, 2.1, 1]} seed={46} />
+    <PlantMass position={[3.5, 0, 1.4]} scale={[1.2, 2.2, 1]} seed={53} />
+    <PlantMass position={[-2.8, 0, -2.4]} scale={[1.3, 1.8, 1]} seed={37} />
+    <PlantMass position={[3.5, 0, -7.8]} scale={[1.5, 2.5, 1]} seed={18} />
+    <GardenLantern position={[-2.35, 2.1, -8.3]} scale={0.7} phase={0.4} />
+    <GardenLantern position={[2.35, 2.1, -8.3]} scale={0.7} phase={1.2} />
   </>;
 }
 
 const PlantMass = GardenPlant;
 
-function CameraDirector({ activeMoment, finale, isMobile }: Pick<StoryGardenSceneProps, "activeMoment" | "finale" | "isMobile">) {
-  const pointer = useThree((state) => state.pointer);
+function CameraDirector({ activeMoment, finale, isMobile, onArrive }: Pick<StoryGardenSceneProps, "activeMoment" | "finale" | "isMobile" | "onArrive">) {
   const size = useThree((state) => state.size);
-  const motion = useRef({ key: "", elapsed: 0, from: new THREE.Vector3(), fromTarget: new THREE.Vector3(), target: new THREE.Vector3(), destination: new THREE.Vector3(), look: new THREE.Vector3() });
-  const chapter = finale ? "finale" : activeMoment?.id ?? "garden";
+  const motion = useRef({ key: "", chapter: "garden" as GardenChapter, layout: isMobile, elapsed: 0, notified: false, from: new THREE.Vector3(), fromTarget: new THREE.Vector3(), target: new THREE.Vector3(), destination: new THREE.Vector3(), look: new THREE.Vector3(), c1: new THREE.Vector3(), c2: new THREE.Vector3(), position: new THREE.Vector3() });
+  const chapter: GardenChapter = finale ? "finale" : activeMoment?.id ?? "garden";
   useFrame(({ camera }, delta) => {
     const m = motion.current;
-    const mark = (isMobile ? mobileMarks : desktopMarks)[chapter];
+    const marks = isMobile ? mobileMarks : desktopMarks;
+    const mark = marks[chapter];
     const key = chapter + isMobile + size.width + size.height;
     const extra = Math.max(0, 1.1 - size.width / Math.max(1, size.height)) * (isMobile ? 3 : 7);
     if (key !== m.key) {
+      const reframe = !m.key || m.layout !== isMobile || m.chapter === chapter;
       m.destination.set(mark.position[0], mark.position[1], mark.position[2] + extra);
       m.look.set(...mark.target);
-      if (!m.key) { camera.position.copy(m.destination); m.target.copy(m.look); }
-      m.from.copy(camera.position); m.fromTarget.copy(m.target); m.elapsed = 0; m.key = key;
+      // A responsive layout switch reframes immediately, never flies between two world layouts.
+      if (reframe) { camera.position.copy(m.destination); m.target.copy(m.look); }
+      m.from.copy(camera.position); m.fromTarget.copy(m.target);
+      const reverse = mark.position[2] > marks[m.chapter].position[2];
+      m.c1.set(...(reverse ? marks[m.chapter].approach : marks[m.chapter].departure));
+      m.c2.set(...(reverse ? mark.departure : mark.approach));
+      m.c1.z += extra; m.c2.z += extra;
+      // Retarget safely from the actual camera if visitors skip or reverse rapidly.
+      m.c1.lerp(m.from, 0.35);
+      if (reframe) { m.c1.copy(m.destination); m.c2.copy(m.destination); }
+      m.elapsed = 0; m.notified = false; m.key = key; m.chapter = chapter; m.layout = isMobile;
     }
-    m.elapsed = Math.min(1, m.elapsed + Math.min(delta, 0.05) / (isMobile ? 0.85 : 1.65));
+    m.elapsed = Math.min(1, m.elapsed + Math.min(delta, 0.05) / journeyDuration(isMobile));
     const t = m.elapsed;
-    const eased = t * t * t * (t * (t * 6 - 15) + 10);
-    camera.position.lerpVectors(m.from, m.destination, eased);
-    camera.position.x += Math.sin(t * Math.PI) * (isMobile ? 0.06 : 0.38);
-    camera.position.z += Math.sin(t * Math.PI) * (isMobile ? 0.12 : 0.45);
-    camera.position.x += isMobile ? 0 : pointer.x * 0.045;
-    m.target.lerpVectors(m.fromTarget, m.look, eased);
+    const u = t * t * t * (t * (t * 6 - 15) + 10);
+    const v = 1 - u;
+    m.position.copy(m.from).multiplyScalar(v * v * v).addScaledVector(m.c1, 3 * v * v * u).addScaledVector(m.c2, 3 * v * u * u).addScaledVector(m.destination, u * u * u);
+    camera.position.copy(m.position);
+    m.target.lerpVectors(m.fromTarget, m.look, u);
     camera.lookAt(m.target);
+    if (t === 1 && !m.notified) { m.notified = true; onArrive(chapter); }
   });
   return null;
+}
+
+function MemoryLighting({ activeMoment, finale, isMobile }: Pick<StoryGardenSceneProps, "activeMoment" | "finale" | "isMobile">) {
+  const light = useRef<THREE.PointLight>(null);
+  const destination = useMemo(() => new THREE.Vector3(), []);
+  useFrame((_, delta) => {
+    if (!light.current) return;
+    const mark = (isMobile ? mobileMarks : desktopMarks)[finale ? "finale" : activeMoment?.id ?? "garden"];
+    destination.set(mark.target[0], 3.8, mark.target[2] + 2);
+    light.current.position.lerp(destination, 1 - Math.exp(-Math.min(delta, 0.05) * 2.5));
+    light.current.intensity = THREE.MathUtils.damp(light.current.intensity, finale ? 18 : 16, 2, delta);
+  });
+  return <pointLight ref={light} position={[0, 3.8, 2]} intensity={16} distance={11} decay={2} color="#f8cb87" />;
 }
 
 function GardenBackdrop({ isMobile }: { isMobile: boolean }) {
@@ -179,7 +189,7 @@ function GroundPath() {
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.06, -2]} material={stone}>
         <planeGeometry args={[35, 36]} />
       </mesh>
-      {Array.from({ length: 12 }, (_, index) => {
+      {Array.from({ length: 14 }, (_, index) => {
         const z = 10 - index * 1.7;
         const x = Math.sin(index * 0.32) * 0.2;
         const width = 3.2 - index * 0.085;
@@ -215,6 +225,19 @@ function SilkWing({ side }: { side: "left" | "right" }) {
 
 function GardenGate({ finale }: { finale: boolean }) {
   const archGeometry = useMemo(() => makeArchGeometry(), []);
+  const pillar = useMemo(() => new THREE.LatheGeometry([[0.5, 0], [0.54, 0.14], [0.43, 0.25], [0.4, 0.43], [0.32, 0.52], [0.27, 4.43], [0.4, 4.52], [0.46, 4.68], [0.42, 4.85]].map(([x, y]) => new THREE.Vector2(x, y)), 12), []);
+  const canopy = useMemo(() => {
+    const geometry = new THREE.PlaneGeometry(1, 1, 32, 8);
+    const arch = new THREE.CubicBezierCurve(new THREE.Vector2(-5.5, 4.8), new THREE.Vector2(-5.5, 8.15), new THREE.Vector2(5.5, 8.15), new THREE.Vector2(5.5, 4.8));
+    const p = geometry.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const u = p.getX(i) + 0.5, v = p.getY(i) + 0.5;
+      const edge = arch.getPoint(u);
+      p.setXYZ(i, edge.x, edge.y - 0.12 - Math.sin(v * Math.PI) * 0.12, -2.1 + v * 2.65);
+    }
+    geometry.computeVertexNormals(); return geometry;
+  }, []);
+  useEffect(() => () => { pillar.dispose(); canopy.dispose(); }, [pillar, canopy]);
   const vineGeometry = useMemo(() => makeVineGeometry(), []);
   useEffect(() => () => { archGeometry.dispose(); vineGeometry.dispose(); }, [archGeometry, vineGeometry]);
 
@@ -229,7 +252,7 @@ function GardenGate({ finale }: { finale: boolean }) {
     <group position={[0, 0, -5.1]}>
       {[-5.1, 5.1].map((x) => (
         <group key={x} position={[x, 0, 0]}>
-          <mesh castShadow receiveShadow position={[0, 2.5, 0]} material={stone}><boxGeometry args={[0.72, 5, 0.85]} /></mesh>
+          <mesh castShadow receiveShadow geometry={pillar} material={stone} />
           <mesh position={[0, 0.32, 0]} material={stone}><boxGeometry args={[0.96, 0.64, 1.05]} /></mesh>
           <mesh position={[0, 4.75, 0]} material={stone}><boxGeometry args={[1, 0.2, 1.1]} /></mesh>
           <mesh position={[0, 5.48, 0]} material={gold}><cylinderGeometry args={[0.55, 0.48, 0.25, 12]} /></mesh>
@@ -238,7 +261,8 @@ function GardenGate({ finale }: { finale: boolean }) {
       ))}
       <mesh castShadow receiveShadow geometry={archGeometry} material={stone} />
       <mesh geometry={archGeometry} material={stone} position={[0, 0, -2.1]} />
-      <mesh position={[0, 7.36, -0.8]} material={stone}><boxGeometry args={[10.8, 0.22, 2.8]} /></mesh>
+      {[-5.1, 5.1].map((x) => <mesh key={x} position={[x, 0, -2.1]} geometry={pillar} material={stone} castShadow />)}
+      <mesh geometry={canopy} receiveShadow><meshStandardMaterial color="#d9cdb0" side={THREE.DoubleSide} roughness={0.95} /></mesh>
       <mesh receiveShadow position={[0, 0.08, -0.8]} material={stone}><boxGeometry args={[10.9, 0.16, 3]} /></mesh>
       <mesh geometry={vineGeometry} position={[0, 0, 0.12]}>
         <meshStandardMaterial color="#264832" roughness={0.7} metalness={0.02} />
@@ -287,9 +311,16 @@ function SchoolDesk({ moment, active, position = [-3.6, 0.16, -0.3], onSelect }:
     <group position={position} onClick={(event: ThreeEvent<MouseEvent>) => { event.stopPropagation(); onSelect(moment); }}>
       <mesh castShadow receiveShadow position={[0, 0.75, 0]}><boxGeometry args={[2.35, 0.16, 1.22]} /><meshStandardMaterial map={grain} bumpMap={grain} bumpScale={0.008} color="#99744c" roughness={0.68} metalness={0} /></mesh>
       {[-0.92, 0.92].flatMap((x) => [-0.4, 0.4].map((z) => <mesh key={`${x}-${z}`} position={[x, 0.28, z]}><boxGeometry args={[0.15, 0.88, 0.15]} /><meshStandardMaterial color="#5b3825" roughness={0.62} /></mesh>))}
-      <mesh position={[0, 0.85, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[1.48, 0.9]} /><meshStandardMaterial color="#efe3c7" roughness={0.72} /></mesh>
-      {[-1, 1].map((side) => <mesh key={side} position={[side * 0.3, 0.869, 0.01]} rotation={[0, 0, side * 0.035]}><boxGeometry args={[0.6, 0.024, 0.7]} /><meshStandardMaterial color="#eee6d3" roughness={0.98} /></mesh>)}
-      <mesh position={[0, 0.875, -0.02]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[0.02, 0.67]} /><meshStandardMaterial color="#b58042" metalness={0.4} roughness={0.44} /></mesh>
+      <group position={[0, 0.86, -0.34]} rotation={[-0.92, 0, 0.015]}>
+        <mesh position={[0, 0.51, -0.06]}><boxGeometry args={[1.65, 1.06, 0.045]} /><meshStandardMaterial color="#6e4e37" roughness={0.82} /></mesh>
+        {[-1, 1].map((side) => <group key={side} position={[side * 0.405, 0.51, 0]} rotation={[0, side * -0.025, 0]}>
+          <mesh><boxGeometry args={[0.79, 1.02, 0.055]} /><meshStandardMaterial color="#d5c8aa" roughness={0.98} /></mesh>
+          <mesh position={[0, 0, 0.03]}><planeGeometry args={[0.77, 1]} /><meshStandardMaterial color="#efe5d0" roughness={1} /></mesh>
+        </group>)}
+        <PhysicalMemory id={moment.id} active={active} position={[0.41, 0.52, 0.045]} width={0.64} treatment="album" />
+        <mesh position={[0, 0.51, 0.031]}><boxGeometry args={[0.018, 1.02, 0.005]} /><meshStandardMaterial color="#a38a58" roughness={0.85} /></mesh>
+        {[0.36, 0.44, 0.52, 0.68].map((y, i) => <mesh key={y} position={[-0.4, y, 0.035]}><planeGeometry args={[i === 3 ? 0.26 : 0.48, 0.006]} /><meshBasicMaterial color="#b5a382" /></mesh>)}
+      </group>
       <GardenLantern position={[-1.1, 1.55, -0.5]} scale={0.48} phase={0} lit={active} />
       <GardenPlant position={[-1.8, -0.15, -0.7]} scale={[1.4, 2.2, 1.2]} seed={32} />
       <GardenPlant position={[1.6, -0.15, -1]} scale={[1.1, 1.4, 1]} seed={36} />
@@ -301,9 +332,11 @@ function SchoolDesk({ moment, active, position = [-3.6, 0.16, -0.3], onSelect }:
 function FriendshipLanterns({ moment, active, position = [3.45, 0.1, -0.5], onSelect }: MemoryProp) {
   return (
     <group position={position} onClick={(event: ThreeEvent<MouseEvent>) => { event.stopPropagation(); onSelect(moment); }}>
-      <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}><circleGeometry args={[1.7, 32]} /><meshStandardMaterial color="#284532" roughness={0.9} /></mesh>
-      <GardenLantern position={[-0.72, 1.4, 0.2]} scale={1.2} phase={1.4} lit={active} />
-      <GardenLantern position={[0.72, 1.85, -0.25]} scale={1.2} phase={2.4} />
+      <mesh receiveShadow position={[0, 0.06, 0]}><boxGeometry args={[2.5, 0.12, 1.25]} /><meshStandardMaterial color="#617064" roughness={0.95} /></mesh>
+      <mesh castShadow position={[0, 0.19, 0.3]}><boxGeometry args={[1.4, 0.32, 0.65]} /><meshStandardMaterial color="#73674f" roughness={0.82} /></mesh>
+      <PhysicalMemory id={moment.id} active={active} position={[0, 1.18, 0.5]} rotation={[-0.08, -0.08, 0]} width={1.08} treatment="brass" />
+      <GardenLantern position={[-1.2, 1.7, 0.2]} scale={1.2} phase={1.4} lit={active} />
+      <GardenLantern position={[1.2, 2, -0.25]} scale={1.2} phase={2.4} />
       <GardenPlant position={[-1.3, 0, -0.5]} scale={[1.6, 1.8, 1]} seed={17} />
       <GardenPlant position={[1.2, 0, -0.7]} scale={[1.2, 2.1, 1]} seed={19} />
       <FlowerGarland position={[0, 3.15, -0.5]} scale={0.64} />
@@ -312,10 +345,11 @@ function FriendshipLanterns({ moment, active, position = [3.45, 0.1, -0.5], onSe
   );
 }
 
-function PromiseArch({ moment, active, position = [0, 0, -4.45], onSelect }: MemoryProp) {
+function PromiseArch({ moment, active, position = [-3.1, 0, -5.6], onSelect }: MemoryProp) {
   return (
     <group position={position} onClick={(event: ThreeEvent<MouseEvent>) => { event.stopPropagation(); onSelect(moment); }}>
       <mesh castShadow receiveShadow position={[0, 0.18, 0.45]}><boxGeometry args={[2.3, 0.32, 1.1]} /><meshStandardMaterial color="#b8ad91" roughness={0.9} metalness={0} /></mesh>
+      <PhysicalMemory id={moment.id} active={active} position={[0, 1.31, 0.74]} rotation={[-0.04, 0.03, 0]} width={1.28} treatment="ivory" />
       <FlowerGarland position={[0, 3.55, 0]} scale={0.9} />
       <GardenPlant position={[-1.6, 0, 0]} scale={[1.5, 3.2, 1.4]} seed={29} />
       <GardenPlant position={[1.6, 0, -0.25]} scale={[1.6, 3.5, 1.3]} seed={31} />
@@ -489,7 +523,11 @@ function PavilionSilk({ finale }: { finale: boolean }) {
   const geometry = useMemo(() => {
     const geometry = new THREE.PlaneGeometry(2.8, 5.6, 24, 12);
     const p = geometry.attributes.position;
-    for (let i = 0; i < p.count; i++) p.setZ(i, Math.cos(p.getX(i) * 8) * 0.12 + Math.sin(p.getY(i)) * 0.05);
+      for (let i = 0; i < p.count; i++) {
+        const x = p.getX(i), y = p.getY(i);
+        const gather = Math.exp(-Math.pow((y + 0.25) / 0.95, 2));
+        p.setXYZ(i, x * (1 - gather * 0.34), y, Math.cos(x * 8) * (0.1 + gather * 0.045) + Math.sin(y) * 0.05);
+      }
     geometry.computeVertexNormals(); return geometry;
   }, []);
   useEffect(() => () => geometry.dispose(), [geometry]);
