@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { useThree } from "@react-three/fiber";
 
 type Point = [number, number, number];
 type Instance = { position: Point; rotation: Point; scale: Point; color: string };
@@ -30,6 +31,7 @@ export function BotanicalPalette({ children }: { children: ReactNode }) {
 /** Geometry follows stems; seeded variation changes individual leaves, never the planting plan. */
 export function GardenPlant({ position, scale, seed }: { position: Point; scale: Point; seed: number }) {
   const atlas = useContext(BotanicalTexture);
+  const multisampled = useThree((state) => state.gl.getContext().getContextAttributes()?.antialias ?? false);
   const data = useMemo(() => {
     const leaves: Instance[] = [];
     const stems: THREE.BufferGeometry[] = [];
@@ -58,7 +60,7 @@ export function GardenPlant({ position, scale, seed }: { position: Point; scale:
   if (atlas) return <group position={position} scale={scale}>
     {[0, 1, 2].map((branch) => <mesh key={branch} position={[(branch - 1) * (bed ? 0.42 : 0.22), 0.42 + ((seed + branch) % 3) * 0.065, (branch - 1) * 0.16]} rotation={[0.02 * (seed % 4), (branch - 1) * 0.64 + (seed % 5 - 2) * 0.17, (branch - 1) * (bed ? -0.48 : -0.19)]} scale={[(bed ? 0.8 : Math.min(scale[1], scale[0] * 1.7) / scale[0]) * ((seed + branch) % 2 ? -1 : 1), 0.84 + ((seed * 7 + branch * 3) % 5) * 0.045, 1]}>
       <planeGeometry args={[1, 1]} />
-      <meshStandardMaterial map={atlas} alphaTest={0.45} side={THREE.DoubleSide} color={["#a5b49b", "#bac1a4", "#96ad9d"][(seed + branch) % 3]} roughness={0.84} />
+      <meshStandardMaterial map={atlas} alphaTest={0.45} alphaToCoverage={multisampled} side={THREE.DoubleSide} color={["#a5b49b", "#bac1a4", "#96ad9d"][(seed + branch) % 3]} roughness={0.84} />
     </mesh>)}
   </group>;
   return <group position={position} scale={scale}>

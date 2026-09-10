@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { gardenMoments, type GardenMomentId } from "./content";
 
@@ -43,11 +43,14 @@ type Props = { id: GardenMomentId; position?: Point; rotation?: Point; width: nu
 /** The print is mounted onto a lit, dimensional object; it is never a floating plane. */
 export default function PhysicalMemory({ id, position, rotation, width, treatment, active }: Props) {
   const texture = useContext(Prints)[id];
+  const invalidate = useThree((state) => state.invalidate);
   const print = useRef<THREE.MeshBasicMaterial>(null);
   useFrame((_, delta) => {
     if (!print.current) return;
-    const illumination = THREE.MathUtils.damp(print.current.color.r, active ? 1 : 0.24, 3, Math.min(delta, 0.05));
+    const target = active ? 1 : 0.1;
+    const illumination = THREE.MathUtils.damp(print.current.color.r, target, 4, Math.min(delta, 0.05));
     print.current.color.setRGB(illumination, illumination, illumination);
+    if (Math.abs(illumination - target) > 0.003) invalidate();
   });
   const height = width * 4 / 3;
   const album = treatment === "album";
@@ -55,7 +58,7 @@ export default function PhysicalMemory({ id, position, rotation, width, treatmen
   return <group position={position} rotation={rotation} name={`physical-memory-${id}`} userData={{ imageState: texture ? "ready" : "unavailable", derivative: "384x512" }}>
     <mesh castShadow receiveShadow position={[0, 0, -0.034]}>
       <boxGeometry args={[width + (album ? 0.13 : 0.19), height + (album ? 0.13 : 0.19), album ? 0.025 : 0.075]} />
-      <meshStandardMaterial color={frame} roughness={album ? 0.96 : 0.48} metalness={treatment === "brass" ? 0.65 : 0} />
+      <meshStandardMaterial color={frame} roughness={album ? 0.96 : 0.62} metalness={treatment === "brass" ? 0.55 : 0} />
     </mesh>
     <mesh position={[0, 0, 0.006]}><planeGeometry args={[width + 0.055, height + 0.055]} /><meshStandardMaterial color="#f1e7d2" roughness={0.96} /></mesh>
     {texture ? <mesh position={[0, 0, 0.009]}><planeGeometry args={[width, height]} /><meshBasicMaterial ref={print} map={texture} color="#868686" toneMapped={false} /></mesh> : <mesh position={[0, 0, 0.01]}><planeGeometry args={[width, height]} /><meshStandardMaterial color="#d7cab1" roughness={1} /></mesh>}

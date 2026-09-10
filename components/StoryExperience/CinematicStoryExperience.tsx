@@ -64,6 +64,18 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
     return () => { window.clearTimeout(timer); document.removeEventListener("visibilitychange", arm); };
   }, [mode, fail]);
   useEffect(() => {
+    if (mode !== "ready" || arrived === chapter) return;
+    // A stalled renderer must never hold the readable memory hostage. Hidden time is excluded.
+    let timer: number | undefined;
+    const arm = () => {
+      window.clearTimeout(timer);
+      if (!document.hidden) timer = window.setTimeout(() => fail("travel-timeout"), 6000);
+    };
+    arm();
+    document.addEventListener("visibilitychange", arm);
+    return () => { window.clearTimeout(timer); document.removeEventListener("visibilitychange", arm); };
+  }, [mode, arrived, chapter, fail]);
+  useEffect(() => {
     const media = window.matchMedia(reducedMotionQuery);
     const update = () => { if (media.matches) fail("reduced-motion"); };
     media.addEventListener("change", update);
@@ -100,12 +112,14 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
           <div className="story-content-inner" key={chapter}>
             <p className="story-eyebrow">{activeMoment ? `Chapter ${activeMoment.number} · ${activeMoment.eyebrow}` : chapter === "finale" ? "Forever" : "Step into our story"}</p>
             <h2 id="garden-title" ref={heading} tabIndex={-1}>{title}</h2>
+            <div className="story-memory-detail">
             {activeMoment ? <MemoryImage key={activeMoment.id} moment={activeMoment} /> : <div className="story-rule" aria-hidden="true" />}
             {activeMoment && <p className="story-memory-caption">{chapter === "school-days" ? "From the pages of our beginning" : chapter === "friendship" ? "A memory held between two lights" : "Held close, among the jasmine"}</p>}
             <p className="story-copy">{activeMoment?.story ?? (chapter === "finale" ? "With grateful hearts, we begin the most beautiful chapter of our lives together." : "A flower-lit garden, three memories, and the journey that brought us here. Stay a little longer, and let us show you.")}</p>
             {chapter === "garden" && <button type="button" onClick={next} className="story-primary">Begin our story <ArrowRight size={16} /></button>}
             {chapter === "finale" && <button type="button" onClick={onContinue} className="story-primary">Continue to the celebration <ArrowDown size={16} /></button>}
             {mode === "fallback" && !["reduced-motion", "unsupported", "visitor-choice"].includes(reason) && <p role="status" className="story-status">The garden is resting. Your story continues here.</p>}
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { createRoot, events, extend, useFrame, type RootState } from "@react-three/fiber";
+import { createRoot, events, extend, useFrame, useThree, type RootState } from "@react-three/fiber";
 import { Component, useLayoutEffect, useRef, type ReactNode } from "react";
 import * as THREE from "three";
 import StoryGardenScene from "./StoryGardenScene";
@@ -37,9 +37,17 @@ class SceneBoundary extends Component<{ children: ReactNode; onFailure: Props["o
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function RenderFrame({ onReady, onFailure }: Pick<Props, "onReady" | "onFailure">) {
+function RenderFrame({ onReady, onFailure, isMobile }: Pick<Props, "onReady" | "onFailure" | "isMobile">) {
   const ready = useRef(false);
   const failed = useRef(false);
+  const get = useThree((state) => state.get);
+  useLayoutEffect(() => {
+    // The directional light and its casters are static within each authored layout.
+    const { gl, invalidate } = get();
+    gl.shadowMap.autoUpdate = false;
+    gl.shadowMap.needsUpdate = true;
+    invalidate();
+  }, [get, isMobile]);
   // Owning the draw also contains runtime render errors. Ready means a real frame.
   useFrame(({ gl, scene, camera }) => {
     if (failed.current || gl.getContext().isContextLost()) return;
@@ -88,15 +96,23 @@ export default function StoryGardenCanvas(props: Props) {
     const draw = (next: Props) => root?.render(
       <SceneBoundary onFailure={report}>
         <StoryGardenScene activeMoment={next.activeMoment} finale={next.chapter === "finale"} isMobile={next.isMobile} onSelect={next.onSelect} onArrive={next.onArrive} />
-        <RenderFrame onReady={next.onReady} onFailure={report} />
+        <RenderFrame onReady={next.onReady} onFailure={report} isMobile={next.isMobile} />
       </SceneBoundary>,
     );
     const resize = new ResizeObserver(() => {
       if (!state || intentionalTeardown || failed) return;
-      void root?.configure({ size: size(), dpr: Math.min(window.devicePixelRatio, latest.current.isMobile ? 1.2 : 1.5) }).catch(() => report("resize-error"));
+      // Reconfiguring the root would reset unrelated defaults (frameloop and shadows).
+      try {
+        const bounds = size();
+        state.setSize(bounds.width, bounds.height, bounds.top, bounds.left);
+        state.setDpr(Math.min(window.devicePixelRatio, latest.current.isMobile ? 1.2 : 1.5));
+      } catch { report("resize-error"); }
     });
     const visibility = () => {
-      if (!failed && !intentionalTeardown) state?.setFrameloop(document.hidden ? "never" : "always");
+      if (!failed && !intentionalTeardown) {
+        state?.setFrameloop(document.hidden ? "never" : "demand");
+        if (!document.hidden) state?.invalidate();
+      }
     };
     canvas.addEventListener("webglcontextlost", lost);
     document.addEventListener("visibilitychange", visibility);
@@ -112,7 +128,7 @@ export default function StoryGardenCanvas(props: Props) {
         size: size(),
         dpr: Math.min(window.devicePixelRatio, profile.mobile ? 1.2 : 1.5),
         camera: { position: [0, 4.2, 16], fov: 42, near: 0.1, far: 60 },
-        frameloop: document.hidden ? "never" : "always",
+        frameloop: document.hidden ? "never" : "demand",
         onCreated: (created) => { state = created; created.events.connect?.(canvas); },
       }).then(() => {
         if (intentionalTeardown || failed) return;
