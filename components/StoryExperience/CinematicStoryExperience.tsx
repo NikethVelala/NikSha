@@ -92,7 +92,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
   const previous = () => setChapter(chapter === "finale" ? "something-more" : gardenMoments[index - 1]?.id ?? "garden");
   const title = activeMoment?.title ?? (chapter === "finale" ? "Our forever is just beginning." : "The Garden of Becoming");
   return createPortal(
-    <section ref={root} role="dialog" aria-modal="true" aria-labelledby="garden-title" className="story-experience" data-layout={isMobile ? "portrait" : "landscape"} data-chapter={chapter} data-journey={mode === "ready" && arrived !== chapter ? "travelling" : "arrived"} data-renderer={mode} data-fallback-reason={mode === "fallback" ? reason : undefined}>
+    <section ref={root} role="dialog" aria-modal="true" aria-labelledby="garden-title" className="story-experience" data-layout={isMobile ? "portrait" : "landscape"} data-chapter={chapter} data-journey={mode !== "fallback" && arrived !== chapter ? "travelling" : "arrived"} data-renderer={mode} data-fallback-reason={mode === "fallback" ? reason : undefined}>
       <header className="story-header">
         <div><p className="story-eyebrow">NikSha presents</p><p className="story-wordmark">A garden of becoming</p></div>
         <button data-story-exit type="button" onClick={onExit} className="story-exit" aria-label="Exit the garden and return to Our Story"><X size={16} strokeWidth={1.25} /><span>Exit</span></button>

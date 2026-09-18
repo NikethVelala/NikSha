@@ -1,7 +1,7 @@
 "use client";
 
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { gardenMoments, type GardenMoment, type GardenChapter } from "./content";
@@ -97,7 +97,7 @@ const PlantMass = GardenPlant;
 function CameraDirector({ activeMoment, finale, isMobile, onArrive }: Pick<StoryGardenSceneProps, "activeMoment" | "finale" | "isMobile" | "onArrive">) {
   const size = useThree((state) => state.size);
   const invalidate = useThree((state) => state.invalidate);
-  const motion = useRef({ key: "", chapter: "garden" as GardenChapter, layout: isMobile, elapsed: 0, notified: false, from: new THREE.Vector3(), fromTarget: new THREE.Vector3(), target: new THREE.Vector3(), destination: new THREE.Vector3(), look: new THREE.Vector3(), c1: new THREE.Vector3(), c2: new THREE.Vector3(), position: new THREE.Vector3() });
+  const motion = useRef({ key: "", chapter: "garden" as GardenChapter, layout: isMobile, elapsed: 0, starting: false, establishing: false, notified: false, from: new THREE.Vector3(), fromTarget: new THREE.Vector3(), target: new THREE.Vector3(), destination: new THREE.Vector3(), look: new THREE.Vector3(), c1: new THREE.Vector3(), c2: new THREE.Vector3(), position: new THREE.Vector3() });
   const chapter: GardenChapter = finale ? "finale" : activeMoment?.id ?? "garden";
   useFrame(({ camera }, delta) => {
     const m = motion.current;
@@ -105,11 +105,21 @@ function CameraDirector({ activeMoment, finale, isMobile, onArrive }: Pick<Story
     const mark = marks[chapter];
     const key = chapter + isMobile + size.width + size.height;
     const changed = key !== m.key;
+    const continuing = changed && Boolean(m.key) && m.layout === isMobile && m.chapter === chapter && m.elapsed < 1;
     const extra = Math.max(0, 1.1 - size.width / Math.max(1, size.height)) * (isMobile ? 3 : 7);
-    if (key !== m.key) {
-      const reframe = !m.key || m.layout !== isMobile || m.chapter === chapter;
+    if (continuing) {
+      // The threshold's taller DOM stage shrinks on Begin. Preserve the journey through
+      // that resize (and mobile browser chrome changes), rather than reporting arrival.
+      const shift = mark.position[2] + extra - m.destination.z;
+      m.destination.z += shift; m.c2.z += shift; m.key = key;
+    } else if (changed) {
+      const coldSchool = !m.key && chapter === "school-days";
+      const reframe = (!m.key && !coldSchool) || m.layout !== isMobile || m.chapter === chapter;
       m.destination.set(mark.position[0], mark.position[1], mark.position[2] + extra);
       m.look.set(...mark.target);
+      // A fast Begin tap can precede the lazy renderer's first frame. Still start at
+      // the existing threshold, using the same garden-to-school rail as a warm entry.
+      if (coldSchool) { camera.position.set(...marks.garden.position); camera.position.z += extra; m.target.set(...marks.garden.target); }
       // A responsive layout switch reframes immediately, never flies between two world layouts.
       if (reframe) { camera.position.copy(m.destination); m.target.copy(m.look); }
       m.from.copy(camera.position); m.fromTarget.copy(m.target);
@@ -120,12 +130,19 @@ function CameraDirector({ activeMoment, finale, isMobile, onArrive }: Pick<Story
       // Retarget safely from the actual camera if visitors skip or reverse rapidly.
       m.c1.lerp(m.from, 0.35);
       if (reframe) { m.c1.copy(m.destination); m.c2.copy(m.destination); }
-      m.elapsed = reframe ? 1 : 0; m.notified = false; m.key = key; m.chapter = chapter; m.layout = isMobile;
+      const establishing = !reframe && m.chapter === "garden" && chapter === "school-days";
+      m.establishing = establishing;
+      m.elapsed = reframe ? 1 : establishing ? -0.18 / journeyDuration(isMobile) : 0;
+      m.notified = false; m.key = key; m.chapter = chapter; m.layout = isMobile;
     }
-    // Ignore the first demand frame's idle interval; then use real elapsed frame time.
-    // A slow device still arrives on time rather than stretching travel below 20fps.
-    m.elapsed = Math.min(1, m.elapsed + (changed ? 0 : delta) / journeyDuration(isMobile));
-    const t = m.elapsed;
+    // Exclude the idle interval and the first draw's possible shader-compilation gap.
+    // Late texture shaders may also stall the first arrival. Cap only that entrance's
+    // large gaps; ordinary chapter travel retains real time and the six-second fallback.
+    const starting = changed && !continuing;
+    const step = starting ? 0 : m.starting ? Math.min(delta, 0.05) : m.establishing ? Math.min(delta, 0.1) : delta;
+    m.starting = starting;
+    m.elapsed = Math.min(1, m.elapsed + step / journeyDuration(isMobile));
+    const t = Math.max(0, m.elapsed);
     const u = t * t * t * (t * (t * 6 - 15) + 10);
     const v = 1 - u;
     m.position.copy(m.from).multiplyScalar(v * v * v).addScaledVector(m.c1, 3 * v * v * u).addScaledVector(m.c2, 3 * v * u * u).addScaledVector(m.destination, u * u * u);
@@ -156,25 +173,31 @@ function MemoryLighting({ activeMoment, finale, isMobile }: Pick<StoryGardenScen
 function GardenBackdrop({ isMobile }: { isMobile: boolean }) {
   const invalidate = useThree((state) => state.invalidate);
   const backdrop = useMemo(() => makeBackdropTexture(), []);
+  const [photograph, setPhotograph] = useState<THREE.Texture | null>(null);
   useEffect(() => () => backdrop.dispose(), [backdrop]);
+  useEffect(() => { if (photograph) backdrop.dispose(); }, [photograph, backdrop]);
   useEffect(() => {
     const image = new Image();
+    let texture: THREE.Texture | undefined;
     image.decoding = "async";
     image.onload = () => {
-      const canvas = backdrop.image as HTMLCanvasElement;
-      canvas.getContext("2d")?.drawImage(image, 0, 0, canvas.width, canvas.height);
-      backdrop.needsUpdate = true;
+      // Preserve the existing 1200px photograph's detail: no 768px derivative or
+      // intermediate canvas upsample. Keep mip filtering for stable distant edges.
+      texture = new THREE.Texture(image);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+      setPhotograph(texture);
       invalidate();
     };
-    image.src = isMobile ? "/images/garden/blue-hour-mobile.webp" : "/images/garden/blue-hour.webp";
-    return () => { image.onload = null; image.onerror = null; image.src = ""; };
-  }, [backdrop, isMobile, invalidate]);
+    image.src = "/images/garden/blue-hour.webp";
+    return () => { image.onload = null; image.onerror = null; image.src = ""; texture?.dispose(); };
+  }, [backdrop, invalidate]);
 
   return (
     <group>
       <mesh position={[0, 6.8, -13.8]}>
         <planeGeometry args={[36, 24]} />
-        <meshBasicMaterial map={backdrop} transparent toneMapped={false} />
+        <meshBasicMaterial map={photograph ?? backdrop} transparent toneMapped={false} fog={!isMobile} />
       </mesh>
       <mesh position={[0, 8, -12.9]}>
         <planeGeometry args={[30, 15]} />
