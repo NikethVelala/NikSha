@@ -95,11 +95,17 @@
 .story-experience[data-chapter=school-days] .story-photo{transform:rotate(-.8deg);border-right:8px solid #c6b693;box-shadow:3px 2px 0 #e9dec5,6px 4px 0 #8e7951,0 18px 40px #0006}
 .story-experience[data-chapter=friendship] .story-photo{box-shadow:0 0 0 4px #0d201c,0 0 0 5px #c8ad7966,0 20px 40px #0007}
 .story-experience[data-chapter=something-more] .story-photo{border-color:#b39a67;background:linear-gradient(130deg,#9c824d,#d4bf8e 30%,#806c45);box-shadow:0 0 36px #b88b5212,0 20px 40px #0007}
-.story-still{background:linear-gradient(#06171c44,#06171055),url('/images/garden/blue-hour.webp') center/cover}
+.story-still{background:linear-gradient(#06171c44,#06171055),url('/images/garden/coastal-blue-hour.webp') center/cover;background-color:#102419}
+.story-still[data-scene=garden]{background-size:cover,130% auto;background-position:center,50% 72%}
+.story-still[data-scene=school-days]{background-size:cover,180% auto;background-position:center,95% 62%}
+.story-still[data-scene=friendship]{background-size:cover,145% auto;background-position:center,65% 58%}
+.story-still[data-scene=something-more]{background-size:cover,185% auto;background-position:center,5% 60%}
+.story-still[data-scene=finale]{background-size:cover,cover;background-position:center,50% 52%}
 .still-wing{opacity:.35}.still-pavilion{border-color:#c8b88d66;box-shadow:0 0 0 3px #d2a57333,0 20px 60px #0003}
 .story-experience[data-layout=portrait] .story-stage{flex-basis:clamp(140px,25dvh,240px)}
 .story-experience[data-layout=portrait] .story-foreground{filter:none}
-.story-experience[data-layout=portrait] .story-still{background-image:linear-gradient(#06171c44,#06171055),url('/images/garden/blue-hour-mobile.webp')}
+.story-experience[data-layout=portrait] .story-still[data-scene=garden]{background-size:cover,160% auto;background-position:center,35% 72%}
+.story-experience[data-layout=portrait] .story-still[data-scene=finale]{background-size:cover,cover;background-position:center,50% 56%}
 .story-experience[data-layout=portrait] .story-content{padding:20px 24px 28px}
 .story-experience[data-layout=portrait] .story-content h2{font-size:34px;margin:6px 0 18px}
 .story-experience[data-layout=portrait] .story-photo{float:none;width:min(100%,240px);height:clamp(190px,27dvh,250px);margin:0 auto 22px}

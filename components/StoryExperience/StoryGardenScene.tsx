@@ -181,7 +181,7 @@ function GardenBackdrop({ isMobile }: { isMobile: boolean }) {
     let texture: THREE.Texture | undefined;
     image.decoding = "async";
     image.onload = () => {
-      // Preserve the existing 1200px photograph's detail: no 768px derivative or
+      // Preserve the 1200px scenic photograph's detail: no 768px derivative or
       // intermediate canvas upsample. Keep mip filtering for stable distant edges.
       texture = new THREE.Texture(image);
       texture.colorSpace = THREE.SRGBColorSpace;
@@ -189,14 +189,17 @@ function GardenBackdrop({ isMobile }: { isMobile: boolean }) {
       setPhotograph(texture);
       invalidate();
     };
-    image.src = "/images/garden/blue-hour.webp";
+    image.src = "/images/garden/coastal-blue-hour.webp";
     return () => { image.onload = null; image.onerror = null; image.src = ""; texture?.dispose(); };
   }, [backdrop, invalidate]);
 
   return (
     <group>
-      <mesh position={[0, 6.8, -13.8]}>
-        <planeGeometry args={[36, 24]} />
+      {/* A fixed world-space vista: chapter rails reveal different openings through
+          the existing planting. Portrait has its own low horizon behind the pavilion.
+          The coast shares the existing backdrop draw; no water animation or extra light. */}
+      <mesh name="garden-coastal-backdrop" position={[0, isMobile ? 1.8 : 2.6, isMobile ? -17.8 : -19.8]}>
+        <planeGeometry args={isMobile ? [40, 80 / 3] : [44, 88 / 3]} />
         <meshBasicMaterial map={photograph ?? backdrop} transparent toneMapped={false} fog={!isMobile} />
       </mesh>
       <mesh position={[0, 8, -12.9]}>
