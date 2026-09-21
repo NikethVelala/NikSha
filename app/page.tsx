@@ -3,7 +3,6 @@ import PetalFall from "@/components/PetalFall/PetalFall";
 import Hero from "@/components/Hero/Hero";
 import Welcome from "@/components/Welcome/Welcome";
 import Story from "@/components/Story/Story";
-import Evening from "@/components/Evening/Evening";
 import Gallery from "@/components/Gallery/Gallery";
 import Footer from "@/components/Footer/Footer";
 import LuxuryInteractions from "@/components/LuxuryInteractions/LuxuryInteractions";
@@ -20,7 +19,6 @@ export default function Home() {
       <PetalFall />
       <Welcome />
       <Story />
-      <Evening />
       <Gallery />
       <Footer />
     </>

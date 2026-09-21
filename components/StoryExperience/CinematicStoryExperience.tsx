@@ -117,7 +117,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
             {activeMoment && <p className="story-memory-caption">{chapter === "school-days" ? "From the pages of our beginning" : chapter === "friendship" ? "A memory held between two lights" : "Held close, among the jasmine"}</p>}
             <p className="story-copy">{activeMoment?.story ?? (chapter === "finale" ? "With grateful hearts, we begin the most beautiful chapter of our lives together." : "A flower-lit garden, three memories, and the journey that brought us here. Stay a little longer, and let us show you.")}</p>
             {chapter === "garden" && <button type="button" onClick={next} className="story-primary">Begin our story <ArrowRight size={16} /></button>}
-            {chapter === "finale" && <button type="button" onClick={onContinue} className="story-primary">Continue to the celebration <ArrowDown size={16} /></button>}
+            {chapter === "finale" && <button type="button" onClick={onContinue} className="story-primary">Continue to our memories <ArrowDown size={16} /></button>}
             {mode === "fallback" && !["reduced-motion", "unsupported", "visitor-choice"].includes(reason) && <p role="status" className="story-status">The garden is resting. Your story continues here.</p>}
             </div>
           </div>

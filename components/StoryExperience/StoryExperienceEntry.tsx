@@ -18,7 +18,7 @@ export default function StoryExperienceEntry() {
   const continueInvitation = () => {
     setProfile(null);
     window.requestAnimationFrame(() => {
-      const section = document.getElementById("evening");
+      const section = document.getElementById("gallery");
       section?.setAttribute("tabindex", "-1");
       section?.focus({ preventScroll: true });
       section?.scrollIntoView({ behavior: profile?.reducedMotion ? "instant" : "smooth", block: "start" });
