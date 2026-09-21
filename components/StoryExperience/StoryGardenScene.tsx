@@ -67,7 +67,7 @@ export default function StoryGardenScene({ activeMoment, finale, isMobile, onSel
       <GardenLantern position={[-8.5, 3.9, 2.1]} scale={0.76} phase={4.1} />
       <GardenLantern position={[8.5, 3.9, 2.1]} scale={0.76} phase={5.1} />
 
-      <SchoolDesk moment={gardenMoments[0]} active={activeMoment?.id === "school-days"} onSelect={onSelect} />
+      <SchoolDesk prepare={!activeMoment && !finale} moment={gardenMoments[0]} active={activeMoment?.id === "school-days"} onSelect={onSelect} />
       <FriendshipLanterns moment={gardenMoments[1]} active={activeMoment?.id === "friendship"} onSelect={onSelect} />
       <PromiseArch moment={gardenMoments[2]} active={activeMoment?.id === "something-more"} onSelect={onSelect} />
       </>}
@@ -80,7 +80,7 @@ export default function StoryGardenScene({ activeMoment, finale, isMobile, onSel
 function PortraitStage({ activeMoment, finale, onSelect }: Pick<StoryGardenSceneProps, "activeMoment" | "finale" | "onSelect">) {
   return <>
     <group position={[0, 0, -6.7]} scale={0.65}><GardenGate finale={finale} /></group>
-    <SchoolDesk portrait position={portraitPlaces.school} moment={gardenMoments[0]} active={activeMoment?.id === "school-days"} onSelect={onSelect} />
+    <SchoolDesk prepare={!activeMoment && !finale} portrait position={portraitPlaces.school} moment={gardenMoments[0]} active={activeMoment?.id === "school-days"} onSelect={onSelect} />
     <FriendshipLanterns position={portraitPlaces.friendship} moment={gardenMoments[1]} active={activeMoment?.id === "friendship"} onSelect={onSelect} />
     <PromiseArch position={portraitPlaces.more} moment={gardenMoments[2]} active={activeMoment?.id === "something-more"} onSelect={onSelect} />
     <PlantMass position={[-5.4, 0, 5.9]} scale={[1.4, 1.7, 1]} seed={46} />
@@ -132,7 +132,7 @@ function CameraDirector({ activeMoment, finale, isMobile, onArrive }: Pick<Story
       if (reframe) { m.c1.copy(m.destination); m.c2.copy(m.destination); }
       const establishing = !reframe && m.chapter === "garden" && chapter === "school-days";
       m.establishing = establishing;
-      m.elapsed = reframe ? 1 : establishing ? -0.18 / journeyDuration(isMobile) : 0;
+      m.elapsed = reframe ? 1 : 0;
       m.notified = false; m.key = key; m.chapter = chapter; m.layout = isMobile;
     }
     // Exclude the idle interval and the first draw's possible shader-compilation gap.
@@ -141,9 +141,11 @@ function CameraDirector({ activeMoment, finale, isMobile, onArrive }: Pick<Story
     const starting = changed && !continuing;
     const step = starting ? 0 : m.starting ? Math.min(delta, 0.05) : m.establishing ? Math.min(delta, 0.1) : delta;
     m.starting = starting;
-    m.elapsed = Math.min(1, m.elapsed + step / journeyDuration(isMobile));
+    // Spend the former entrance hold in motion instead. A gentler cubic start
+    // responds sooner than the other chapters' quintic easing, on the same rail.
+    m.elapsed = Math.min(1, m.elapsed + step / (journeyDuration(isMobile) + (m.establishing ? 0.18 : 0)));
     const t = Math.max(0, m.elapsed);
-    const u = t * t * t * (t * (t * 6 - 15) + 10);
+    const u = m.establishing ? t * t * (3 - 2 * t) : t * t * t * (t * (t * 6 - 15) + 10);
     const v = 1 - u;
     m.position.copy(m.from).multiplyScalar(v * v * v).addScaledVector(m.c1, 3 * v * v * u).addScaledVector(m.c2, 3 * v * u * u).addScaledVector(m.destination, u * u * u);
     camera.position.copy(m.position);
@@ -196,10 +198,11 @@ function GardenBackdrop({ isMobile }: { isMobile: boolean }) {
   return (
     <group>
       {/* A fixed world-space vista: chapter rails reveal different openings through
-          the existing planting. Portrait has its own low horizon behind the pavilion.
+          the existing planting. Portrait brings the opening closer and crops past
+          the artwork's outer foliage, keeping sea above the garden floor/occluders.
           The coast shares the existing backdrop draw; no water animation or extra light. */}
-      <mesh name="garden-coastal-backdrop" position={[0, isMobile ? 1.8 : 2.6, isMobile ? -17.8 : -19.8]}>
-        <planeGeometry args={isMobile ? [40, 80 / 3] : [44, 88 / 3]} />
+      <mesh name="garden-coastal-backdrop" position={isMobile ? [-1, 1, -13] : [0, 2.6, -19.8]}>
+        <planeGeometry args={isMobile ? [52, 104 / 3] : [44, 88 / 3]} />
         <meshBasicMaterial map={photograph ?? backdrop} transparent toneMapped={false} fog={!isMobile} />
       </mesh>
       <mesh position={[0, 8, -12.9]}>
@@ -313,7 +316,7 @@ function GardenGate({ finale }: { finale: boolean }) {
 
 const FlowerGarland = JasmineSwag;
 
-function GardenLantern({ position, scale, phase, lit = false }: { position: [number, number, number]; scale: number; phase: number; lit?: boolean }) {
+function GardenLantern({ position, scale, phase, lit = false, lightIntensity = 3.5 }: { position: [number, number, number]; scale: number; phase: number; lit?: boolean; lightIntensity?: number }) {
   const glow = useMemo(() => makeGlowTexture(), []);
   useEffect(() => () => glow.dispose(), [glow]);
 
@@ -326,14 +329,14 @@ function GardenLantern({ position, scale, phase, lit = false }: { position: [num
       {[-1, 1].flatMap((x) => [-1, 1].map((z) => <mesh key={`${x}-${z}`} position={[x * 0.16, 0.08, z * 0.16]}><boxGeometry args={[0.026, 0.39, 0.026]} /><meshStandardMaterial color="#ad9669" metalness={0.5} roughness={0.6} /></mesh>))}
       <mesh position={[0, 0.12, 0]}><cylinderGeometry args={[0.09, 0.09, 0.28, 10]} /><meshStandardMaterial color="#ffd98a" emissive="#f6a943" emissiveIntensity={1.4} transparent opacity={0.93} /></mesh>
       <sprite position={[0, 0.12, 0]} scale={[1.6, 1.6, 1]}><spriteMaterial map={glow} color="#f5b45e" transparent opacity={0.18} depthWrite={false} blending={THREE.AdditiveBlending} /></sprite>
-      {lit && <pointLight position={[0, 0.15, 0.35]} intensity={3.5} distance={6.5} decay={2} color="#f4c58b" />}
+      {lit && <pointLight position={[0, 0.15, 0.35]} intensity={lightIntensity} distance={6.5} decay={2} color="#f4c58b" />}
     </group>
   );
 }
 
 type MemoryProp = { moment: GardenMoment; active: boolean; position?: [number, number, number]; onSelect: (moment: GardenMoment) => void };
 
-function SchoolDesk({ moment, active, position = [-4.5, 0.16, 1], onSelect, portrait = false }: MemoryProp & { portrait?: boolean }) {
+function SchoolDesk({ moment, active, position = [-4.5, 0.16, 1], onSelect, portrait = false, prepare = false }: MemoryProp & { portrait?: boolean; prepare?: boolean }) {
   const grain = useMemo(() => makeWoodTexture(), []);
   useEffect(() => () => grain.dispose(), [grain]);
   return (
@@ -350,7 +353,9 @@ function SchoolDesk({ moment, active, position = [-4.5, 0.16, 1], onSelect, port
         <mesh position={[0, 0.51, 0.031]}><boxGeometry args={[0.018, 1.02, 0.005]} /><meshStandardMaterial color="#a38a58" roughness={0.85} /></mesh>
         {[0.36, 0.44, 0.52, 0.68].map((y, i) => <mesh key={y} position={[-0.4, y, 0.035]}><planeGeometry args={[i === 3 ? 0.26 : 0.48, 0.006]} /><meshBasicMaterial color="#b5a382" /></mesh>)}
       </group>
-      <GardenLantern position={[-1.1, 1.55, -0.5]} scale={0.48} phase={0} lit={active} />
+      {/* Keep School's existing light in the threshold shader variant, at zero
+          intensity. Begin then changes a uniform instead of recompiling the garden. */}
+      <GardenLantern position={[-1.1, 1.55, -0.5]} scale={0.48} phase={0} lit={active || prepare} lightIntensity={active ? 3.5 : 0} />
       <GardenPlant position={[-1.25, -0.15, -0.9]} scale={[1.5, portrait ? 3 : 2.4, 1.2]} seed={32} />
       <group position={[portrait ? 2.6 : 2.1, -0.15, -1]} rotation={[0, 0.4, 0]}><GardenPlant position={[0, 0, 0]} scale={[1.35, portrait ? 3 : 2.05, 1]} seed={61} /></group>
       <ContactShade position={[0, -0.145, 0]} scale={[3, 2.1, 1]} />

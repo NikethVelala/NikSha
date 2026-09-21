@@ -53,7 +53,13 @@ function RenderFrame({ onReady, onFailure, isMobile }: Pick<Props, "onReady" | "
     if (failed.current || gl.getContext().isContextLost()) return;
     try {
       gl.render(scene, camera);
-      if (!ready.current) { ready.current = true; onReady(); }
+      if (!ready.current) {
+        // Prepare the existing scene's offscreen material variants at the threshold,
+        // before School's camera rail reveals them. No extra draw or render loop.
+        gl.compile(scene, camera);
+        ready.current = true;
+        onReady();
+      }
     } catch {
       failed.current = true;
       onFailure("render-error");
