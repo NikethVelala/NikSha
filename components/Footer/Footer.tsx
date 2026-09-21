@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRef } from "react";
 import { ArrowUp, RotateCcw } from "lucide-react";
 import Section from "@/components/common/Section";
+import { ForeverAtmosphere } from "@/components/common/PageScrollEffects";
 import { wedding } from "@/data/wedding";
 
 function ClosingOrnament() {
@@ -19,15 +21,16 @@ function ClosingOrnament() {
 }
 
 export default function Footer() {
+  const footerRef = useRef<HTMLElement>(null);
   const reliveOpening = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
     window.location.reload();
   };
 
   return (
-    <footer id="footer" className="bg-forest text-ivory">
+    <footer ref={footerRef} id="footer" className="bg-forest text-ivory">
       <Section id="forever" className="relative overflow-hidden bg-transparent px-6 py-24 sm:px-8 sm:py-32 lg:px-12 lg:py-40">
-        <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(210,165,115,0.13),transparent_68%)]" />
+        <ForeverAtmosphere target={footerRef} />
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
