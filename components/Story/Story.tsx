@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import MugguOrnament from "@/components/common/MugguOrnament";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
 import StoryExperienceEntry from "@/components/StoryExperience/StoryExperienceEntry";
@@ -11,18 +12,6 @@ const chapters = [
   { number: "02", title: "A Friendship", eyebrow: "What grew between us" },
   { number: "03", title: "Something More", eyebrow: "When friendship became love" },
 ];
-
-function KolamOrnament() {
-  return (
-    <div aria-hidden="true" className="mx-auto mt-8 flex h-14 w-44 items-center justify-center text-champagne">
-      <svg viewBox="0 0 176 56" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth="1">
-        <path d="M88 7c-7 8-7 14 0 21 7-7 7-13 0-21ZM88 49c7-8 7-14 0-21-7 7-7 13-7 21ZM39 28c8-7 14-7 21 0-7 7-13 7-21 0ZM137 28c-8 7-14 7-21 0 7-7 13-7 21 0Z" />
-        <path d="M58 14c10 0 18 5 24 14-6 9-14 14-24 14 4-8 4-20 0-28ZM118 14c-10 0-18 5-24 14 6 9 14 14 24 14-4-8 4-20 0-28Z" />
-        <circle cx="88" cy="28" r="3" />
-      </svg>
-    </div>
-  );
-}
 
 function ChapterMarker({ number, title, eyebrow, active }: (typeof chapters)[number] & { active: boolean }) {
   return (
@@ -58,13 +47,13 @@ export default function Story() {
   }, []);
 
   return (
-    <Section id="story" className="relative overflow-hidden bg-ivory">
+    <Section id="story" className="coastal-story relative overflow-hidden bg-ivory">
       <div className="mx-auto max-w-6xl">
         <motion.header initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 1, ease: "easeOut" }} className="mx-auto max-w-4xl text-center">
           <p className="text-[10px] uppercase tracking-[0.5em] text-rose sm:text-xs">Chapter II · Our Story</p>
           <h2 className="mt-6 font-heading text-6xl leading-[0.9] text-charcoal sm:text-8xl">{wedding.story.title}</h2>
           <p className="mx-auto mt-8 max-w-2xl font-heading text-2xl leading-relaxed text-charcoal/65 sm:mt-10 sm:text-3xl">{wedding.story.intro}</p>
-          <KolamOrnament />
+          <div className="mx-auto mt-8 flex h-14 w-44 items-center justify-center text-champagne"><MugguOrnament variant="divider" className="h-8 w-36" /></div>
         </motion.header>
 
         <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 1.2, ease: "easeOut" }} className="relative mt-10 sm:mt-16">

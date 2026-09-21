@@ -4,6 +4,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import MugguOrnament from "@/components/common/MugguOrnament";
 import Section from "@/components/common/Section";
 import { FinalMemoryRelease } from "@/components/common/PageScrollEffects";
 import { wedding } from "@/data/wedding";
@@ -47,7 +48,7 @@ export default function Gallery() {
   };
 
   return (
-    <Section id="gallery" className="relative overflow-hidden bg-paper pt-16 pb-16 sm:pt-24 sm:pb-24 lg:pt-32 lg:pb-32">
+    <Section id="gallery" className="coastal-gallery relative overflow-hidden bg-paper pt-16 pb-16 sm:pt-24 sm:pb-24 lg:pt-32 lg:pb-32">
       <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 h-80 w-[80vw] -translate-x-1/2 bg-[radial-gradient(circle,rgba(210,165,115,0.11),transparent_68%)]" />
 
       <div className="relative mx-auto max-w-6xl">
@@ -97,7 +98,7 @@ export default function Gallery() {
           className="mt-16 flex items-center justify-center gap-4 sm:mt-24"
         >
           <span className="h-px w-12 bg-champagne/45 sm:w-20" />
-          <span className="font-heading text-xl text-champagne">✦</span>
+          <MugguOrnament className="h-7 w-9 text-champagne" />
           <span className="h-px w-12 bg-champagne/45 sm:w-20" />
         </motion.div>
         <motion.p
