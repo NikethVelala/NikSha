@@ -3,22 +3,10 @@
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { ArrowUp, RotateCcw } from "lucide-react";
+import CoastalHorizon from "@/components/Footer/CoastalHorizon";
 import Section from "@/components/common/Section";
 import { ForeverAtmosphere } from "@/components/common/PageScrollEffects";
 import { wedding } from "@/data/wedding";
-
-function ClosingOrnament() {
-  return (
-    <div aria-hidden="true" className="mx-auto flex w-36 items-center justify-center gap-3 text-champagne/70">
-      <span className="h-px flex-1 bg-champagne/35" />
-      <svg viewBox="0 0 32 24" className="h-6 w-8" fill="none" stroke="currentColor" strokeWidth="1">
-        <path d="M16 2c0 6-5 6-5 10s5 4 5 10M16 2c0 6 5 6 5 10s-5 4-5 10" />
-        <path d="M8 7c3 1 5 3 8 3s5-2 8-3M8 17c3-1 5-3 8-3s5 2 8 3" />
-      </svg>
-      <span className="h-px flex-1 bg-champagne/35" />
-    </div>
-  );
-}
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
@@ -30,6 +18,7 @@ export default function Footer() {
   return (
     <footer ref={footerRef} id="footer" className="bg-forest text-ivory">
       <Section id="forever" className="relative overflow-hidden bg-transparent px-6 py-24 sm:px-8 sm:py-32 lg:px-12 lg:py-40">
+        <CoastalHorizon />
         <ForeverAtmosphere target={footerRef} />
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -39,7 +28,7 @@ export default function Footer() {
           className="relative mx-auto max-w-4xl text-center"
         >
           <p className="text-[10px] uppercase tracking-[0.45em] text-champagne sm:text-xs">Chapter IV · Forever</p>
-          <div className="mt-7"><ClosingOrnament /></div>
+          <div aria-hidden="true" className="mx-auto mt-7 flex h-6 w-20 items-center"><span className="h-px w-full bg-champagne/35" /></div>
 
           <p className="mt-9 font-heading text-2xl italic text-ivory/65 sm:text-3xl">And so, our forever begins.</p>
 

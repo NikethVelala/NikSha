@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowRight, Sparkles } from "lucide-react";
+import MugguOrnament from "@/components/common/MugguOrnament";
+import { ArrowRight } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { GardenEntryAtmosphere } from "@/components/common/PageScrollEffects";
 import CinematicStoryExperience from "./CinematicStoryExperience";
@@ -34,7 +35,7 @@ export default function StoryExperienceEntry() {
       >
         <GardenEntryAtmosphere target={entryRef} />
         <div className="relative">
-          <div aria-hidden="true" className="mx-auto flex items-center justify-center gap-3 text-champagne/80"><span className="h-px w-10 bg-champagne/45" /><Sparkles className="h-3.5 w-3.5" strokeWidth={1.3} /><span className="h-px w-10 bg-champagne/45" /></div>
+          <div aria-hidden="true" className="mx-auto flex items-center justify-center gap-3 text-champagne/80"><span className="h-px w-10 bg-champagne/45" /><MugguOrnament className="h-3.5 w-[18px]" /><span className="h-px w-10 bg-champagne/45" /></div>
           <p className="mt-5 text-[9px] uppercase tracking-[0.4em] text-champagne/80">An optional cinematic interlude</p>
           <h3 className="mt-3 font-heading text-4xl leading-none text-[#fff8e9] sm:text-5xl">Step Into <span className="italic text-champagne">Our Story</span></h3>
           <p className="mx-auto mt-4 max-w-lg font-heading text-lg italic leading-relaxed text-[#fff8e9]/70 sm:text-xl">A flower-lit garden, three memories, and a little more of the journey that brought us here.</p>
