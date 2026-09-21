@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
+import styles from "./Hero.module.css";
 
 const curtainImage = "/images/curtain-clean.png";
 const curtainMobileImage = "/images/curtain-mobile.png";
@@ -82,11 +83,11 @@ export default function Hero() {
   return (
     <section className="relative h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-[#2d160b] text-white" onClick={open} role="button" tabIndex={0} aria-label="Open the wedding invitation" onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); } }}>
       <div className="absolute inset-0 bg-[#2d160b]" />
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div animate={opening ? { scale: 1.06, opacity: 1 } : { scale: 1, opacity: 0.12 }} transition={{ duration: reducedMotion ? 0.35 : 3.5, ease: [0.76, 0, 0.24, 1] }} className="absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,rgba(246,213,164,0.2),transparent_32%),linear-gradient(180deg,rgba(20,8,3,0.2),rgba(20,8,3,0.5))]" />
+      <div className={`${styles.composition} absolute inset-0 overflow-hidden`}>
+        <motion.div animate={opening ? { scale: 1.06, opacity: 1 } : { scale: 1, opacity: 0.12 }} transition={{ duration: reducedMotion ? 0.35 : 3.5, ease: [0.76, 0, 0.24, 1] }} className={`${styles.photograph} absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center`} />
+        <div className={`${styles.veil} absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,rgba(246,213,164,0.2),transparent_32%),linear-gradient(180deg,rgba(20,8,3,0.2),rgba(20,8,3,0.5))]`} />
 
-        <motion.div className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center" initial={false} animate={reveal ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }} transition={{ duration: reducedMotion ? 0.25 : 1.1, ease: [0.22, 1, 0.36, 1] }}>
+        <motion.div className={`${styles.copy} absolute inset-0 z-10 flex items-center justify-center px-6 text-center`} initial={false} animate={reveal ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }} transition={{ duration: reducedMotion ? 0.25 : 1.1, ease: [0.22, 1, 0.36, 1] }}>
           <div className="max-w-4xl">
             <motion.p className="text-[10px] uppercase tracking-[0.48em] text-champagne-light sm:text-xs" animate={reveal ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }} transition={{ duration: reducedMotion ? 0.2 : 0.8 }}>Together Forever</motion.p>
             <motion.div className="mx-auto mt-5 flex items-center justify-center gap-3" animate={reveal ? { opacity: 1, scaleX: 1 } : { opacity: 0, scaleX: 0.2 }} transition={{ duration: reducedMotion ? 0.2 : 0.9, delay: reducedMotion ? 0 : 0.12 }}><span className="h-px w-12 bg-champagne-light/55 sm:w-20" /><span className="text-[9px] text-champagne-light">✦</span><span className="h-px w-12 bg-champagne-light/55 sm:w-20" /></motion.div>
