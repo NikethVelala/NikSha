@@ -7,7 +7,21 @@
     gap: 32px;
     padding-top: max(80px, env(safe-area-inset-top));
     padding-bottom: 24px;
-    background: radial-gradient(ellipse at 50% 30%, #75563b, #2d160b 78%);
+    background: #35291e;
+  }
+
+  .composition::before {
+    content: "";
+    position: absolute;
+    inset: -24px;
+    pointer-events: none;
+    /* Reuse the photograph for static colour/light; the enlarged centre crop
+       and veil keep background subjects subordinate to the sharp foreground. */
+    background:
+      linear-gradient(180deg, rgba(30, 22, 15, 0.3), rgba(30, 22, 15, 0.24) 34%, rgba(24, 18, 14, 0.72) 75%),
+      url("/images/hero.jpg") center / cover no-repeat;
+    filter: blur(12px);
+    transform: scale(1.24);
   }
 
   .composition .photograph {
@@ -19,7 +33,14 @@
     aspect-ratio: 1327 / 887;
     background-size: contain;
     background-repeat: no-repeat;
-    mask-image: linear-gradient(to bottom, transparent, #000 5%, #000 94%, transparent);
+    /* Ease into transparency rather than outlining the photograph as a card. */
+    mask-image:
+      linear-gradient(to bottom, transparent 3%, rgba(0, 0, 0, 0.15) 10%, #000 28%, #000 76%, rgba(0, 0, 0, 0.25) 94%, transparent 97%),
+      linear-gradient(to right, transparent 2%, #000 12%, #000 88%, transparent 98%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    /* Trim only the transparent guard to prevent a seam on the zoomed mask. */
+    clip-path: inset(1px);
   }
 
   .composition .veil {
