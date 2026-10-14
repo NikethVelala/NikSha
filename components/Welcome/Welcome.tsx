@@ -6,54 +6,78 @@ import MugguOrnament from "@/components/common/MugguOrnament";
 import Section from "@/components/common/Section";
 import Countdown from "@/components/Countdown/Countdown";
 import Invitation3D from "@/components/Welcome/Invitation3D";
+import WeddingLivestream from "@/components/Welcome/WeddingLivestream";
 import { wedding } from "@/data/wedding";
 
 export default function Welcome() {
-  const gateActive = useRef(false);
   const gateReleased = useRef(false);
 
   useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-    const previous = { htmlOverflow: html.style.overflow, bodyOverflow: body.style.overflow, htmlTouch: html.style.touchAction, bodyTouch: body.style.touchAction, htmlOverscroll: html.style.overscrollBehavior, bodyOverscroll: body.style.overscrollBehavior };
-    html.style.overflow = "auto";
-    body.style.overflow = "auto";
-    html.style.touchAction = "auto";
-    body.style.touchAction = "auto";
-    html.style.overscrollBehavior = "auto";
-    body.style.overscrollBehavior = "auto";
-
+    const sectionForHash = (hash: string) => {
+      const id = hash.slice(1);
+      return ["top", "welcome", "story", "gallery", "forever"].includes(id) ? document.getElementById(id) : null;
+    };
+    const releaseForHash = () => {
+      if (sectionForHash(window.location.hash)) gateReleased.current = true;
+    };
+    const explicitNavigation = (event: MouseEvent) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
+      if (!(anchor instanceof HTMLAnchorElement) || (anchor.target && anchor.target !== "_self")) return;
+      const url = new URL(anchor.href);
+      if (url.origin === location.origin && url.pathname === location.pathname && url.search === location.search && sectionForHash(url.hash)) {
+        // Release before the browser performs its native anchor navigation.
+        gateReleased.current = true;
+      }
+    };
     const clampStoryBoundary = () => {
-      if (gateReleased.current) return;
+      releaseForHash();
+      if (gateReleased.current || document.body.style.position === "fixed" || document.body.style.overflow === "hidden" || document.documentElement.style.overflow === "hidden") return;
       const section = document.getElementById("welcome");
       if (!section) return;
       const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-      const sectionBottom = sectionTop + section.offsetHeight;
-      const maxScroll = Math.max(sectionTop, sectionBottom - window.innerHeight);
-      if (window.scrollY > maxScroll) {
-        gateActive.current = true;
-        window.scrollTo({ top: maxScroll, behavior: "auto" });
-      }
+      const maxScroll = Math.max(sectionTop, sectionTop + section.offsetHeight - window.innerHeight);
+      if (window.scrollY > maxScroll) window.scrollTo({ top: maxScroll, behavior: "instant" });
     };
 
+    releaseForHash();
+    document.addEventListener("click", explicitNavigation, true);
+    window.addEventListener("hashchange", releaseForHash);
+    window.addEventListener("popstate", releaseForHash);
     window.addEventListener("scroll", clampStoryBoundary, { passive: true });
     window.addEventListener("resize", clampStoryBoundary);
+
+    // Keep an explicit deep link after the unchanged curtain's Welcome handoff.
+    const hero = document.querySelector('section[aria-label="Open the wedding invitation"]');
+    let frame = 0;
+    const openingObserver = new MutationObserver(() => {
+      if (hero?.querySelector(':scope > div.fixed[aria-hidden="true"]')) return;
+      openingObserver.disconnect();
+      frame = requestAnimationFrame(() => {
+        const section = sectionForHash(window.location.hash);
+        if (!section || document.body.style.position === "fixed") return;
+        section.setAttribute("tabindex", "-1");
+        section.focus({ preventScroll: true });
+        section.scrollIntoView({ behavior: "instant", block: "start" });
+      });
+    });
+    if (hero) openingObserver.observe(hero, { childList: true });
     return () => {
+      document.removeEventListener("click", explicitNavigation, true);
+      window.removeEventListener("hashchange", releaseForHash);
+      window.removeEventListener("popstate", releaseForHash);
       window.removeEventListener("scroll", clampStoryBoundary);
       window.removeEventListener("resize", clampStoryBoundary);
-      html.style.overflow = previous.htmlOverflow;
-      body.style.overflow = previous.bodyOverflow;
-      html.style.touchAction = previous.htmlTouch;
-      body.style.touchAction = previous.bodyTouch;
-      html.style.overscrollBehavior = previous.htmlOverscroll;
-      body.style.overscrollBehavior = previous.bodyOverscroll;
+      openingObserver.disconnect();
+      cancelAnimationFrame(frame);
     };
   }, []);
 
   const openStory = () => {
     gateReleased.current = true;
-    gateActive.current = false;
-    requestAnimationFrame(() => document.getElementById("story")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    const section = document.getElementById("story");
+    section?.setAttribute("tabindex", "-1");
+    section?.focus({ preventScroll: true });
   };
 
   return (
@@ -73,14 +97,15 @@ export default function Welcome() {
               <p className="mx-auto mt-4 max-w-sm font-heading text-base italic leading-relaxed text-[#5e554c] sm:mt-5 sm:text-xl">We cordially invite you to grace the occasion with your presence and blessings.</p>
               <div className="my-6 flex items-center justify-center gap-3 sm:my-7"><span className="h-px w-10 bg-[#a8783f]/40 sm:w-16" /><span className="text-[8px] text-[#a8783f]">·</span><span className="h-px w-10 bg-[#a8783f]/40 sm:w-16" /></div>
               <div className="rounded-[2px] border-y border-[#a8783f]/25 py-5 sm:py-6"><p className="text-[10px] uppercase tracking-[0.3em] text-[#756957] sm:text-[9px]">Wednesday</p><p className="mt-1.5 font-heading text-[2.15rem] leading-none text-[#292622] sm:text-5xl">18 November 2026</p><p className="mt-2 text-[8px] uppercase tracking-[0.25em] text-[#a8783f]">A day we will remember forever</p></div>
-              <div className="mx-auto mt-6 grid max-w-md grid-cols-2 border-b border-[#a8783f]/35"><div className="border-r border-[#a8783f]/35 px-2 py-4 sm:px-5 sm:py-5"><p className="text-[10px] uppercase tracking-[0.2em] text-[#756957] sm:text-[9px]">Dinner</p><p className="mt-1.5 font-heading text-2xl text-[#292622] sm:text-3xl">8:00 PM</p><p className="mt-0.5 text-[9px] uppercase tracking-[0.12em] text-[#93673b] sm:text-[8px]">onwards</p></div><div className="px-2 py-4 sm:px-5 sm:py-5"><p className="text-[10px] uppercase tracking-[0.2em] text-[#756957] sm:text-[9px]">Muhurtham</p><p className="mt-1.5 font-heading text-2xl text-[#292622] sm:text-3xl">10:05 PM</p><p className="mt-0.5 text-[9px] uppercase tracking-[0.12em] text-[#93673b] sm:text-[8px]">auspicious time</p></div></div>
+              <div className="mx-auto mt-6 grid max-w-md grid-cols-2 border-b border-[#a8783f]/35"><div className="border-r border-[#a8783f]/35 px-2 py-4 sm:px-5 sm:py-5"><p className="text-[10px] uppercase tracking-[0.2em] text-[#756957] sm:text-[9px]">Dinner</p><p className="mt-1.5 font-heading text-2xl text-[#292622] sm:text-3xl">7:00 PM</p><p className="mt-0.5 text-[9px] uppercase tracking-[0.12em] text-[#93673b] sm:text-[8px]">onwards</p></div><div className="px-2 py-4 sm:px-5 sm:py-5"><p className="text-[10px] uppercase tracking-[0.2em] text-[#756957] sm:text-[9px]">Muhurtham</p><p className="mt-1.5 font-heading text-2xl text-[#292622] sm:text-3xl">10:01 PM</p><p className="mt-0.5 text-[9px] uppercase tracking-[0.12em] text-[#93673b] sm:text-[8px]">IST · auspicious time</p></div></div>
               <div className="mt-6"><p className="text-[10px] uppercase tracking-[0.26em] text-[#756957] sm:text-[9px]">Venue</p><p className="mt-1.5 font-heading text-3xl text-[#292622] sm:text-4xl">SB Square</p><p className="mx-auto mt-1.5 max-w-sm text-[12px] leading-5 text-[#6f665d] sm:text-sm sm:leading-6">Chinna Bazaar · Rushikonda · Visakhapatnam, Andhra Pradesh</p><a href={wedding.ceremony.venue.maps} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-10 items-center gap-2 border border-[#8c6130] bg-[#8c6130] px-5 py-2 text-[9px] font-medium uppercase tracking-[0.2em] text-white transition-all hover:-translate-y-0.5 hover:bg-[#714b24] hover:shadow-[0_8px_20px_rgba(113,75,36,0.2)] sm:mt-5 sm:px-6 sm:text-[9px]">Open in Google Maps <span aria-hidden="true">→</span></a></div>
               <div className="mt-6 flex justify-center sm:mt-7"><span aria-hidden="true" className="flex h-8 w-28 items-center"><span className="h-px w-full bg-[#a8783f]/35" /></span></div><p className="mt-2 text-[8px] uppercase tracking-[0.28em] text-[#a8783f]/80">With love, Niketh &amp; Sirisha</p>
             </div>
           </div>
         </Invitation3D>
         <Countdown compact />
-        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20px" }} transition={{ duration: 0.8, delay: 0.15 }} className="px-3 pb-3 pt-4 text-center sm:pb-8 sm:pt-6"><p className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#756957] sm:text-[9px]">There&apos;s more to our story</p><p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">If you&apos;d like to stay a little longer…</p><a href="#story" onClick={(event) => { event.preventDefault(); openStory(); }} className="group mx-auto mt-4 flex min-h-12 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]">Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
+        <WeddingLivestream />
+        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20px" }} transition={{ duration: 0.8, delay: 0.15 }} className="px-3 pb-3 pt-4 text-center sm:pb-8 sm:pt-6"><p className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#756957] sm:text-[9px]">There&apos;s more to our story</p><p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">If you&apos;d like to stay a little longer…</p><a href="#story" onClick={openStory} className="group mx-auto mt-4 flex min-h-12 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]">Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
       </motion.div>
     </Section>
   );
