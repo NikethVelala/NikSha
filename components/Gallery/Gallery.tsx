@@ -1,38 +1,31 @@
 "use client";
 
+import usePageReducedMotion from "@/components/common/usePageReducedMotion";
+
 import Image from "next/image";
+import GalleryDialog from "./GalleryDialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState, type MouseEvent } from "react";
 import MugguOrnament from "@/components/common/MugguOrnament";
 import Section from "@/components/common/Section";
 import { FinalMemoryRelease } from "@/components/common/PageScrollEffects";
 import { wedding } from "@/data/wedding";
 
 export default function Gallery() {
+  const reducedMotion = usePageReducedMotion();
   const images = wedding.gallery.images;
   const [selected, setSelected] = useState<number | null>(null);
   const touchStartX = useRef<number | null>(null);
 
-  const closeLightbox = () => setSelected(null);
+  const [origin, setOrigin] = useState<HTMLButtonElement | null>(null);
+  const openLightbox = (index: number, event: MouseEvent<HTMLButtonElement>) => {
+    setOrigin(event.currentTarget);
+    setSelected(index);
+  };
+  const closeLightbox = useCallback(() => setSelected(null), []);
   const previous = () => setSelected((value) => value === null ? null : (value - 1 + images.length) % images.length);
   const next = () => setSelected((value) => value === null ? null : (value + 1) % images.length);
-
-  useEffect(() => {
-    if (selected === null) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeLightbox();
-      if (event.key === "ArrowLeft") previous();
-      if (event.key === "ArrowRight") next();
-    };
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selected]);
 
   const handleTouchStart = (event: React.TouchEvent) => {
     touchStartX.current = event.changedTouches[0]?.clientX ?? null;
@@ -53,10 +46,11 @@ export default function Gallery() {
 
       <div className="relative mx-auto max-w-6xl">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+          animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          transition={reducedMotion ? { duration: 0 } : { duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="grid gap-8 lg:grid-cols-[0.68fr_1.32fr] lg:items-end lg:gap-24"
         >
           <div>
@@ -75,26 +69,27 @@ export default function Gallery() {
         </motion.div>
 
         <div className="mt-12 sm:mt-20 lg:mt-24">
-          <GalleryImage image={images[0]} index={0} aspect="hero" onOpen={() => setSelected(0)} />
+          <GalleryImage image={images[0]} index={0} aspect="hero" onOpen={(event) => openLightbox(0, event)} />
 
           <div className="mt-12 grid gap-12 md:mt-24 md:grid-cols-12 md:items-start md:gap-x-10">
-            <GalleryImage image={images[1]} index={1} className="md:col-span-4 md:mt-20" aspect="portrait" onOpen={() => setSelected(1)} />
-            <GalleryImage image={images[2]} index={2} className="md:col-span-8" aspect="wide" onOpen={() => setSelected(2)} />
+            <GalleryImage image={images[1]} index={1} className="md:col-span-4 md:mt-20" aspect="portrait" onOpen={(event) => openLightbox(1, event)} />
+            <GalleryImage image={images[2]} index={2} className="md:col-span-8" aspect="wide" onOpen={(event) => openLightbox(2, event)} />
           </div>
 
           <div className="mt-12 grid gap-12 md:mt-24 md:grid-cols-12 md:items-start md:gap-x-10">
-            <GalleryImage image={images[3]} index={3} className="md:col-span-7" aspect="wide" onOpen={() => setSelected(3)} />
-            <GalleryImage image={images[4]} index={4} className="md:col-span-5 md:mt-24" aspect="portrait" onOpen={() => setSelected(4)} />
+            <GalleryImage image={images[3]} index={3} className="md:col-span-7" aspect="wide" onOpen={(event) => openLightbox(3, event)} />
+            <GalleryImage image={images[4]} index={4} className="md:col-span-5 md:mt-24" aspect="portrait" onOpen={(event) => openLightbox(4, event)} />
           </div>
 
-          <GalleryImage image={images[5]} index={5} className="mt-12 md:mt-24 md:ml-auto md:max-w-[70%]" aspect="wide" onOpen={() => setSelected(5)} />
+          <GalleryImage image={images[5]} index={5} className="mt-12 md:mt-24 md:ml-auto md:max-w-[70%]" aspect="wide" onOpen={(event) => openLightbox(5, event)} />
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+          animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.9 }}
+          transition={reducedMotion ? { duration: 0 } : { duration: 0.9 }}
           className="mt-16 flex items-center justify-center gap-4 sm:mt-24"
         >
           <span className="h-px w-12 bg-champagne/45 sm:w-20" />
@@ -102,10 +97,11 @@ export default function Gallery() {
           <span className="h-px w-12 bg-champagne/45 sm:w-20" />
         </motion.div>
         <motion.p
-          initial={{ opacity: 0, y: 12 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+          animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-30px" }}
-          transition={{ duration: 0.8, delay: 0.1 }}
+          transition={reducedMotion ? { duration: 0 } : { duration: 0.8, delay: 0.1 }}
           className="mt-5 text-center font-heading text-xl italic text-charcoal/60 sm:text-3xl"
         >
           Every photograph holds a little piece of our journey.
@@ -114,14 +110,12 @@ export default function Gallery() {
 
       <AnimatePresence>
         {selected !== null && (
+          <GalleryDialog origin={origin} onClose={closeLightbox} onPrevious={previous} onNext={next}>
           <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Photo viewer"
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.35 }}
+            transition={{ duration: reducedMotion ? 0 : 0.35 }}
             className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[#120f0d]/[0.98] px-3 py-3 backdrop-blur-2xl sm:px-8 sm:py-7"
             onClick={closeLightbox}
             onTouchStart={handleTouchStart}
@@ -151,9 +145,9 @@ export default function Gallery() {
 
             <motion.figure
               key={selected}
-              initial={{ opacity: 0, scale: 0.975, y: 8 }}
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.975, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: reducedMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="relative flex h-full max-h-full w-full max-w-5xl touch-pan-y flex-col items-center justify-center px-1 pb-4 pt-16 sm:px-8 sm:pb-3 sm:pt-14"
               onClick={(event) => event.stopPropagation()}
             >
@@ -162,7 +156,7 @@ export default function Gallery() {
               </div>
 
               <div className="mt-3 flex w-full max-w-3xl items-end justify-between gap-4 border-t border-ivory/10 pt-3 sm:mt-4 sm:pt-4">
-                <figcaption className="min-w-0 text-left">
+                <figcaption id="gallery-photo-caption" aria-live="polite" aria-atomic="true" className="min-w-0 text-left">
                   <p className="mb-1 text-[8px] uppercase tracking-[0.28em] text-champagne/70">{String(selected + 1).padStart(2, "0")} <span className="text-ivory/25">/</span> {String(images.length).padStart(2, "0")}</p>
                   <p className="mb-1 text-[8px] uppercase tracking-[0.28em] text-ivory/35">{images[selected].label}</p>
                   <span className="block font-heading text-base italic leading-snug text-ivory/85 sm:text-2xl">{images[selected].caption}</span>
@@ -171,6 +165,7 @@ export default function Gallery() {
               </div>
             </motion.figure>
           </motion.div>
+          </GalleryDialog>
         )}
       </AnimatePresence>
     </Section>
@@ -182,13 +177,14 @@ type GalleryImageProps = {
   index: number;
   className?: string;
   aspect: "hero" | "wide" | "portrait";
-  onOpen: () => void;
+  onOpen: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
 function GalleryImage({ image, index, className = "", aspect, onOpen }: GalleryImageProps) {
+  const reducedMotion = usePageReducedMotion();
   const photograph = (
     <div className={`relative overflow-hidden bg-[#eee8df] shadow-[0_16px_45px_rgba(73,55,35,0.08)] ${aspect === "hero" ? "aspect-[4/3] md:aspect-[16/8]" : aspect === "wide" ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-[4/5]"}`}>
-      <motion.div className="absolute inset-0" whileHover={{ scale: 1.035 }} transition={{ duration: 1.4, ease: "easeOut" }}>
+      <motion.div className="absolute inset-0" whileHover={reducedMotion ? undefined : { scale: 1.035 }} transition={reducedMotion ? { duration: 0 } : { duration: 1.4, ease: "easeOut" }}>
         <Image src={image.src} alt={`Niketh and Sirisha memory ${index + 1}`} fill sizes="(max-width: 768px) 100vw, 80vw" className="object-contain md:object-cover" />
       </motion.div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
@@ -204,10 +200,11 @@ function GalleryImage({ image, index, className = "", aspect, onOpen }: GalleryI
 
   return (
     <motion.figure
-      initial={{ opacity: 0, y: 42, scale: 0.985 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 42, scale: 0.985 }}
+      animate={reducedMotion ? { opacity: 1, y: 0, scale: 1 } : undefined}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-70px" }}
-      transition={{ duration: 0.95, delay: (index % 2) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={reducedMotion ? { duration: 0 } : { duration: 0.95, delay: (index % 2) * 0.1, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       <button type="button" onClick={onOpen} className="group block w-full touch-manipulation text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose focus-visible:ring-offset-4 focus-visible:ring-offset-paper" aria-label={`Open memory ${index + 1}: ${image.label}`}>

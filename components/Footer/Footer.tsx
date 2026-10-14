@@ -1,19 +1,18 @@
 "use client";
 
+import usePageReducedMotion from "@/components/common/usePageReducedMotion";
+
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { ArrowUp, RotateCcw } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import CoastalHorizon from "@/components/Footer/CoastalHorizon";
 import Section from "@/components/common/Section";
 import { ForeverAtmosphere } from "@/components/common/PageScrollEffects";
 import { wedding } from "@/data/wedding";
 
 export default function Footer() {
+  const reducedMotion = usePageReducedMotion();
   const footerRef = useRef<HTMLElement>(null);
-  const reliveOpening = () => {
-    window.scrollTo({ top: 0, behavior: "auto" });
-    window.location.reload();
-  };
 
   return (
     <footer ref={footerRef} id="footer" className="bg-forest text-ivory">
@@ -21,10 +20,11 @@ export default function Footer() {
         <CoastalHorizon />
         <ForeverAtmosphere target={footerRef} />
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+          animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.9 }}
+          transition={reducedMotion ? { duration: 0 } : { duration: 0.9 }}
           className="relative mx-auto max-w-4xl text-center"
         >
           <p className="text-[10px] uppercase tracking-[0.45em] text-champagne sm:text-xs">Chapter IV · Forever</p>
@@ -33,10 +33,11 @@ export default function Footer() {
           <p className="mt-9 font-heading text-2xl italic text-ivory/65 sm:text-3xl">And so, our forever begins.</p>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
+            initial={reducedMotion ? false : { opacity: 0, scale: 0.92 }}
+            animate={reducedMotion ? { opacity: 1, scale: 1 } : undefined}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1.1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            transition={reducedMotion ? { duration: 0 } : { duration: 1.1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto mt-7 flex h-32 w-32 items-center justify-center rounded-full border border-champagne/35 bg-[radial-gradient(circle_at_35%_30%,rgba(255,245,220,0.13),transparent_62%)] sm:h-40 sm:w-40"
           >
             <span className="font-heading text-4xl italic tracking-[-0.06em] text-champagne sm:text-5xl">{wedding.couple.monogram}</span>
@@ -68,10 +69,6 @@ export default function Footer() {
               Back to the beginning
               <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1" strokeWidth={1.5} />
             </a>
-            <button type="button" onClick={reliveOpening} className="group inline-flex min-h-12 items-center gap-3 border-b border-champagne/35 pb-2 text-[10px] uppercase tracking-[0.26em] text-champagne/85 transition-colors hover:border-champagne hover:text-champagne sm:text-xs">
-              Relive the opening
-              <RotateCcw className="h-3.5 w-3.5 transition-transform duration-500 group-hover:rotate-[-90deg]" strokeWidth={1.35} />
-            </button>
           </div>
 
           <p className="mt-20 text-[9px] uppercase tracking-[0.38em] text-ivory/30">With love, NikSha</p>

@@ -1,5 +1,7 @@
 "use client";
 
+import usePageReducedMotion from "@/components/common/usePageReducedMotion";
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { wedding } from "@/data/wedding";
@@ -20,9 +22,12 @@ function calculateTimeLeft(): TimeLeft {
 const secondaryUnits: Array<keyof Omit<TimeLeft, "days">> = ["hours", "minutes", "seconds"];
 
 export default function Countdown({ compact = false }: { compact?: boolean }) {
+  const reducedMotion = usePageReducedMotion();
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
+    // Read the clock after hydration so server/client countdown markup agrees.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTimeLeft(calculateTimeLeft());
     const interval = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
     return () => clearInterval(interval);
@@ -33,10 +38,11 @@ export default function Countdown({ compact = false }: { compact?: boolean }) {
   if (compact) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 14 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+        animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-20px" }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        transition={reducedMotion ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="mx-auto mt-8 max-w-xl px-3 sm:mt-10"
       >
         <div className="relative overflow-hidden border-y border-[#a8783f]/25 py-5 sm:py-6">
@@ -68,10 +74,11 @@ export default function Countdown({ compact = false }: { compact?: boolean }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+      animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.8 }}
+      transition={reducedMotion ? { duration: 0 } : { duration: 0.8 }}
       className="mt-12 border-t border-line pt-8 sm:mt-16 sm:pt-12"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">

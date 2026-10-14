@@ -1,5 +1,7 @@
 "use client";
 
+import usePageReducedMotion from "@/components/common/usePageReducedMotion";
+
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import MugguOrnament from "@/components/common/MugguOrnament";
@@ -10,6 +12,7 @@ import WeddingLivestream from "@/components/Welcome/WeddingLivestream";
 import { wedding } from "@/data/wedding";
 
 export default function Welcome() {
+  const reducedMotion = usePageReducedMotion();
   const gateReleased = useRef(false);
 
   useEffect(() => {
@@ -83,14 +86,14 @@ export default function Welcome() {
   return (
     <Section id="welcome" className="coastal-welcome relative overflow-hidden bg-[#f5eee2] py-7 sm:py-12">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(183,126,59,0.13),transparent_34%)]" />
-      <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }} className="relative mx-auto max-w-xl px-3 sm:max-w-2xl sm:px-6">
+      <motion.div initial={reducedMotion ? false : { opacity: 0, y: 28 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={reducedMotion ? { duration: 0 } : { duration: 1, ease: [0.22, 1, 0.36, 1] }} className="relative mx-auto max-w-xl px-3 sm:max-w-2xl sm:px-6">
         <Invitation3D>
           <div className="relative overflow-hidden border-[1.5px] border-[#a8783f]/70 bg-[#fcfaf4] px-6 py-8 shadow-[0_22px_65px_rgba(73,55,35,0.14)] sm:px-12 sm:py-11">
             <div aria-hidden="true" className="pointer-events-none absolute inset-[4px] border border-[#a8783f]/45" />
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.7),transparent_34%),linear-gradient(115deg,rgba(165,120,63,0.035),transparent_24%,rgba(165,120,63,0.025)_76%,transparent)]" />
             <div className="relative text-center">
               <p className="mb-5 text-[9px] uppercase tracking-[0.45em] text-[#93673b] sm:mb-6 sm:text-[10px]">Chapter I · The Invitation</p>
-              <motion.div initial={{ opacity: 0, scale: 0.86 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.12 }}><div aria-hidden="true" className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[#a8783f]/65 bg-[radial-gradient(circle_at_35%_30%,#fffaf0,#ead8b9_62%,#c49a60)] shadow-[0_5px_18px_rgba(105,70,32,0.16)] sm:h-[4.5rem] sm:w-[4.5rem]"><div className="absolute inset-1.5 rounded-full border border-[#8c6130]/35" /><span className="font-heading text-xl italic tracking-[-0.05em] text-[#70491f] sm:text-2xl">{wedding.couple.monogram}</span></div></motion.div>
+              <motion.div initial={reducedMotion ? false : { opacity: 0, scale: 0.86 }} animate={reducedMotion ? { opacity: 1, scale: 1 } : undefined} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={reducedMotion ? { duration: 0 } : { duration: 0.8, delay: 0.12 }}><div aria-hidden="true" className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[#a8783f]/65 bg-[radial-gradient(circle_at_35%_30%,#fffaf0,#ead8b9_62%,#c49a60)] shadow-[0_5px_18px_rgba(105,70,32,0.16)] sm:h-[4.5rem] sm:w-[4.5rem]"><div className="absolute inset-1.5 rounded-full border border-[#8c6130]/35" /><span className="font-heading text-xl italic tracking-[-0.05em] text-[#70491f] sm:text-2xl">{wedding.couple.monogram}</span></div></motion.div>
               <p lang="te" className="mt-5 font-heading text-xl tracking-wide text-[#8c6130] sm:mt-6 sm:text-2xl">శ్రీ</p><p lang="te" className="mt-1 font-heading text-xs tracking-[0.18em] text-[#8c6130] sm:text-sm">శుభమస్తు</p><p className="mx-auto mt-4 max-w-sm text-[10px] uppercase leading-5 tracking-[0.24em] text-[#756957] sm:text-[10px] sm:tracking-[0.4em]">With the blessings of our parents &amp; elders</p>
               <div className="mt-5 flex justify-center sm:mt-6"><MugguOrnament variant="divider" className="h-8 w-28 text-[#a8783f]" /></div><p className="mt-5 text-[9px] uppercase tracking-[0.34em] text-[#93673b]">The Wedding Invitation</p>
               <div className="mt-4 flex items-center justify-center gap-2.5 sm:gap-5"><h1 className="font-heading text-[3rem] leading-none text-[#292622] sm:text-6xl">{wedding.couple.groom}</h1><span className="font-heading text-2xl text-[#a8783f] sm:text-3xl">&amp;</span><h1 className="font-heading text-[3rem] leading-none text-[#292622] sm:text-6xl">{wedding.couple.bride}</h1></div>
@@ -105,7 +108,7 @@ export default function Welcome() {
         </Invitation3D>
         <Countdown compact />
         <WeddingLivestream />
-        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20px" }} transition={{ duration: 0.8, delay: 0.15 }} className="px-3 pb-3 pt-4 text-center sm:pb-8 sm:pt-6"><p className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#756957] sm:text-[9px]">There&apos;s more to our story</p><p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">If you&apos;d like to stay a little longer…</p><a href="#story" onClick={openStory} className="group mx-auto mt-4 flex min-h-12 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]">Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
+        <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20px" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.8, delay: 0.15 }} className="px-3 pb-3 pt-4 text-center sm:pb-8 sm:pt-6"><p className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#756957] sm:text-[9px]">There&apos;s more to our story</p><p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">If you&apos;d like to stay a little longer…</p><a href="#story" onClick={openStory} className="group mx-auto mt-4 flex min-h-12 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]">Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
       </motion.div>
     </Section>
   );

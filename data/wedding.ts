@@ -1,3 +1,6 @@
+// Add the confirmed streaming destination here when it is available.
+export const weddingLivestreamUrl: string | null = null;
+
 export const wedding = {
   couple: {
     groom: "Niketh",
@@ -7,8 +10,8 @@ export const wedding = {
 
   ceremony: {
     date: "18 November 2026",
-    dateTime: "2026-11-18T22:05:00",
-    time: "10:05 PM Muhurtham",
+    dateTime: "2026-11-18T22:01:00+05:30",
+    time: "10:01 PM IST Muhurtham",
     venue: {
       name: "SB Square",
       address: "Chinna Bazaar, Rushikonda, Visakhapatnam, Andhra Pradesh",
@@ -23,7 +26,7 @@ export const wedding = {
       title: "Dinner",
       icon: "🍽️",
       date: "18 November 2026",
-      time: "8:00 PM onwards",
+      time: "7:00 PM onwards",
       venue: "SB Square",
       address: "Chinna Bazaar, Rushikonda, Visakhapatnam",
     },
@@ -31,11 +34,17 @@ export const wedding = {
       title: "Wedding Muhurtham",
       icon: "💍",
       date: "18 November 2026",
-      time: "10:05 PM",
+      time: "10:01 PM IST",
       venue: "SB Square",
       address: "Chinna Bazaar, Rushikonda, Visakhapatnam",
     },
   ],
+
+  livestream: {
+    startsAt: "2026-11-18T19:00:00+05:30",
+    // After the event, change to "Watch Our Wedding" when the destination is confirmed.
+    watchLabel: "Watch Wedding Live",
+  },
 
   story: {
     title: "How It All Began",

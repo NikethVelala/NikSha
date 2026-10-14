@@ -11,7 +11,7 @@ export default function LuxuryInteractions() {
   const springY = useSpring(y, { stiffness: 420, damping: 32, mass: 0.45 });
 
   useEffect(() => {
-    const media = window.matchMedia("(pointer: fine) and (min-width: 768px)");
+    const media = window.matchMedia("(pointer: fine) and (min-width: 768px) and (prefers-reduced-motion: no-preference)");
     const update = () => setEnabled(media.matches);
     update();
     media.addEventListener("change", update);
