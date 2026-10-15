@@ -1,107 +1,80 @@
 "use client";
 
 import usePageReducedMotion from "@/components/common/usePageReducedMotion";
-
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { wedding } from "@/data/wedding";
+import styles from "./Countdown.module.css";
 
 type TimeLeft = { days: number; hours: number; minutes: number; seconds: number };
+const units = ["days", "hours", "minutes", "seconds"] as const;
+const target = Date.parse(wedding.ceremony.dateTime);
 
 function calculateTimeLeft(): TimeLeft {
-  const difference = new Date(wedding.ceremony.dateTime).getTime() - Date.now();
-  if (difference <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  // Round up the remaining second so zero never appears before the ceremony.
+  const seconds = Math.max(0, Math.ceil((target - Date.now()) / 1000));
   return {
-    days: Math.floor(difference / 86400000),
-    hours: Math.floor((difference / 3600000) % 24),
-    minutes: Math.floor((difference / 60000) % 60),
-    seconds: Math.floor((difference / 1000) % 60),
+    days: Math.floor(seconds / 86400),
+    hours: Math.floor(seconds / 3600) % 24,
+    minutes: Math.floor(seconds / 60) % 60,
+    seconds: seconds % 60,
   };
 }
-
-const secondaryUnits: Array<keyof Omit<TimeLeft, "days">> = ["hours", "minutes", "seconds"];
 
 export default function Countdown({ compact = false }: { compact?: boolean }) {
   const reducedMotion = usePageReducedMotion();
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
-    // Read the clock after hydration so server/client countdown markup agrees.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setTimeLeft(calculateTimeLeft());
-    const interval = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
-    return () => clearInterval(interval);
+    let timer: number | undefined;
+    const update = () => {
+      window.clearTimeout(timer);
+      if (document.hidden) return;
+      const next = calculateTimeLeft();
+      setTimeLeft((current) => current && units.every((unit) => current[unit] === next[unit]) ? current : next);
+      // Re-read wall time each tick; do not accumulate interval drift or hidden time.
+      if (Date.now() < target) timer = window.setTimeout(update, 1000 - Date.now() % 1000 + 5);
+    };
+    // Clock-dependent values are filled after hydration; the full layout is reserved.
+    update();
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", update);
+    };
   }, []);
 
-  if (!timeLeft) return null;
-
-  if (compact) {
-    return (
-      <motion.div
-        initial={reducedMotion ? false : { opacity: 0, y: 14 }}
-        animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-20px" }}
-        transition={reducedMotion ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto mt-8 max-w-xl px-3 sm:mt-10"
-      >
-        <div className="relative overflow-hidden border-y border-[#a8783f]/25 py-5 sm:py-6">
-          <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 h-20 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#c49a60]/10 blur-2xl" />
-          <div className="relative text-center">
-            <div className="flex items-center justify-center gap-3 text-[#a8783f]/65 sm:gap-4">
-              <span className="h-px w-10 bg-[#a8783f]/30 sm:w-16" />
-              <span className="text-[8px]">✦</span>
-              <span className="h-px w-10 bg-[#a8783f]/30 sm:w-16" />
-            </div>
-            <p className="mt-3 text-[8px] uppercase tracking-[0.4em] text-[#756957] sm:mt-4 sm:text-[9px] sm:tracking-[0.45em]">Until we say I do</p>
-            <div className="mt-2 flex items-baseline justify-center gap-2 sm:mt-1 sm:gap-3">
-              <span className="font-heading text-[3.4rem] leading-none text-[#292622] sm:text-6xl">{timeLeft.days}</span>
-              <span className="font-heading text-lg italic text-[#8c6130] sm:text-xl">days</span>
-            </div>
-            <div className="mx-auto mt-4 grid max-w-sm grid-cols-3 border-t border-[#a8783f]/18 pt-3 sm:mt-5 sm:pt-4">
-              {secondaryUnits.map((unit) => (
-                <div key={unit} className="border-r border-[#a8783f]/18 last:border-r-0">
-                  <p className="font-heading text-xl leading-none text-[#292622] sm:text-2xl">{String(timeLeft[unit]).padStart(2, "0")}</p>
-                  <p className="mt-1 text-[7px] uppercase tracking-[0.22em] text-[#756957] sm:text-[8px]">{unit}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
-
+  const complete = timeLeft !== null && units.every((unit) => timeLeft[unit] === 0);
   return (
-    <motion.div
-      initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+    <motion.section
+      id="wedding-countdown"
+      aria-labelledby="wedding-countdown-title"
+      initial={reducedMotion ? false : { opacity: 0, y: compact ? 14 : 20 }}
       animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={reducedMotion ? { duration: 0 } : { duration: 0.8 }}
-      className="mt-12 border-t border-line pt-8 sm:mt-16 sm:pt-12"
+      viewport={{ once: true, margin: "-20px" }}
+      transition={reducedMotion ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className={compact ? "mx-auto mt-8 max-w-xl px-3 sm:mt-10" : "mx-auto mt-12 max-w-2xl sm:mt-16"}
     >
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.36em] text-rose sm:text-[11px] sm:tracking-[0.4em]">The days are counting down</p>
-          <p className="mt-2 font-heading text-xl text-charcoal sm:mt-3 sm:text-3xl">Until we say I do</p>
+      <div className="border-y border-[#a8783f]/35 py-6 text-center sm:py-8">
+        <p className="text-[9px] font-medium uppercase tracking-[0.24em] text-[#76522d]">Until we say I do</p>
+        <h2 id="wedding-countdown-title" className="mx-auto mt-2 max-w-sm font-heading text-[1.8rem] leading-tight text-[#292622] sm:text-4xl">Counting Down to Our Forever</h2>
+        <div role="timer" aria-live="off" aria-atomic="true" aria-label="Time until our wedding ceremony" className="mt-5">
+          <dl className="grid grid-cols-4 gap-1 sm:gap-3">
+            {units.map((unit) => (
+              <div key={unit} className={`min-w-0 rounded-sm border py-3 sm:py-4 ${unit === "seconds" ? "border-[#a8783f]/45 bg-[#e9d8b8]/55" : "border-transparent"}`}>
+                <dt className="text-[9px] font-medium uppercase tracking-[0.08em] text-[#65543c] sm:text-[10px] sm:tracking-[0.16em]">{unit}</dt>
+                <dd className="mt-2 overflow-hidden font-sans text-[clamp(1.7rem,7.5vw,2.75rem)] font-semibold leading-none tracking-[-0.04em] text-[#244232] tabular-nums">
+                  <span key={unit === "seconds" ? timeLeft?.seconds ?? "pending" : unit} data-countdown-unit={unit} className={`block ${unit === "seconds" && timeLeft && !complete && !reducedMotion ? styles.tick : ""}`}>
+                    {timeLeft ? String(timeLeft[unit]).padStart(2, "0") : "––"}
+                  </span>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
-        <p className="font-heading text-base text-muted sm:text-lg">18 · 11 · 2026</p>
+        <p className="mt-4 font-heading text-lg italic leading-6 text-[#65543c]">{complete ? "Our forever has begun." : "Every second brings us closer."}</p>
       </div>
-      <div className="mt-6 border-y border-line sm:mt-8 sm:flex sm:items-end">
-        <div className="px-1 py-6 sm:flex-1 sm:px-5 sm:py-8">
-          <p className="font-heading text-[4.5rem] leading-none text-charcoal sm:text-8xl lg:text-9xl">{String(timeLeft.days).padStart(2, "0")}</p>
-          <p className="mt-2 text-[9px] uppercase tracking-[0.35em] text-muted sm:mt-3 sm:text-[10px]">Days</p>
-        </div>
-        <div className="grid grid-cols-3 border-t border-line sm:flex sm:border-l sm:border-t-0">
-          {secondaryUnits.map((unit) => (
-            <div key={unit} className="border-r border-line px-3 py-5 last:border-r-0 sm:min-w-28 sm:px-6 sm:py-7">
-              <p className="font-heading text-3xl leading-none text-charcoal sm:text-4xl">{String(timeLeft[unit]).padStart(2, "0")}</p>
-              <p className="mt-2 text-[8px] uppercase tracking-[0.24em] text-muted sm:mt-3 sm:text-[9px] sm:tracking-[0.28em]">{unit}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </motion.div>
+    </motion.section>
   );
 }

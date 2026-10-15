@@ -1,0 +1,12 @@
+.tick {
+  animation: second-settle 240ms ease-out both;
+}
+
+@keyframes second-settle {
+  from { transform: translateY(3px); opacity: 0.8; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tick { animation: none; }
+}
