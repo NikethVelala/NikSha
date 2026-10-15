@@ -19,7 +19,7 @@
        and veil keep background subjects subordinate to the sharp foreground. */
     background:
       linear-gradient(180deg, rgba(30, 22, 15, 0.3), rgba(30, 22, 15, 0.24) 34%, rgba(24, 18, 14, 0.72) 75%),
-      url("/images/hero.jpg") center / cover no-repeat;
+      url("/images/optimized/hero.webp") center / cover no-repeat;
     filter: blur(12px);
     transform: scale(1.24);
   }

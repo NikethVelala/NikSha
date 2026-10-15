@@ -3,7 +3,7 @@
 import usePageReducedMotion from "@/components/common/usePageReducedMotion";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MugguOrnament from "@/components/common/MugguOrnament";
 import Section from "@/components/common/Section";
 import { wedding } from "@/data/wedding";
@@ -31,6 +31,27 @@ function ChapterMarker({ number, title, eyebrow, active }: (typeof chapters)[num
 export default function Story() {
   const reducedMotion = usePageReducedMotion();
   const [activeChapter, setActiveChapter] = useState(0);
+  const [loadPhotograph, setLoadPhotograph] = useState(false);
+  const photographRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Warm the photo during the existing curtain journey, never compete with
+    // the closed curtain. Proximity also covers direct links and history entry.
+    const load = () => {
+      setLoadPhotograph(true);
+      observer.disconnect();
+      window.removeEventListener("niksha-curtain-open", load);
+    };
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) load();
+    }, { rootMargin: "1000px 0px" });
+    if (photographRef.current) observer.observe(photographRef.current);
+    window.addEventListener("niksha-curtain-open", load);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("niksha-curtain-open", load);
+    };
+  }, []);
 
   useEffect(() => {
     const articles = Array.from(document.querySelectorAll<HTMLElement>("[data-story-chapter]"));
@@ -60,8 +81,21 @@ export default function Story() {
         </motion.header>
 
         <motion.div initial={reducedMotion ? false : { opacity: 0, scale: 0.98 }} animate={reducedMotion ? { opacity: 1, scale: 1 } : undefined} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-100px" }} transition={reducedMotion ? { duration: 0 } : { duration: 1.2, ease: "easeOut" }} className="relative mt-10 sm:mt-16">
-          <div className="relative overflow-hidden border-y border-champagne/45 bg-paper p-1 sm:p-2">
-            <motion.img src="/images/story.jpg" alt="Niketh and Sirisha through the years" whileHover={reducedMotion ? undefined : { scale: 1.015 }} transition={reducedMotion ? { duration: 0 } : { duration: 1.2, ease: "easeOut" }} className="h-auto w-full object-contain" />
+          <div ref={photographRef} className="relative overflow-hidden border-y border-champagne/45 bg-paper p-1 sm:p-2">
+            {loadPhotograph ? (
+              <motion.img
+                src="/images/optimized/story-1080.webp"
+                srcSet="/images/optimized/story-640.webp 640w, /images/optimized/story-1080.webp 1080w, /images/optimized/story-1600.webp 1600w, /images/optimized/story-2400.webp 2400w"
+                sizes="(min-width: 1120px) 1008px, (min-width: 1024px) calc(100vw - 112px), (min-width: 640px) calc(100vw - 80px), calc(100vw - 48px)"
+                width={4000}
+                height={6000}
+                decoding="async"
+                alt="Niketh and Sirisha through the years"
+                whileHover={reducedMotion ? undefined : { scale: 1.015 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 1.2, ease: "easeOut" }}
+                className="h-auto w-full object-contain"
+              />
+            ) : <div aria-hidden="true" className="aspect-[2/3]" />}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/25 via-transparent to-transparent" />
             <p className="absolute bottom-4 left-4 text-[9px] uppercase tracking-[0.35em] text-ivory/80 sm:bottom-7 sm:left-7">From then · to now</p>
           </div>

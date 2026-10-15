@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { wedding } from "@/data/wedding";
 import styles from "./Hero.module.css";
 
-const curtainImage = "/images/curtain-clean.png";
-const curtainMobileImage = "/images/curtain-mobile.png";
+const curtainImage = "/images/optimized/curtain-desktop.webp";
+const curtainMobileImage = "/images/optimized/curtain-mobile.webp";
 
 function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boolean }) {
   const isLeft = side === "left";
@@ -20,7 +20,7 @@ function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boole
     >
       <picture>
         <source media="(max-width: 767px)" srcSet={curtainMobileImage} />
-        <motion.img src={curtainImage} alt="" draggable={false} className="absolute left-0 top-0 h-[100dvh] w-[100vw] max-w-none select-none object-fill" style={{ left: isLeft ? "0" : "-50vw" }} animate={opening ? { scale: 1.045, x: isLeft ? "-1.8%" : "1.8%" } : { scale: [1, 1.006, 1], x: [0, isLeft ? "0.3%" : "-0.3%", 0] }} transition={opening ? { duration: 3.1, ease: [0.65, 0, 0.2, 1] } : { duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }} />
+        <motion.img src={curtainImage} alt="" loading="eager" fetchPriority="high" draggable={false} className="absolute left-0 top-0 h-[100dvh] w-[100vw] max-w-none select-none object-fill" style={{ left: isLeft ? "0" : "-50vw" }} animate={opening ? { scale: 1.045, x: isLeft ? "-1.8%" : "1.8%" } : { scale: [1, 1.006, 1], x: [0, isLeft ? "0.3%" : "-0.3%", 0] }} transition={opening ? { duration: 3.1, ease: [0.65, 0, 0.2, 1] } : { duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }} />
       </picture>
       <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 w-24 opacity-70 blur-xl ${isLeft ? "right-[-2rem] bg-gradient-to-l" : "left-[-2rem] bg-gradient-to-r"} from-black/45 via-black/15 to-transparent`} />
     </motion.div>
@@ -84,7 +84,7 @@ export default function Hero() {
     <section className="relative h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-[#2d160b] text-white" onClick={open} role="button" tabIndex={0} aria-label="Open the wedding invitation" onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); } }}>
       <div className="absolute inset-0 bg-[#2d160b]" />
       <div className={`${styles.composition} absolute inset-0 overflow-hidden`}>
-        <motion.div animate={opening ? { scale: 1.06, opacity: 1 } : { scale: 1, opacity: 0.12 }} transition={{ duration: reducedMotion ? 0.35 : 3.5, ease: [0.76, 0, 0.24, 1] }} className={`${styles.photograph} absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center`} />
+        <motion.div animate={opening ? { scale: 1.06, opacity: 1 } : { scale: 1, opacity: 0.12 }} transition={{ duration: reducedMotion ? 0.35 : 3.5, ease: [0.76, 0, 0.24, 1] }} className={`${styles.photograph} absolute inset-0 bg-[url('/images/optimized/hero.webp')] bg-cover bg-center`} />
         <div className={`${styles.veil} absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,rgba(246,213,164,0.2),transparent_32%),linear-gradient(180deg,rgba(20,8,3,0.2),rgba(20,8,3,0.5))]`} />
 
         <motion.div className={`${styles.copy} absolute inset-0 z-10 flex items-center justify-center px-6 text-center`} initial={false} animate={reveal ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }} transition={{ duration: reducedMotion ? 0.25 : 1.1, ease: [0.22, 1, 0.36, 1] }}>
