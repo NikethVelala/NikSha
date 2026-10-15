@@ -6,11 +6,13 @@ import { useCallback, useRef, useState } from "react";
 import { GardenEntryAtmosphere } from "@/components/common/PageScrollEffects";
 import CinematicStoryExperience from "./CinematicStoryExperience";
 import { getGardenProfile, type GardenProfile } from "./runtime";
+import useGardenPreparation from "./useGardenPreparation";
 
 export default function StoryExperienceEntry() {
   const [profile, setProfile] = useState<GardenProfile | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const entryRef = useRef<HTMLDivElement>(null);
+  useGardenPreparation(entryRef);
 
   const close = useCallback(() => {
     setProfile(null);

@@ -8,10 +8,11 @@ import MemoryImage, { preloadMemory } from "./MemoryImage";
 import { gardenMoments, type GardenChapter } from "./content";
 import { portraitQuery, reducedMotionQuery, type GardenProfile } from "./runtime";
 import { useStoryModal } from "./useStoryModal";
+import { loadGardenRenderer } from "./useGardenPreparation";
 import "./experience.css";
 
 // Only the renderer is lazy. The dialog, story and navigation never suspend.
-const StoryGardenCanvas = dynamic(() => import("./StoryGardenCanvas"), { ssr: false, loading: () => null });
+const StoryGardenCanvas = dynamic(loadGardenRenderer, { ssr: false, loading: () => null });
 const subscribePortrait = (callback: () => void) => {
   const media = window.matchMedia(portraitQuery);
   media.addEventListener("change", callback);
