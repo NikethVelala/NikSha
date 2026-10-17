@@ -308,6 +308,7 @@ function GardenGate({ finale }: { finale: boolean }) {
       <GardenPlant position={[-4.9, 0.1, 0.5]} scale={[1.6, 4.8, 1]} seed={21} />
       <GardenPlant position={[4.9, 0.1, 0.5]} scale={[1.7, 4.5, 1]} seed={24} />
       <PavilionSilk finale={finale} />
+      {finale && <PhysicalMemory id="finale" active position={[0, 2.9, 0.45]} width={3.1} treatment="ivory" />}
       <PetalBed position={[0, 0.18, 0]} width={3.5} />
       <pointLight position={[0, 4.7, -0.7]} intensity={14} distance={9} decay={2} color="#f7d2a0" />
     </group>
@@ -368,7 +369,8 @@ function FriendshipLanterns({ moment, active, position = [3.45, 0.1, -0.5], onSe
     <group position={position} onClick={(event: ThreeEvent<MouseEvent>) => { event.stopPropagation(); onSelect(moment); }}>
       <mesh receiveShadow position={[0, 0, 0]}><boxGeometry args={[2.1, 0.07, 1.1]} /><meshStandardMaterial color="#304637" roughness={0.98} /></mesh>
       <mesh castShadow position={[0, 0.085, 0.3]}><boxGeometry args={[1.25, 0.1, 0.56]} /><meshStandardMaterial color="#82745b" roughness={0.9} /></mesh>
-      <PhysicalMemory id={moment.id} active={active} position={[0, 1, 0.5]} rotation={[-0.08, -0.08, 0]} width={1.08} treatment="brass" />
+      <PhysicalMemory id={moment.id} active={active} position={[-0.5, 1, 0.5]} rotation={[-0.08, 0.08, 0]} width={0.83} treatment="brass" />
+      <PhysicalMemory id="family-together" active={active} position={[0.5, 1.12, 0.48]} rotation={[-0.08, -0.08, 0]} width={0.83} treatment="brass" />
       <GardenLantern position={[-1.2, 1.7, 0.2]} scale={1.2} phase={1.4} lit={active} />
       <GardenLantern position={[1.2, 2, -0.25]} scale={1.2} phase={2.4} />
       <GardenPlant position={[-1.3, 0, -0.5]} scale={[1.6, 1.8, 1]} seed={17} />

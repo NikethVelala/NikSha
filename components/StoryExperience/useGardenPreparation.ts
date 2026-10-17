@@ -19,7 +19,7 @@ export function loadGardenRenderer() {
 const scenicImages = [
   "/images/garden/coastal-blue-hour.webp",
   "/images/garden/jasmine-branch.webp",
-  ...gardenMoments.map(({ id }) => `/images/garden/memories/${id}.webp`),
+  ...gardenMoments.flatMap((moment) => [moment.image, ...(moment.secondaryImage ? [moment.secondaryImage] : [])]),
 ];
 
 /** Optional preparation only after the guest reaches the fully loaded Story. */

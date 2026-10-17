@@ -153,3 +153,54 @@
 .story-experience[data-layout=portrait] .story-step:first-child{min-width:40px;padding:7px}
 .story-experience[data-layout=portrait] .story-memory-detail>.story-photo+.story-photo{margin-top:18px}
 @media(max-width:365px){.story-experience[data-layout=portrait] .story-step:last-child{min-width:124px;padding-inline:8px}.story-experience[data-layout=portrait] .story-step:last-child span{font-size:10px}}
+
+/* Readable family prints, kept together within their authored memory. */
+.story-photo-sequence{display:grid;gap:22px}
+.story-photo-sequence .story-photo{width:100%;height:clamp(290px,48dvh,460px);max-width:340px;float:none;margin:0 auto}
+.story-experience[data-layout=portrait] .story-photo-sequence .story-photo{width:100%;max-width:310px;height:clamp(300px,50dvh,450px);float:none;margin:0 auto}
+.story-experience[data-layout=portrait] .story-memory-caption{margin:16px 0}
+.story-progress{width:100%;text-align:center;color:#e0c698;font-size:10px;letter-spacing:.1em;line-height:1.6;margin-bottom:2px}
+.story-chapters{flex-wrap:wrap;justify-content:center;max-width:680px}
+.story-chapters button{min-width:44px}
+.story-chapters .chapter-name{display:none}
+.story-chapters button[aria-current]{background:#d2a57318;border-radius:8px}
+.story-next{min-width:164px;border:1px solid #ebd3a7;border-radius:28px;background:#dfbf89;color:#10241c;font-weight:700}
+.story-next:hover{background:#efd6ac}
+.story-experience[data-layout=portrait] .story-footer{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:7px 14px max(9px,env(safe-area-inset-bottom))}
+.story-experience[data-layout=portrait] .story-chapters{grid-column:1/-1;grid-row:1;gap:4px;max-width:none}
+.story-experience[data-layout=portrait] .story-chapters button{min-width:44px;min-height:44px;padding:5px 8px}
+.story-experience[data-layout=portrait] .story-progress{width:auto;max-width:130px;margin:0 10px 0 0;font-size:9px}
+.story-experience[data-layout=portrait] .story-step:first-child{grid-row:2;grid-column:1;justify-self:start}
+.story-experience[data-layout=portrait] .story-step:first-child span{display:inline}
+.story-experience[data-layout=portrait] .story-next{grid-row:2;grid-column:2;min-width:158px;min-height:48px;background:#dfbf89;color:#10241c}
+.story-experience[data-layout=portrait] .story-stage{flex-basis:clamp(150px,24dvh,240px)}
+.story-experience[data-layout=portrait][data-chapter=finale] .story-stage{flex-basis:clamp(240px,40dvh,420px)}
+.story-experience[data-chapter=finale] .story-content{background:radial-gradient(ellipse at 50% 25%,#7e684333,transparent 75%),linear-gradient(#17342a,#0b1919)}
+.story-experience[data-chapter=finale] h2{text-align:center;font-size:clamp(38px,4vw,60px)}
+.story-experience[data-chapter=finale] .story-content-inner>.story-eyebrow{text-align:center}
+.story-final-portrait{position:relative;text-align:center;padding-top:12px}
+.story-final-portrait::before{content:'';position:absolute;top:0;left:-10px;right:-10px;height:90px;background:url('/images/garden/jasmine-branch.webp') center top/contain no-repeat;opacity:.3;pointer-events:none}
+.story-final-names{position:relative;font-family:var(--font-cormorant),Georgia,serif;font-size:clamp(32px,3vw,44px);font-style:italic;color:#f3d5a6;margin:6px 0 24px}
+.story-final-portrait .story-photo{height:clamp(340px,56dvh,590px);max-width:400px;width:100%;border-radius:110px 110px 3px 3px;background:linear-gradient(130deg,#dbcca8,#f5e7c9 45%,#b29965);box-shadow:0 0 55px #d2a57318,0 20px 40px #0006}
+.story-final-portrait .story-photo::after{border-radius:100px 100px 0 0}
+.story-final-portrait .story-photo img{background:#14291e}
+.story-final-line{font-family:var(--font-cormorant),Georgia,serif;font-size:25px;line-height:1.3;margin:24px 0 16px;color:#f5e7cf;text-wrap:balance}
+.story-final-date{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#e2bf83;margin:0 0 16px}
+.story-experience[data-layout=portrait] .story-final-portrait .story-photo{float:none;width:100%;max-width:340px;height:clamp(360px,58dvh,550px);margin:0 auto}
+.story-experience[data-layout=portrait] .story-content-inner{padding-bottom:8px}
+@media(max-width:365px){.story-experience[data-layout=portrait] .story-progress{max-width:100px;margin-right:4px;letter-spacing:.04em}.story-experience[data-layout=portrait] .story-chapters{gap:1px}.story-experience[data-layout=portrait] .story-next{min-width:150px}}
+@media(max-height:600px){.story-experience[data-layout=portrait] .story-stage,.story-experience[data-layout=portrait][data-chapter=finale] .story-stage{flex-basis:120px}.story-experience[data-layout=landscape] .story-header{padding-block:8px}.story-footer{padding-block:6px}}
+
+/* The finale lives in the arch; the reading panel holds its dedication. */
+.story-finale-still-portrait{position:absolute;inset:7% 0 7%;display:flex;justify-content:center;pointer-events:none}
+.story-finale-still-portrait .story-photo{width:min(60%,320px);max-width:none;height:100%;margin:0;padding:5px;border-radius:80px 80px 2px 2px}
+.story-experience[data-layout=portrait] .story-finale-still-portrait .story-photo{float:none;width:60%;height:100%;max-width:260px;margin:0}
+.story-finale-still-portrait .story-photo::after{border-radius:75px 75px 0 0}
+.story-final-names{margin:6px 0 12px}
+.story-final-line{margin:14px 0}
+.story-experience[data-chapter=finale] .story-content{display:flex;align-items:center}
+.story-experience[data-chapter=finale] .story-content-inner{width:100%;margin:auto}
+.story-experience[data-chapter=finale] .story-content h2{margin-bottom:10px}
+.story-experience[data-layout=portrait][data-chapter=finale] .story-content{padding-block:14px}
+.story-experience[data-layout=portrait] .story-final-names{font-size:32px}
+.story-experience[data-layout=portrait] .story-final-line{font-size:23px}
