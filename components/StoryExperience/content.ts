@@ -1,5 +1,3 @@
-import { wedding } from "@/data/wedding";
-
 export type GardenMomentId = "school-days" | "friendship" | "something-more";
 export type GardenChapter = "garden" | GardenMomentId | "finale";
 
@@ -11,38 +9,49 @@ export type GardenMoment = {
   story: string;
   image: string;
   imageAlt: string;
+  secondaryImage?: string;
+  secondaryImageAlt?: string;
 };
 
-/**
- * This is deliberately kept separate from the scene. Future bespoke art can
- * replace the image paths without changing the camera choreography or world.
- */
+// The five original, unmodified user photographs belong at these paths.
+// Keep the existing renderer's three memory IDs so its camera choreography
+// and garden scene remain compatible.
 export const gardenMoments: GardenMoment[] = [
   {
     id: "school-days",
     number: "I",
-    eyebrow: "Where it began",
-    title: "School Days",
-    story: wedding.story.paragraphs[0],
-    image: wedding.gallery.images[0].src,
-    imageAlt: "Niketh and Sirisha at the beginning of their journey",
+    eyebrow: "The families come together",
+    title: "When Two Families Come Together",
+    story: "A heartfelt beginning, marked by a simple gesture and the warmth of family. Some of life's most beautiful beginnings happen right at home.",
+    image: "/images/garden/memories/family-welcome.webp",
+    imageAlt: "Niketh and Sirisha sharing a decorated fruit basket during a family visit",
   },
   {
     id: "friendship",
     number: "II",
-    eyebrow: "What grew between us",
-    title: "A Friendship",
-    story: wedding.story.paragraphs[1],
-    image: wedding.gallery.images[2].src,
-    imageAlt: "Niketh and Sirisha together",
+    eyebrow: "Blessings, traditions and togetherness",
+    title: "Blessings, Traditions & Togetherness",
+    story: "Surrounded by loved ones, traditions and celebrations become memories to treasure. From the ceremony to a photograph together, these are the moments that make family feel like home.",
+    image: "/images/garden/memories/family-ceremony.webp",
+    imageAlt: "Family members gathered for a traditional ceremony",
+    secondaryImage: "/images/garden/memories/family-together.webp",
+    secondaryImageAlt: "Family and friends smiling together beneath a colourful canopy",
   },
   {
     id: "something-more",
     number: "III",
-    eyebrow: "When friendship became love",
-    title: "Something More",
-    story: wedding.story.paragraphs[2],
-    image: wedding.gallery.images[5].src,
-    imageAlt: "Niketh and Sirisha as their forever begins",
+    eyebrow: "Our engagement celebration",
+    title: "A Promise to Forever",
+    story: "A day filled with smiles, celebrations and a promise that brought our dreams a little closer to reality.",
+    image: "/images/garden/memories/engagement.webp",
+    imageAlt: "Niketh and Sirisha posing together with their engagement celebration photo frame",
   },
 ];
+
+export const gardenFinale = {
+  title: "Forever Begins Here",
+  eyebrow: "Niketh & Sirisha",
+  story: "Every beautiful beginning has led us here. Together, we look forward to the next chapter.",
+  image: "/images/garden/memories/forever.webp",
+  imageAlt: "Niketh and Sirisha together in their pre-wedding photoshoot, in ivory and red traditional outfits",
+};
