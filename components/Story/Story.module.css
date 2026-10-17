@@ -61,7 +61,8 @@
   .together { gap: 1.3rem; }
 }
 @media(prefers-reduced-motion: reduce) {
-  .story [style] { transform: none !important; opacity: 1 !important; transition: none !important; }
+  .intro, .heading, .composition, .photograph, .closingLine, .chapterBridge, .thread, .cityLeft, .cityRight, .distance > p, .yes { transform: none !important; opacity: 1 !important; clip-path: none !important; transition: none !important; }
+  .thread path { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
 }
 
 /* A quieter second voice lets each memory unfold rather than read like a caption. */
@@ -79,3 +80,18 @@
 .finale .image { display: block; width: 100%; height: auto; max-height: min(85svh, 1100px); object-fit: contain; background: #fffaf0; }
 .finale .yes { margin-top: clamp(2rem, 5vw, 4rem); }
 @media (max-width: 767px) { .finale .composition { width: calc(100% + 1rem); margin-left: -.5rem; } .finale .image { max-height: none; } }
+
+/* Short connective beats live inside the existing chapter spacing. */
+.chapterBridge { position: absolute; top: -2.8rem; left: 50%; display: flex; align-items: center; flex-direction: column; gap: 5px; height: 32px; width: 10px; margin-left: -5px; transform-origin: top; pointer-events: none; }
+.chapterBridge span { width: 1px; flex: 1; background: linear-gradient(#b7905c10, #b7905c80); }
+.chapterBridge span:last-child { transform: rotate(180deg); }
+.chapterBridge i { height: 4px; width: 4px; border: 1px solid #b7905c; transform: rotate(45deg); }
+.separation { border-color: #ad874958; background: radial-gradient(ellipse at 10% 80%, #b7905c20, transparent 55%), linear-gradient(135deg, #eee7db, #faf6ee 65%, #e9dfce); }
+.separation .closingLine { color: #75532f; }
+.finale { isolation: isolate; }
+.finale::before { content: ''; position: absolute; z-index: -1; inset: 3rem -1rem 0; background: radial-gradient(ellipse at 50% 55%, #d6b67824, transparent 65%); pointer-events: none; }
+.finale .composition { transform-origin: center; }
+.finale .image { width: 100%; aspect-ratio: 2 / 3; }
+@media(min-width: 768px) { .chapterBridge { top: -3.9rem; height: 46px; } }
+
+.threadDrawing { display: block; width: 100%; height: 100%; }

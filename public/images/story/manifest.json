@@ -1,5 +1,5 @@
 {
-  "note": "Wonderla and mirror filenames corrected after visual inspection and user confirmation. Supplied photographs otherwise unchanged. Chapter 7 reuses /images/optimized/story-1080.webp.",
+  "note": "Three v2 full-colour replacements converted from supplied originals after visual verification: video call, Charminar, kayaking. Existing selective-colour Wonderla retained byte-for-byte. Chapter 7 reuses the existing optimized proposal photograph.",
   "images": [
     {
       "chapter": "01-school-days",
@@ -23,23 +23,23 @@
     },
     {
       "chapter": "03-ten-became-four",
-      "source": "5d320eaa-df4c-4713-8692-5bf0dc2659c5.jpg",
+      "source": "photo-output.JPEG",
       "output": "public/images/story/03-ten-became-four.webp",
       "optimized_dimensions": [
-        720,
-        1560
+        1050,
+        2048
       ],
-      "bytes": 52548
+      "bytes": 90078
     },
     {
       "chapter": "04a-charminar",
-      "source": "IMG_3381_SnapseedCopy.heic",
+      "source": "IMG_3381.heic",
       "output": "public/images/story/04a-charminar.webp",
       "optimized_dimensions": [
         1600,
         2133
       ],
-      "bytes": 448960
+      "bytes": 567832
     },
     {
       "chapter": "04b-wonderla",
@@ -53,13 +53,13 @@
     },
     {
       "chapter": "04c-kayaking",
-      "source": "45b4189f-6e2b-4e9f-ac3f-e827d11c9af3.jpg",
+      "source": "IMG_3296.heic",
       "output": "public/images/story/04c-kayaking.webp",
       "optimized_dimensions": [
-        1052,
-        780
+        1600,
+        2133
       ],
-      "bytes": 61486
+      "bytes": 459332
     },
     {
       "chapter": "06a-mirror",

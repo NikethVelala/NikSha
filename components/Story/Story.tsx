@@ -78,42 +78,52 @@ type Photograph = { src: string; width: number; height: number; alt: string; cap
 const photographs: Record<string, Photograph> = {
   "01-school-days": { src: "/images/story/01-school-days.webp", width: 1600, height: 1154, alt: "School friends together, with Niketh and Sirisha highlighted in colour", caption: "A familiar face. An unwritten story." },
   "02-years-between": { src: "/images/story/02-years-between.webp", width: 1280, height: 853, alt: "Niketh and Sirisha with friends on the beach, selectively in colour", caption: "Different paths. A connection that stayed." },
-  "03-ten-became-four": { src: "/images/story/03-ten-became-four.webp", width: 1050, height: 2048, alt: "Four friends keeping in touch on a video call", caption: "Four screens. One little circle." },
-  "04a-charminar": { src: "/images/story/04a-charminar.webp", width: 1600, height: 2133, alt: "Niketh, Sirisha and friends in front of Charminar", caption: "01 · Charminar" },
+  "03-ten-became-four": { src: "/images/story/03-ten-became-four.webp?v=2", width: 1050, height: 2048, alt: "Four friends keeping in touch on a video call", caption: "Four screens. One little circle." },
+  "04a-charminar": { src: "/images/story/04a-charminar.webp?v=2", width: 1600, height: 2133, alt: "Niketh, Sirisha and friends in front of Charminar", caption: "01 · Charminar" },
   "04b-wonderla": { src: "/images/story/04b-wonderla.webp", width: 1467, height: 2200, alt: "Niketh and Sirisha with friends on the Wonderla amusement ride", caption: "02 · Wonderla" },
-  "04c-kayaking": { src: "/images/story/04c-kayaking.webp", width: 1600, height: 2133, alt: "Niketh and Sirisha enjoying a kayaking outing", caption: "03 · A little closer, on the water" },
+  "04c-kayaking": { src: "/images/story/04c-kayaking.webp?v=2", width: 1600, height: 2133, alt: "Niketh and Sirisha enjoying a kayaking outing", caption: "03 · A little closer, on the water" },
   "06a-mirror": { src: "/images/story/06a-mirror.webp", width: 1237, height: 2200, alt: "Niketh and Sirisha together in a full-colour mirror selfie", caption: "The everyday" },
   "06b-forest-road": { src: "/images/story/06b-forest-road.webp", width: 1600, height: 2133, alt: "Sirisha and Niketh taking a selfie on a forest road", caption: "The little adventures" },
   "06c-stadium": { src: "/images/story/06c-stadium.webp", width: 1600, height: 2133, alt: "Niketh and Sirisha smiling together at the stadium", caption: "The joy of us" },
-  proposal: { src: "/images/optimized/story-1080.webp", width: 1080, height: 1620, alt: "Niketh on one knee proposing to Sirisha beneath a floral arch", caption: "A question. A promise. A lifetime." },
+  proposal: { src: "/images/optimized/story-2400.webp", width: 2400, height: 3600, alt: "Niketh on one knee proposing to Sirisha beneath a floral arch", caption: "A question. A promise. A lifetime." },
 };
 
-function StoryPhotograph({ name, compact = false }: { name: string; compact?: boolean }) {
+function StoryPhotograph({ name, compact = false, order = 0 }: { name: string; compact?: boolean; order?: number }) {
+  const reducedMotion = usePageReducedMotion();
   const photo = photographs[name];
   return (
-    <figure className={`${styles.photograph} ${name === "03-ten-became-four" ? styles.call : ""}`}>
+    <motion.figure initial={reducedMotion ? false : { opacity: 0, y: compact ? 12 : 0 }}
+      animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
+      whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: reducedMotion ? 0 : 0.8, delay: reducedMotion ? 0 : order * 0.12 }}
+      className={`${styles.photograph} ${name === "03-ten-became-four" ? styles.call : ""}`}>
       <div className={styles.frame}>
         <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height}
-          sizes={compact ? "(min-width: 768px) 300px, 44vw" : "(min-width: 768px) 640px, calc(100vw - 40px)"}
+          sizes={name === "proposal" ? "(min-width: 1100px) 980px, (min-width: 768px) calc(100vw - 96px), calc(100vw - 24px)" : compact ? "(min-width: 768px) 300px, 44vw" : "(min-width: 768px) 640px, calc(100vw - 40px)"}
           loading="lazy" className={styles.image} />
       </div>
       <figcaption>{photo.caption}</figcaption>
-    </figure>
+    </motion.figure>
   );
 }
 
 function DistanceScene() {
+  const reducedMotion = usePageReducedMotion();
   return (
-    <div className={styles.distance} role="img" aria-label="Two distant golden lights connect Hyderabad, where Niketh stayed, and Punjab, where Sirisha returned, before their feelings were confessed">
-      <svg viewBox="0 0 600 180" aria-hidden="true" className={styles.thread}>
+    <motion.div initial="quiet" whileInView="connected" viewport={{ once: true, amount: 0.45 }} className={styles.distance} role="img" aria-label="Two distant golden lights connect Hyderabad, where Niketh stayed, and Punjab, where Sirisha returned, before their feelings were confessed">
+      <motion.div aria-hidden="true" className={styles.thread}
+        variants={{ quiet: { clipPath: reducedMotion ? "inset(0% 0% 0% 0%)" : "inset(0% 100% 0% 0%)" }, connected: { clipPath: "inset(0% 0% 0% 0%)" } }}
+        transition={{ duration: reducedMotion ? 0 : 2, delay: reducedMotion ? 0 : 0.4, ease: "easeInOut" }}>
+      <svg viewBox="0 0 600 180" className={styles.threadDrawing}>
         <defs><linearGradient id="story-thread"><stop stopColor="#ba9259" stopOpacity=".3"/><stop offset=".5" stopColor="#e6c78e"/><stop offset="1" stopColor="#ba9259" stopOpacity=".3"/></linearGradient></defs>
         <path d="M65 130 C190 165 380 5 535 50" fill="none" stroke="url(#story-thread)" strokeWidth="1.3"/>
         <circle cx="65" cy="130" r="4" fill="#f3d59f"/><circle cx="535" cy="50" r="4" fill="#f3d59f"/>
       </svg>
-      <div className={styles.cityLeft}><span className={styles.light}/><span>Hyderabad</span><small>Niketh</small></div>
-      <div className={styles.cityRight}><span className={styles.light}/><span>Punjab</span><small>Sirisha</small></div>
-      <p>So much between us. So much still unsaid.</p>
-    </div>
+      </motion.div>
+      <motion.div variants={{ quiet: { opacity: reducedMotion ? 1 : 0 }, connected: { opacity: 1 } }} transition={{ duration: reducedMotion ? 0 : 1 }} className={styles.cityLeft}><span className={styles.light}/><span>Hyderabad</span><small>Niketh</small></motion.div>
+      <motion.div variants={{ quiet: { opacity: reducedMotion ? 1 : 0 }, connected: { opacity: 1 } }} transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.25 }} className={styles.cityRight}><span className={styles.light}/><span>Punjab</span><small>Sirisha</small></motion.div>
+      <motion.p variants={{ quiet: { opacity: reducedMotion ? 1 : 0 }, connected: { opacity: 1 } }} transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 1.1 }}>So much between us. So much still unsaid.</motion.p>
+    </motion.div>
   );
 }
 
@@ -131,22 +141,32 @@ export default function Story() {
       <div className={styles.chapters}>
         {chapters.map((chapter, index) => (
           <article key={chapter.title} data-story-chapter={index} aria-labelledby={`story-title-${index}`} className={`${styles.chapter} ${index === 4 ? styles.separation : ""} ${index === 6 ? styles.finale : ""}`}>
-            <motion.div initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
-              whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: reducedMotion ? 0 : 0.65 }} className={styles.heading}>
+            {index > 0 && <motion.div aria-hidden="true" className={styles.chapterBridge}
+              initial={reducedMotion ? false : { opacity: 0, scaleY: 0.4 }} animate={reducedMotion ? { opacity: 1, scaleY: 1 } : undefined}
+              whileInView={{ opacity: 1, scaleY: 1 }} viewport={{ once: true }} transition={{ duration: reducedMotion ? 0 : 1.1 }}>
+              <span/><i/><span/>
+            </motion.div>}
+            <motion.div initial={reducedMotion ? false : { opacity: 0, y: index === 4 ? 0 : 18 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
+              whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.12 }} transition={{ duration: reducedMotion ? 0 : index === 4 ? 1.2 : 0.75 }} className={styles.heading}>
               <div className={styles.marker}><span>{String(index + 1).padStart(2, "0")}</span><p className={styles.eyebrow}>{chapter.eyebrow}</p></div>
               <h3 id={`story-title-${index}`}>{chapter.title}</h3>
               <p className={styles.copy}>{chapter.copy}</p>
               <p className={styles.reflection}>{chapter.reflection}</p>
-              <p className={styles.closingLine}>{chapter.closingLine}</p>
+              <motion.p initial={reducedMotion ? false : { opacity: 0 }} animate={reducedMotion ? { opacity: 1 } : undefined}
+                whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: reducedMotion ? 0 : 0.9, delay: reducedMotion ? 0 : 0.15 }} className={styles.closingLine}>{chapter.closingLine}</motion.p>
             </motion.div>
             {index === 4 ? <DistanceScene /> : (
-              <motion.div initial={reducedMotion ? false : { opacity: 0 }} animate={reducedMotion ? { opacity: 1 } : undefined}
-                whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.08 }} transition={{ duration: reducedMotion ? 0 : 0.8 }}
+              <motion.div data-proposal-reveal={index === 6 ? "true" : undefined}
+                initial={reducedMotion ? false : index === 6 ? { opacity: 0, clipPath: "inset(8% 0 8% 0)", scale: 0.985 } : { opacity: 0 }}
+                animate={reducedMotion ? { opacity: 1, clipPath: "inset(0% 0 0% 0)", scale: 1 } : undefined}
+                whileInView={{ opacity: 1, clipPath: "inset(0% 0 0% 0)", scale: 1 }} viewport={{ once: true, amount: index === 6 ? 0.18 : 0.08 }}
+                transition={{ duration: reducedMotion ? 0 : index === 6 ? 1.5 : 0.8, ease: [0.22, 1, 0.36, 1] }}
                 className={`${styles.composition} ${index === 3 ? styles.hyderabad : ""} ${index === 5 ? styles.together : ""}`}>
-                {chapter.photos.map((name, i) => <StoryPhotograph key={name} name={name} compact={(index === 3 && i < 2) || index === 5} />)}
+                {chapter.photos.map((name, i) => <StoryPhotograph key={name} name={name} order={i} compact={(index === 3 && i < 2) || index === 5} />)}
               </motion.div>
             )}
-            {index === 6 && <div className={styles.yes}><p>And she said yes.</p><span>18 November 2026 · Our wedding</span></div>}
+            {index === 6 && <motion.div initial={reducedMotion ? false : { opacity: 0, y: 16 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
+              whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.6 }} transition={{ duration: reducedMotion ? 0 : 1.15, delay: reducedMotion ? 0 : 0.2 }} className={styles.yes}><p>And she said yes.</p><span>18 November 2026 · Our wedding</span></motion.div>}
           </article>
         ))}
       </div>
