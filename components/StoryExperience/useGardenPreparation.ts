@@ -16,17 +16,17 @@ export function loadGardenRenderer() {
   });
 }
 
-const scenicImages = [
+const firstVisitImages = [
   "/images/garden/coastal-blue-hour.webp",
   "/images/garden/jasmine-branch.webp",
-  ...gardenMoments.flatMap((moment) => [moment.image, ...(moment.secondaryImage ? [moment.secondaryImage] : [])]),
+  gardenMoments[0].image,
 ];
 
 /** Optional preparation only after the guest reaches the fully loaded Story. */
 export default function useGardenPreparation(entry: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
-    const story = document.getElementById("story");
-    if (!story) return;
+    const target = entry.current;
+    if (!target) return;
     const motion = window.matchMedia(reducedMotionQuery);
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     const hero = document.querySelector('section[aria-label="Open the wedding invitation"]');
@@ -35,13 +35,11 @@ export default function useGardenPreparation(entry: RefObject<HTMLDivElement | n
     let cancelIdle: (() => void) | undefined;
 
     const eligible = () => {
-      const photograph = story.querySelector("img");
       return visible && !document.hidden && !motion.matches && !connection?.saveData
         && typeof WebGL2RenderingContext !== "undefined"
         && !hero?.querySelector(":scope > div.fixed")
         && document.body.style.overflow !== "hidden"
-        && document.documentElement.style.overflow !== "hidden"
-        && photograph?.complete && photograph.naturalWidth > 0;
+        && document.documentElement.style.overflow !== "hidden";
     };
     const prepare = () => {
       cancelIdle = undefined;
@@ -49,7 +47,7 @@ export default function useGardenPreparation(entry: RefObject<HTMLDivElement | n
       started = true;
       // Resource hints reuse the exact CSS, texture and DOM-photo requests. Their
       // low priority keeps foreground browsing ahead of this optional experience.
-      for (const href of [...scenicImages, memoryImageSource(gardenMoments[0])]) {
+      for (const href of [...firstVisitImages, memoryImageSource(gardenMoments[0])]) {
         preload(href, { as: "image", fetchPriority: "low" });
       }
       // A failed background import must not break the invitation or prevent retry
@@ -71,20 +69,18 @@ export default function useGardenPreparation(entry: RefObject<HTMLDivElement | n
     const intersection = new IntersectionObserver(([record]) => {
       visible = record.isIntersecting;
       schedule();
-    });
-    intersection.observe(story);
+    }, { rootMargin: "600px 0px" });
+    intersection.observe(target);
     const locks = new MutationObserver(schedule);
     locks.observe(document.body, { attributes: true, attributeFilter: ["style"] });
     locks.observe(document.documentElement, { attributes: true, attributeFilter: ["style"] });
     if (hero) locks.observe(hero, { childList: true });
-    story.addEventListener("load", schedule, true);
     document.addEventListener("visibilitychange", schedule);
     motion.addEventListener("change", schedule);
     return () => {
       cancelIdle?.();
       intersection.disconnect();
       locks.disconnect();
-      story.removeEventListener("load", schedule, true);
       document.removeEventListener("visibilitychange", schedule);
       motion.removeEventListener("change", schedule);
     };
