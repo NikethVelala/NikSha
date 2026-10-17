@@ -54,9 +54,7 @@ function RenderFrame({ onReady, onFailure, isMobile }: Pick<Props, "onReady" | "
     try {
       gl.render(scene, camera);
       if (!ready.current) {
-        // Prepare the existing scene's offscreen material variants at the threshold,
-        // before School's camera rail reveals them. No extra draw or render loop.
-        gl.compile(scene, camera);
+        // The first frame is drawn: do not block the entrance on offscreen shader compilation.
         ready.current = true;
         onReady();
       }
