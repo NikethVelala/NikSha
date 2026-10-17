@@ -1,11 +1,15 @@
 "use client";
 
+import { useInView } from "framer-motion";
+import usePageActive from "@/components/common/usePageActive";
 import { useEffect, useRef } from "react";
 import usePageReducedMotion from "@/components/common/usePageReducedMotion";
 
 export default function Invitation3D({ children }: { children: React.ReactNode }) {
   const reducedMotion = usePageReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, { margin: "100px" });
+  const active = usePageActive();
   useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
@@ -13,6 +17,7 @@ export default function Invitation3D({ children }: { children: React.ReactNode }
       card.style.transform = "none";
       return;
     }
+    if (!active || !inView) return;
     let frame = 0;
     let px = 0, py = 0;
     const update = () => {
@@ -42,6 +47,6 @@ export default function Invitation3D({ children }: { children: React.ReactNode }
       window.removeEventListener("resize", request);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, [reducedMotion]);
+  }, [active, inView, reducedMotion]);
   return <div className="relative [perspective:1400px] motion-reduce:[perspective:none]"><div ref={cardRef} className="relative transform-gpu will-change-transform transition-transform duration-500 ease-out motion-reduce:transition-none motion-reduce:will-change-auto" style={{ transformStyle: reducedMotion ? "flat" : "preserve-3d" }}><div aria-hidden="true" className="pointer-events-none absolute -inset-1 translate-y-2 bg-[#8c6130]/10 blur-[2px]" style={{ transform: "translateZ(-18px)" }} /><div aria-hidden="true" className="pointer-events-none absolute inset-0 border border-[#8c6130]/25 shadow-[0_22px_55px_rgba(55,42,28,0.16)]" style={{ transform: "translateZ(-7px)" }} /><div className="relative" style={{ transform: "translateZ(0)" }}>{children}</div></div></div>;
 }

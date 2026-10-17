@@ -1,10 +1,12 @@
 "use client";
 
+import usePageActive from "@/components/common/usePageActive";
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function LuxuryInteractions() {
   const [enabled, setEnabled] = useState(false);
+  const active = usePageActive();
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
   const springX = useSpring(x, { stiffness: 420, damping: 32, mass: 0.45 });
@@ -16,6 +18,11 @@ export default function LuxuryInteractions() {
     update();
     media.addEventListener("change", update);
 
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!enabled || !active) return;
     const move = (event: MouseEvent) => {
       x.set(event.clientX);
       y.set(event.clientY);
@@ -23,12 +30,11 @@ export default function LuxuryInteractions() {
     window.addEventListener("mousemove", move, { passive: true });
 
     return () => {
-      media.removeEventListener("change", update);
       window.removeEventListener("mousemove", move);
     };
-  }, [x, y]);
+  }, [active, enabled, x, y]);
 
-  if (!enabled) return null;
+  if (!enabled || !active) return null;
 
   return (
     <motion.div

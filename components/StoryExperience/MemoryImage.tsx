@@ -1,6 +1,6 @@
 "use client";
 import Image, { getImageProps } from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { GardenMoment } from "./content";
 
 export type MemoryPhoto = Pick<GardenMoment, "image" | "imageAlt" | "imageWidth" | "imageHeight">;
@@ -17,11 +17,6 @@ export function preloadMemory(moment: MemoryPhoto, large = false) {
 }
 export default function MemoryImage({ moment, large = false, onZoom }: { moment: MemoryPhoto; large?: boolean; onZoom?: (photo: MemoryPhoto, origin: HTMLButtonElement) => void }) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
-  useEffect(() => {
-    if (status !== "loading") return;
-    const timer = window.setTimeout(() => setStatus("error"), 12000);
-    return () => window.clearTimeout(timer);
-  }, [status]);
   return <figure className="story-photo" aria-label={moment.imageAlt} data-image-state={status}>
     {status !== "error" && <Image unoptimized src={memoryImageSource(moment, large)} alt={moment.imageAlt} width={moment.imageWidth} height={moment.imageHeight} loading="eager" onLoad={() => setStatus("ready")} onError={() => setStatus("error")} className={status === "ready" ? "is-ready" : ""} />}
     {status === "ready" && onZoom && <button type="button" className="story-photo-open" aria-label={`View full photograph: ${moment.imageAlt}`} onClick={(event) => onZoom(moment, event.currentTarget)}><span>View full photo ↗</span></button>}

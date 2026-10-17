@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import usePageReducedMotion from "@/components/common/usePageReducedMotion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { wedding } from "@/data/wedding";
@@ -9,19 +10,19 @@ import styles from "./Hero.module.css";
 const curtainImage = "/images/optimized/curtain-desktop.webp";
 const curtainMobileImage = "/images/optimized/curtain-mobile.webp";
 
-function CurtainHalf({ side, opening }: { side: "left" | "right"; opening: boolean }) {
+function CurtainHalf({ side, opening, reducedMotion }: { side: "left" | "right"; opening: boolean; reducedMotion: boolean }) {
   const isLeft = side === "left";
 
   return (
     <motion.div
       className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} h-[100dvh] w-1/2 overflow-hidden will-change-transform`}
       style={{ perspective: "1800px", transformStyle: "preserve-3d", transformOrigin: isLeft ? "right center" : "left center" }}
-      animate={opening ? { x: isLeft ? "-103%" : "103%", scaleX: 0.72, rotateY: isLeft ? -14 : 14, skewY: isLeft ? -1.2 : 1.2, opacity: 0.98 } : { x: [0, isLeft ? "0.22%" : "-0.22%", isLeft ? "-0.12%" : "0.12%", 0], scaleX: [1, 0.998, 1.002, 1], rotateY: [0, isLeft ? -0.5 : 0.5, isLeft ? 0.35 : -0.35, 0], skewY: [0, isLeft ? -0.15 : 0.15, isLeft ? 0.1 : -0.1, 0], opacity: 1 }}
-      transition={opening ? { duration: 3.1, ease: [0.65, 0, 0.2, 1] } : { duration: 7.5, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
+      animate={reducedMotion ? { x: opening ? (isLeft ? "-103%" : "103%") : 0, scaleX: 1, rotateY: 0, skewY: 0, opacity: 1 } : opening ? { x: isLeft ? "-103%" : "103%", scaleX: 0.72, rotateY: isLeft ? -14 : 14, skewY: isLeft ? -1.2 : 1.2, opacity: 0.98 } : { x: [0, isLeft ? "0.22%" : "-0.22%", isLeft ? "-0.12%" : "0.12%", 0], scaleX: [1, 0.998, 1.002, 1], rotateY: [0, isLeft ? -0.5 : 0.5, isLeft ? 0.35 : -0.35, 0], skewY: [0, isLeft ? -0.15 : 0.15, isLeft ? 0.1 : -0.1, 0], opacity: 1 }}
+      transition={reducedMotion ? { duration: 0.25 } : opening ? { duration: 3.1, ease: [0.65, 0, 0.2, 1] } : { duration: 7.5, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
     >
       <picture>
         <source media="(max-width: 767px)" srcSet={curtainMobileImage} />
-        <motion.img src={curtainImage} alt="" loading="eager" fetchPriority="high" draggable={false} className="absolute left-0 top-0 h-[100dvh] w-[100vw] max-w-none select-none object-fill" style={{ left: isLeft ? "0" : "-50vw" }} animate={opening ? { scale: 1.045, x: isLeft ? "-1.8%" : "1.8%" } : { scale: [1, 1.006, 1], x: [0, isLeft ? "0.3%" : "-0.3%", 0] }} transition={opening ? { duration: 3.1, ease: [0.65, 0, 0.2, 1] } : { duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }} />
+        <motion.img src={curtainImage} alt="" loading="eager" fetchPriority="high" draggable={false} className="absolute left-0 top-0 h-[100dvh] w-[100vw] max-w-none select-none object-fill" style={{ left: isLeft ? "0" : "-50vw" }} animate={reducedMotion ? { scale: 1, x: 0 } : opening ? { scale: 1.045, x: isLeft ? "-1.8%" : "1.8%" } : { scale: [1, 1.006, 1], x: [0, isLeft ? "0.3%" : "-0.3%", 0] }} transition={reducedMotion ? { duration: 0 } : opening ? { duration: 3.1, ease: [0.65, 0, 0.2, 1] } : { duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }} />
       </picture>
       <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 w-24 opacity-70 blur-xl ${isLeft ? "right-[-2rem] bg-gradient-to-l" : "left-[-2rem] bg-gradient-to-r"} from-black/45 via-black/15 to-transparent`} />
     </motion.div>
@@ -43,7 +44,8 @@ export default function Hero() {
   const [opening, setOpening] = useState(false);
   const [visible, setVisible] = useState(true);
   const [reveal, setReveal] = useState(false);
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = usePageReducedMotion();
+  const openingReducedMotion = useRef(false);
   const portraitRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -64,6 +66,8 @@ export default function Hero() {
 
   useEffect(() => {
     if (!opening) return;
+    // Keep this visit's timers stable if the OS preference changes mid-opening.
+    const reducedMotion = openingReducedMotion.current;
     let hasScrolled = window.scrollY > 0;
     let scrollFrame = 0;
     let autoScrollTimer = 0;
@@ -110,10 +114,10 @@ export default function Hero() {
       window.cancelAnimationFrame(scrollFrame);
       window.removeEventListener("scroll", cancelAutoScroll);
     };
-  }, [opening, reducedMotion]);
+  }, [opening]);
 
   const open = () => {
-    if (!opening) setOpening(true);
+    if (!opening) { openingReducedMotion.current = reducedMotion; setOpening(true); }
   };
 
   return (
@@ -137,12 +141,12 @@ export default function Hero() {
 
       {visible && (
         <div className="pointer-events-auto fixed inset-0 z-[90] h-[100dvh] w-[100vw] overflow-hidden" aria-hidden="true">
-          <CurtainHalf side="left" opening={opening} />
-          <CurtainHalf side="right" opening={opening} />
+          <CurtainHalf side="left" opening={opening} reducedMotion={reducedMotion} />
+          <CurtainHalf side="right" opening={opening} reducedMotion={reducedMotion} />
           <Tieback side="left" opening={opening} />
           <Tieback side="right" opening={opening} />
           {!opening && (
-            <motion.div className="pointer-events-none absolute inset-x-0 bottom-[9%] z-[115] flex justify-center px-6" initial={{ opacity: 0, y: 10 }} animate={{ opacity: [0.65, 1, 0.65], y: [10, 0, 10] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}>
+            <motion.div className="pointer-events-none absolute inset-x-0 bottom-[9%] z-[115] flex justify-center px-6" initial={reducedMotion ? false : { opacity: 0, y: 10 }} animate={reducedMotion ? { opacity: 1, y: 0 } : { opacity: [0.65, 1, 0.65], y: [10, 0, 10] }} transition={reducedMotion ? { duration: 0 } : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }}>
               <div className="rounded-full border border-[#f0d1ad]/65 bg-black/25 px-6 py-3 text-[10px] font-medium uppercase tracking-[0.3em] text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-[3px]">Tap to Open</div>
             </motion.div>
           )}
