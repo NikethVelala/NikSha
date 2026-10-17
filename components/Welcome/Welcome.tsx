@@ -2,7 +2,7 @@
 
 import usePageReducedMotion from "@/components/common/usePageReducedMotion";
 
-import { useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { motion, useInView } from "framer-motion";
 import styles from "./DiscoveryHighlight.module.css";
@@ -12,6 +12,17 @@ import Countdown from "@/components/Countdown/Countdown";
 import Invitation3D from "@/components/Welcome/Invitation3D";
 import WeddingLivestream from "@/components/Welcome/WeddingLivestream";
 import { wedding } from "@/data/wedding";
+
+const goldTrail = [
+  { length: 30, opacity: 0.08, width: 5 },
+  { length: 24, opacity: 0.13, width: 4.7 },
+  { length: 18, opacity: 0.22, width: 4.4 },
+  { length: 13, opacity: 0.34, width: 4.1 },
+  { length: 9, opacity: 0.48, width: 3.8 },
+  { length: 5, opacity: 0.65, width: 3.5 },
+  { length: 3, opacity: 0.85, width: 3.2 },
+  { length: 1.2, opacity: 1, width: 3 },
+];
 
 export default function Welcome({ children }: { children: ReactNode }) {
   const reducedMotion = usePageReducedMotion();
@@ -58,7 +69,11 @@ export default function Welcome({ children }: { children: ReactNode }) {
         <Countdown compact />
         <WeddingLivestream />
         <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20px" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.8, delay: 0.15 }} className="px-3 pb-3 pt-4 text-center sm:pb-8 sm:pt-6"><p className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#756957] sm:text-[9px]">There&apos;s more to our story</p><p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">If you&apos;d like to stay a little longer…</p><a ref={discoveryRef} data-sparkle-active={discoveryVisible && !storyUnlocked && !reducedMotion} id="discover-our-story" href="#story" aria-controls="invitation-continuation" aria-expanded={storyUnlocked} onClick={openStory} className={`${styles.discovery} group mx-auto mt-4 flex min-h-12 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]`}>
-          <span aria-hidden="true" className={styles.sparkle} />Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
+          <span aria-hidden="true" className={styles.sparkle}>
+            <svg className={styles.trail} width="100%" height="100%" fill="none" focusable="false">
+              {goldTrail.map(({ length, opacity, width }) => <rect key={length} x="3" y="3" rx="999" pathLength="100" stroke={length === 1.2 ? "#fff8d9" : "#ffd477"} strokeWidth={width} strokeOpacity={opacity} strokeDasharray={`${length} ${100 - length}`} style={{ "--trail-length": `${length}px`, "--trail-end": `${length - 100}px` } as CSSProperties} />)}
+            </svg>
+          </span>Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
       </motion.div>
     </Section>
     {/* A native document boundary avoids overshoot and corrective scroll jumps. */}
