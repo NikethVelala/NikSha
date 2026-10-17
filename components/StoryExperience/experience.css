@@ -215,3 +215,14 @@
 .story-experience[data-chapter=finale] .story-content-inner{margin:auto}
 
 .story-stage-photo-open{position:absolute;z-index:3;right:12px;top:12px;min-height:44px;padding:10px 14px;border:1px solid #e0c69888;border-radius:28px;background:#10241de8;color:#fff7e7;font-size:11px;line-height:1.4}
+
+/* Keep the print and its focus/preview overlay inside the gold arch. */
+.story-experience .story-final-portrait .story-photo { overflow:hidden; }
+.story-experience .story-final-portrait .story-photo img {
+  inset:14px;
+  width:calc(100% - 28px);
+  height:calc(100% - 28px);
+  border-radius:96px 96px 0 0;
+}
+.story-experience .story-finale-still-portrait .story-photo { overflow:hidden; }
+.story-experience .story-finale-still-portrait .story-photo img { border-radius:66px 66px 0 0; inset:14px; width:calc(100% - 28px); height:calc(100% - 28px); }

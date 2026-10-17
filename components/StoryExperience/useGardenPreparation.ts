@@ -25,7 +25,7 @@ const scenicImages = [
 /** Optional preparation only after the guest reaches the fully loaded Story. */
 export default function useGardenPreparation(entry: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
-    const story = entry.current?.closest("#story");
+    const story = document.getElementById("story");
     if (!story) return;
     const motion = window.matchMedia(reducedMotionQuery);
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;

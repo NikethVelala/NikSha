@@ -3,7 +3,8 @@
 import MugguOrnament from "@/components/common/MugguOrnament";
 import { ArrowRight } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
-import { GardenEntryAtmosphere } from "@/components/common/PageScrollEffects";
+import GardenEntranceArtwork from "./GardenEntranceArtwork";
+import styles from "./GardenEntrance.module.css";
 import CinematicStoryExperience from "./CinematicStoryExperience";
 import { getGardenProfile, type GardenProfile } from "./runtime";
 import useGardenPreparation from "./useGardenPreparation";
@@ -32,22 +33,26 @@ export default function StoryExperienceEntry() {
 
   return (
     <>
-      <div
-        ref={entryRef}
-        className="relative mx-auto mt-12 max-w-3xl overflow-hidden border border-champagne/35 bg-[#183629] px-6 py-8 text-center shadow-[0_24px_64px_rgba(30,50,38,0.14)] sm:mt-16 sm:px-12 sm:py-11"
-      >
-        <GardenEntryAtmosphere target={entryRef} />
-        <div className="relative">
-          <div aria-hidden="true" className="mx-auto flex items-center justify-center gap-3 text-champagne/80"><span className="h-px w-10 bg-champagne/45" /><MugguOrnament className="h-3.5 w-[18px]" /><span className="h-px w-10 bg-champagne/45" /></div>
-          <p className="mt-5 text-[9px] uppercase tracking-[0.4em] text-champagne/80">The celebrations that followed</p>
-          <h3 className="mt-3 font-heading text-4xl leading-none text-[#fff8e9] sm:text-5xl">The Road to <span className="italic text-champagne">Our Wedding</span></h3>
-          <p className="mx-auto mt-4 max-w-lg font-heading text-lg italic leading-relaxed text-[#fff8e9]/70 sm:text-xl">Our families came together, the celebrations began, and our wedding grew a little closer with every moment.</p>
-          <button ref={triggerRef} type="button" onClick={() => setProfile(getGardenProfile())} className="group mt-7 inline-flex min-h-12 items-center gap-3 rounded-full border border-champagne/70 bg-[#f8f4ee] px-6 py-3 text-[10px] font-medium uppercase tracking-[0.24em] text-[#244232] transition-all hover:-translate-y-0.5 hover:bg-[#fffaf1] hover:shadow-[0_12px_30px_rgba(5,18,11,0.28)] sm:min-h-14 sm:px-8">
-            Enter the garden <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.3} />
-          </button>
-          <p className="mt-4 text-[8px] uppercase tracking-[0.28em] text-[#fff8e9]/45">Optional · You can return at any time</p>
+      <section id="garden-entry" aria-labelledby="garden-entry-title" className={styles.section}>
+      <div ref={entryRef} className={styles.entrance}>
+        <div aria-hidden="true" className={styles.sectionDivider}><MugguOrnament className="h-7 w-10" /></div>
+        <p className={styles.sectionLabel}>The celebrations that followed</p>
+        <p className={styles.bridge}>With our families beside us,<br />the celebrations began.</p>
+        <div className={styles.invitation}>
+          <GardenEntranceArtwork />
+          <div className={styles.copy}>
+            <div aria-hidden="true" className={styles.ornament}><MugguOrnament className="h-4 w-6" /></div>
+            <p className={styles.eyebrow}>The Garden of Becoming</p>
+            <h2 id="garden-entry-title" className={styles.title}>The Road to <span>Our Wedding</span></h2>
+            <p className={styles.description}>Two families. Three celebrations.<br />A beautiful beginning to forever.</p>
+            <button ref={triggerRef} type="button" onClick={() => setProfile(getGardenProfile())} className={styles.button}>
+              Enter Our Garden <ArrowRight className="h-4 w-4" strokeWidth={1.3} />
+            </button>
+            <p className={styles.note}>Explore our celebrations · Return at any time</p>
+          </div>
         </div>
       </div>
+      </section>
 
       {profile && <CinematicStoryExperience profile={profile} onExit={close} onContinue={continueInvitation} />}
     </>
