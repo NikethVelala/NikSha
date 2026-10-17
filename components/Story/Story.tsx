@@ -13,6 +13,8 @@ const chapters = [
     title: "The Unspoken Hello",
     eyebrow: "School days",
     copy: "It began in a classroom, long before either of us knew how much this connection would mean.",
+    reflection: "Back then, we were simply two classmates, part of the same school-day memories. Nothing announced itself as the beginning of a love story. There was no grand moment, no promise of forever—only an ordinary hello that would mean something extraordinary one day.",
+    closingLine: "Some beginnings are so quiet that you only recognise them when you look back.",
     photos: ["01-school-days"],
     note: "School group photograph · selective colour",
   },
@@ -20,6 +22,8 @@ const chapters = [
     title: "The Years Between",
     eyebrow: "Still connected",
     copy: "Life carried us into different seasons. Through the years, the friendship remained.",
+    reflection: "School became a memory, and life took us in different directions. We weren't together for every milestone or every ordinary day. But somewhere between the passing years and the conversations that brought us back, the connection never quite disappeared.",
+    closingLine: "Time changed so much around us. It never quite erased the thread between us.",
     photos: ["02-years-between"],
     note: "Beach friends photograph · selective colour",
   },
@@ -27,6 +31,8 @@ const chapters = [
     title: "Ten Became Four",
     eyebrow: "A smaller circle",
     copy: "From a larger group of friends, four of us kept finding our way back to one another—even through a screen.",
+    reflection: "What had once been a bigger circle gradually became a smaller one. Ten friends became four, and the conversations continued across screens and changing routines. There was comfort in having people who still felt familiar, no matter how much life moved on.",
+    closingLine: "Without realising it, we were becoming part of each other's everyday world again.",
     photos: ["03-ten-became-four"],
     note: "Four-person video call · black and white",
   },
@@ -34,6 +40,8 @@ const chapters = [
     title: "A Little Hyderabad Magic",
     eyebrow: "Moments together",
     copy: "Hyderabad gave us days to remember: a visit to Charminar, laughter at Wonderla, and a quieter moment together on the water.",
+    reflection: "Some memories are made in the middle of a crowd. Others happen in the spaces between the noise. There was Charminar with friends, a day of adventure at Wonderla, and a moment together on the water. At the time, they were simply good days—days we were happy to share.",
+    closingLine: "Only later would we understand how precious those seemingly ordinary moments had become.",
     photos: ["04a-charminar", "04b-wonderla", "04c-kayaking"],
     note: "Charminar → Wonderla → kayaking · selective colour",
   },
@@ -41,6 +49,8 @@ const chapters = [
     title: "The Hardest Goodbye",
     eyebrow: "Two cities · one connection",
     copy: "Then came the distance. Sirisha returned to Punjab while Niketh stayed in Hyderabad. We were still friends, with feelings we had not yet put into words.",
+    reflection: "The city that held so many memories was no longer a place we could both be. Sirisha went back to Punjab; Niketh remained in Hyderabad. There was distance between two friends, and something deeper neither of us had confessed yet. We didn't have a name for what was changing.",
+    closingLine: "Two places. Two lives moving forward. One connection that refused to feel far away.",
     photos: [],
     note: "",
   },
@@ -48,6 +58,8 @@ const chapters = [
     title: "More Than Friends, Not Yet Forever",
     eyebrow: "The feelings we finally shared",
     copy: "When we finally told each other how we felt, a new part of our story began. Before the proposal, there were little moments that made this new beginning our own.",
+    reflection: "Eventually, the feelings we had kept unspoken found their words. Friendship had grown into something more, and for the first time, we could share that truth with each other. The months that followed weren't defined by a single grand gesture. They were filled with little moments, photographs, adventures, and the simple happiness of being us.",
+    closingLine: "The love story hadn't suddenly begun. We had finally realised we were already living it.",
     photos: ["06a-mirror", "06b-forest-road", "06c-stadium"],
     note: "Mirror selfie → forest-road selfie → stadium selfie · full colour",
   },
@@ -55,6 +67,8 @@ const chapters = [
     title: "The Proposal",
     eyebrow: "A question for forever",
     copy: "And then came the question that changed everything.",
+    reflection: "After all the years, all the conversations, the laughter, the distance, and the feelings we finally found the courage to share, there was one question left to ask. Not about where our story began, but about every chapter still waiting to be written.",
+    closingLine: "From that first unspoken hello to a promise of forever.",
     photos: ["proposal"],
     note: "",
   },
@@ -111,7 +125,7 @@ export default function Story() {
         whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: reducedMotion ? 0 : 0.7 }} className={styles.intro}>
         <p className={styles.eyebrow}>Our story</p>
         <h2>Seven Chapters.<br/><em>One Forever.</em></h2>
-        <p className={styles.introCopy}>Some stories begin long before we know they are love stories.</p>
+        <p className={styles.introCopy}>A story told in moments, memories, miles apart, and the beautiful things we almost missed.</p>
         <MugguOrnament variant="divider" className="mx-auto mt-6 h-8 w-36 text-champagne" />
       </motion.header>
       <div className={styles.chapters}>
@@ -122,6 +136,8 @@ export default function Story() {
               <div className={styles.marker}><span>{String(index + 1).padStart(2, "0")}</span><p className={styles.eyebrow}>{chapter.eyebrow}</p></div>
               <h3 id={`story-title-${index}`}>{chapter.title}</h3>
               <p className={styles.copy}>{chapter.copy}</p>
+              <p className={styles.reflection}>{chapter.reflection}</p>
+              <p className={styles.closingLine}>{chapter.closingLine}</p>
             </motion.div>
             {index === 4 ? <DistanceScene /> : (
               <motion.div initial={reducedMotion ? false : { opacity: 0 }} animate={reducedMotion ? { opacity: 1 } : undefined}
