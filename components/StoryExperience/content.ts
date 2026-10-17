@@ -7,6 +7,7 @@ export type GardenMoment = {
   eyebrow: string;
   title: string;
   story: string;
+  caption: string;
   image: string;
   imageAlt: string;
   imageWidth: number;
@@ -24,9 +25,10 @@ export const gardenMoments: GardenMoment[] = [
   {
     id: "school-days",
     number: "I",
-    eyebrow: "The families come together",
-    title: "When Two Families Come Together",
-    story: "A heartfelt beginning, marked by a simple gesture and the warmth of family. Some of life's most beautiful beginnings happen right at home.",
+    eyebrow: "Two families, one happy beginning",
+    title: "Pelli Choopulu",
+    story: "During Pelli Choopulu, our parents and families came together for warm, happy conversations. Sirisha's family welcomed Niketh as their son-in-law, and Niketh's family embraced Sirisha as their daughter-in-law. It was a peaceful, heartfelt beginning—full of acceptance, blessings, and the happiness of knowing our families were with us.",
+    caption: "A peaceful beginning, with our families' blessings",
     image: "/images/garden/memories/family-welcome.webp",
     imageWidth: 720, imageHeight: 1280,
     imageAlt: "Niketh and Sirisha sharing a decorated fruit basket during a family visit",
@@ -34,9 +36,10 @@ export const gardenMoments: GardenMoment[] = [
   {
     id: "friendship",
     number: "II",
-    eyebrow: "Blessings, traditions and togetherness",
-    title: "Blessings, Traditions & Togetherness",
-    story: "Surrounded by loved ones, traditions and celebrations become memories to treasure. From the ceremony to a photograph together, these are the moments that make family feel like home.",
+    eyebrow: "Pasupu Danchadam · The preparations begin",
+    title: "Godhuma Rayi",
+    story: "With family and friends gathered around, we celebrated Godhuma Rayi, also known as Pasupu Danchadam, by crushing turmeric sticks together. The occasion marked the official start of our wedding preparations. It was a joyful day of tradition, togetherness, and celebration, made even more special by everyone who joined us.",
+    caption: "Turmeric, laughter, and the start of our wedding preparations",
     image: "/images/garden/memories/family-ceremony.webp",
     imageWidth: 1238, imageHeight: 2200,
     imageAlt: "Family members gathered for a traditional ceremony",
@@ -47,9 +50,10 @@ export const gardenMoments: GardenMoment[] = [
   {
     id: "something-more",
     number: "III",
-    eyebrow: "Our engagement celebration",
-    title: "A Promise to Forever",
-    story: "A day filled with smiles, celebrations and a promise that brought our dreams a little closer to reality.",
+    eyebrow: "A promise to forever",
+    title: "Our Engagement",
+    story: "Our engagement brought everyone together for a day of love, laughter, and celebration. We enjoyed every moment with our families and friends, making memories we will always treasure. It was a joyful celebration of our promise to each other—and all the beautiful days still to come.",
+    caption: "A day of happy memories and a promise to forever",
     image: "/images/garden/memories/engagement.webp",
     imageWidth: 1467, imageHeight: 2200,
     imageAlt: "Niketh and Sirisha posing together with their engagement celebration photo frame",

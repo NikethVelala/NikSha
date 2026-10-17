@@ -140,7 +140,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
               <MemoryImage key={activeMoment.id} moment={activeMoment} />
               {activeMoment.secondaryImage && <MemoryImage key={`${activeMoment.id}-family`} moment={{ ...activeMoment, image: activeMoment.secondaryImage, imageAlt: activeMoment.secondaryImageAlt ?? activeMoment.imageAlt, imageWidth: activeMoment.secondaryImageWidth!, imageHeight: activeMoment.secondaryImageHeight! }} />}
             </div> : chapter === "finale" ? <div className="story-final-portrait"><p className="story-final-names">Niketh &amp; Sirisha</p><p className="story-final-line">Every beautiful beginning has led us here</p><p className="story-final-date">18 November 2026</p></div> : <div className="story-rule" aria-hidden="true" />}
-            {activeMoment && <p className="story-memory-caption">{chapter === "school-days" ? "Where two families came together" : chapter === "friendship" ? "Blessed by the people we love" : "Our engagement celebration"}</p>}
+            {activeMoment && <p className="story-memory-caption">{activeMoment.caption}</p>}
             {chapter !== "finale" && <p className="story-copy">{activeMoment?.story ?? "A flower-lit garden, three family memories, and one final moment beneath the arch. Stay a little longer."}</p>}
             {chapter === "garden" && <button type="button" onClick={next} className="story-primary">Begin our story <ArrowRight size={16} /></button>}
 
