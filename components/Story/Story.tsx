@@ -34,7 +34,7 @@ const chapters = [
     reflection: "What had once been a bigger circle gradually became a smaller one. Ten friends became four, and the conversations continued across screens and changing routines. There was comfort in having people who still felt familiar, no matter how much life moved on.",
     closingLine: "Without realising it, we were becoming part of each other's everyday world again.",
     photos: ["03-ten-became-four"],
-    note: "Four-person video call · black and white",
+    note: "Four-person video call · full colour",
   },
   {
     title: "A Little Hyderabad Magic",
@@ -43,7 +43,7 @@ const chapters = [
     reflection: "Some memories are made in the middle of a crowd. Others happen in the spaces between the noise. There was Charminar with friends, a day of adventure at Wonderla, and a moment together on the water. At the time, they were simply good days—days we were happy to share.",
     closingLine: "Only later would we understand how precious those seemingly ordinary moments had become.",
     photos: ["04a-charminar", "04b-wonderla", "04c-kayaking"],
-    note: "Charminar → Wonderla → kayaking · selective colour",
+    note: "Charminar in full colour → selective-colour Wonderla → kayaking in full colour",
   },
   {
     title: "The Hardest Goodbye",
@@ -78,10 +78,10 @@ type Photograph = { src: string; width: number; height: number; alt: string; cap
 const photographs: Record<string, Photograph> = {
   "01-school-days": { src: "/images/story/01-school-days.webp", width: 1600, height: 1154, alt: "School friends together, with Niketh and Sirisha highlighted in colour", caption: "A familiar face. An unwritten story." },
   "02-years-between": { src: "/images/story/02-years-between.webp", width: 1280, height: 853, alt: "Niketh and Sirisha with friends on the beach, selectively in colour", caption: "Different paths. A connection that stayed." },
-  "03-ten-became-four": { src: "/images/story/03-ten-became-four.webp", width: 720, height: 1560, alt: "Four friends keeping in touch on a video call, in black and white", caption: "Four screens. One little circle." },
+  "03-ten-became-four": { src: "/images/story/03-ten-became-four.webp", width: 1050, height: 2048, alt: "Four friends keeping in touch on a video call", caption: "Four screens. One little circle." },
   "04a-charminar": { src: "/images/story/04a-charminar.webp", width: 1600, height: 2133, alt: "Niketh, Sirisha and friends in front of Charminar", caption: "01 · Charminar" },
   "04b-wonderla": { src: "/images/story/04b-wonderla.webp", width: 1467, height: 2200, alt: "Niketh and Sirisha with friends on the Wonderla amusement ride", caption: "02 · Wonderla" },
-  "04c-kayaking": { src: "/images/story/04c-kayaking.webp", width: 1052, height: 780, alt: "Sirisha and Niketh taking a selfie while kayaking", caption: "03 · A little closer, on the water" },
+  "04c-kayaking": { src: "/images/story/04c-kayaking.webp", width: 1600, height: 2133, alt: "Niketh and Sirisha enjoying a kayaking outing", caption: "03 · A little closer, on the water" },
   "06a-mirror": { src: "/images/story/06a-mirror.webp", width: 1237, height: 2200, alt: "Niketh and Sirisha together in a full-colour mirror selfie", caption: "The everyday" },
   "06b-forest-road": { src: "/images/story/06b-forest-road.webp", width: 1600, height: 2133, alt: "Sirisha and Niketh taking a selfie on a forest road", caption: "The little adventures" },
   "06c-stadium": { src: "/images/story/06c-stadium.webp", width: 1600, height: 2133, alt: "Niketh and Sirisha smiling together at the stadium", caption: "The joy of us" },
