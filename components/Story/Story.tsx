@@ -148,13 +148,9 @@ export default function Story() {
   return (
     <>
     <Section id="story" className={`coastal-story bg-ivory ${styles.story}`}>
-      <motion.header initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
-        whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: reducedMotion ? 0 : 0.7 }} className={styles.intro}>
-        <p className={styles.eyebrow}>Our story</p>
-        <h2>Seven Chapters.<br/><em>One Forever.</em></h2>
-        <p className={styles.introCopy}>A story told in moments, memories, miles apart, and the beautiful things we almost missed.</p>
-        <MugguOrnament variant="divider" className="mx-auto mt-6 h-8 w-36 text-champagne" />
-      </motion.header>
+      <header className={styles.intro}>
+        <h2 className={styles.eyebrow}>Our story</h2>
+      </header>
       <div className={styles.chapters}>
         {chapters.map((chapter, index) => (
           <article key={chapter.title} data-story-chapter={index} aria-labelledby={`story-title-${index}`} className={`${styles.chapter} ${index === 4 ? styles.separation : ""} ${index === 6 ? styles.finale : ""}`}>
