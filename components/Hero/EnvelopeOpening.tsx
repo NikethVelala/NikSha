@@ -9,10 +9,10 @@ export default function EnvelopeOpening({ opening, onOpen, reducedMotion }: { op
    <div className={styles.envelope} aria-hidden="true">
      <div className={styles.back}/>
      <div className={styles.innerLight}/>
-     <div className={styles.leftWing}/>
-     <div className={styles.rightWing}/>
-     <div className={styles.bottomWing}/>
-     <div className={styles.flap}/>
+     <div className={styles.leftWing}><div className={styles.faceShade}/></div>
+     <div className={styles.rightWing}><div className={styles.faceShade}/></div>
+     <div className={styles.bottomWing}><div className={styles.faceShade}/></div>
+     <div className={styles.flap}><div className={styles.flapReverse}/><div className={styles.faceShade}/></div>
      <div className={styles.foldShadow} aria-hidden="true"/>
      <div className={styles.goldTrace} aria-hidden="true"/>
      <div className={styles.seam} aria-hidden="true"/>
