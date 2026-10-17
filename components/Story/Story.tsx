@@ -48,8 +48,8 @@ const chapters = [
   {
     title: "The Hardest Goodbye",
     eyebrow: "Two cities · one connection",
-    copy: "Then came the distance. Sirisha returned to Punjab while Niketh stayed in Hyderabad. We were still friends, with feelings we had not yet put into words.",
-    reflection: "The city that held so many memories was no longer a place we could both be. Sirisha went back to Punjab; Niketh remained in Hyderabad. There was distance between two friends, and something deeper neither of us had confessed yet. We didn't have a name for what was changing.",
+    copy: "Then came the distance. Sirisha returned to Ludhiana while Niketh stayed in Hyderabad. We were still friends, with feelings we had not yet put into words.",
+    reflection: "The city that held so many memories was no longer a place we could both be. Sirisha went back to Ludhiana; Niketh remained in Hyderabad. There was distance between two friends, and something deeper neither of us had confessed yet. We didn't have a name for what was changing.",
     closingLine: "Two places. Two lives moving forward. One connection that refused to feel far away.",
     photos: [],
     note: "",
@@ -110,7 +110,7 @@ function StoryPhotograph({ name, compact = false, order = 0 }: { name: string; c
 function DistanceScene() {
   const reducedMotion = usePageReducedMotion();
   return (
-    <motion.div initial="quiet" whileInView="connected" viewport={{ once: true, amount: 0.45 }} className={styles.distance} role="img" aria-label="Two distant golden lights connect Hyderabad, where Niketh stayed, and Punjab, where Sirisha returned, before their feelings were confessed">
+    <motion.div initial="quiet" whileInView="connected" viewport={{ once: true, amount: 0.45 }} className={styles.distance} role="img" aria-label="Two distant golden lights connect Hyderabad, where Niketh stayed, and Ludhiana, where Sirisha returned, before their feelings were confessed">
       <motion.div aria-hidden="true" className={styles.thread}
         variants={{ quiet: { clipPath: reducedMotion ? "inset(0% 0% 0% 0%)" : "inset(0% 100% 0% 0%)" }, connected: { clipPath: "inset(0% 0% 0% 0%)" } }}
         transition={{ duration: reducedMotion ? 0 : 2, delay: reducedMotion ? 0 : 0.4, ease: "easeInOut" }}>
@@ -121,7 +121,7 @@ function DistanceScene() {
       </svg>
       </motion.div>
       <motion.div variants={{ quiet: { opacity: reducedMotion ? 1 : 0 }, connected: { opacity: 1 } }} transition={{ duration: reducedMotion ? 0 : 1 }} className={styles.cityLeft}><span className={styles.light}/><span>Hyderabad</span><small>Niketh</small></motion.div>
-      <motion.div variants={{ quiet: { opacity: reducedMotion ? 1 : 0 }, connected: { opacity: 1 } }} transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.25 }} className={styles.cityRight}><span className={styles.light}/><span>Punjab</span><small>Sirisha</small></motion.div>
+      <motion.div variants={{ quiet: { opacity: reducedMotion ? 1 : 0 }, connected: { opacity: 1 } }} transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 0.25 }} className={styles.cityRight}><span className={styles.light}/><span>Ludhiana</span><small>Sirisha</small></motion.div>
       <motion.p variants={{ quiet: { opacity: reducedMotion ? 1 : 0 }, connected: { opacity: 1 } }} transition={{ duration: reducedMotion ? 0 : 1, delay: reducedMotion ? 0 : 1.1 }}>So much between us. So much still unsaid.</motion.p>
     </motion.div>
   );
