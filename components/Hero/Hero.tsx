@@ -8,39 +8,6 @@ import { wedding } from "@/data/wedding";
 import styles from "./Hero.module.css";
 import EnvelopeOpening from "./EnvelopeOpening";
 
-const curtainImage = "/images/optimized/curtain-desktop.webp";
-const curtainMobileImage = "/images/optimized/curtain-mobile.webp";
-
-function CurtainHalf({ side, opening, reducedMotion }: { side: "left" | "right"; opening: boolean; reducedMotion: boolean }) {
-  const isLeft = side === "left";
-
-  return (
-    <motion.div
-      className={`absolute inset-y-0 ${isLeft ? "left-0" : "right-0"} h-[100dvh] w-1/2 overflow-hidden will-change-transform`}
-      style={{ perspective: "1800px", transformStyle: "preserve-3d", transformOrigin: isLeft ? "right center" : "left center" }}
-      animate={reducedMotion ? { x: opening ? (isLeft ? "-103%" : "103%") : 0, scaleX: 1, rotateY: 0, skewY: 0, opacity: 1 } : opening ? { x: isLeft ? "-103%" : "103%", scaleX: 0.72, rotateY: isLeft ? -14 : 14, skewY: isLeft ? -1.2 : 1.2, opacity: 0.98 } : { x: [0, isLeft ? "0.22%" : "-0.22%", isLeft ? "-0.12%" : "0.12%", 0], scaleX: [1, 0.998, 1.002, 1], rotateY: [0, isLeft ? -0.5 : 0.5, isLeft ? 0.35 : -0.35, 0], skewY: [0, isLeft ? -0.15 : 0.15, isLeft ? 0.1 : -0.1, 0], opacity: 1 }}
-      transition={reducedMotion ? { duration: 0.25 } : opening ? { duration: 3.1, ease: [0.65, 0, 0.2, 1] } : { duration: 7.5, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
-    >
-      <picture>
-        <source media="(max-width: 767px)" srcSet={curtainMobileImage} />
-        <motion.img src={curtainImage} alt="" loading="eager" fetchPriority="high" draggable={false} className="absolute left-0 top-0 h-[100dvh] w-[100vw] max-w-none select-none object-fill" style={{ left: isLeft ? "0" : "-50vw" }} animate={reducedMotion ? { scale: 1, x: 0 } : opening ? { scale: 1.045, x: isLeft ? "-1.8%" : "1.8%" } : { scale: [1, 1.006, 1], x: [0, isLeft ? "0.3%" : "-0.3%", 0] }} transition={reducedMotion ? { duration: 0 } : opening ? { duration: 3.1, ease: [0.65, 0, 0.2, 1] } : { duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }} />
-      </picture>
-      <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 w-24 opacity-70 blur-xl ${isLeft ? "right-[-2rem] bg-gradient-to-l" : "left-[-2rem] bg-gradient-to-r"} from-black/45 via-black/15 to-transparent`} />
-    </motion.div>
-  );
-}
-
-function Tieback({ side, opening }: { side: "left" | "right"; opening: boolean }) {
-  const isLeft = side === "left";
-  return (
-    <motion.div aria-hidden="true" className={`pointer-events-none absolute top-[57%] z-[108] hidden h-16 w-12 sm:block ${isLeft ? "left-[calc(50%-3rem)]" : "right-[calc(50%-3rem)]"}`} animate={opening ? { x: isLeft ? "-24vw" : "24vw", opacity: 0 } : { x: 0, opacity: 1 }} transition={{ duration: 3.05, delay: 0.05, ease: [0.65, 0, 0.2, 1] }}>
-      <div className={`absolute top-1/2 h-px w-12 ${isLeft ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-[#f1d09f]/0 via-[#d2a15d] to-[#8b5a25]/40`} />
-      <div className="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-[#f0d1ad]/80 bg-[#8a5425] shadow-[0_2px_12px_rgba(0,0,0,0.28)]" />
-      <div className="absolute left-1/2 top-[calc(50%+10px)] h-7 w-1 -translate-x-1/2 rounded-full bg-gradient-to-b from-[#e8c184] to-[#7d4f1b]" />
-    </motion.div>
-  );
-}
-
 export default function Hero() {
   const [opening, setOpening] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -92,7 +59,7 @@ export default function Hero() {
     };
     // Once a guest starts exploring, the timed handoff must not move them back.
     window.addEventListener("scroll", cancelAutoScroll, { passive: true, once: true });
-    window.dispatchEvent(new CustomEvent("niksha-curtain-open"));
+    window.dispatchEvent(new CustomEvent("niksha-curtain-open")); // Preserve existing listeners during the envelope transition.
     const revealTimer = window.setTimeout(() => setReveal(true), reducedMotion ? 50 : 1100);
     const finishTimer = window.setTimeout(() => {
       setVisible(false);
