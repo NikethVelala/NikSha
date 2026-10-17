@@ -17,10 +17,11 @@ export default function Home() {
       <Navigation />
       <Hero />
       <PetalFall />
-      <Welcome />
-      <Story />
-      <Gallery />
-      <Footer />
+      <Welcome>
+        <Story />
+        <Gallery />
+        <Footer />
+      </Welcome>
     </>
   );
 }
