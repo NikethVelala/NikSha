@@ -117,7 +117,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
     <section ref={root} role="dialog" aria-modal="true" aria-labelledby="garden-title" className="story-experience" data-layout={isMobile ? "portrait" : "landscape"} data-chapter={chapter} data-journey={mode !== "fallback" && arrived !== chapter ? "travelling" : "arrived"} data-renderer={mode} data-fallback-reason={mode === "fallback" ? reason : undefined}>
       <header className="story-header">
         <div><p className="story-eyebrow">NikSha presents</p><p className="story-wordmark">A garden of becoming</p></div>
-        <button data-story-exit type="button" onClick={onExit} className="story-exit" aria-label="Exit the garden and return to Our Story"><X size={16} strokeWidth={1.25} /><span>Exit</span></button>
+        <button data-story-exit type="button" onClick={onExit} className="story-exit" aria-label="Exit the garden and return to the invitation"><X size={16} strokeWidth={1.25} /><span>Exit</span></button>
       </header>
       <div className="story-body" onTouchStart={touchStart} onTouchEnd={touchEnd} onTouchCancel={() => { swipe.current = null; }}>
         <div className="story-stage" role={chapter === "finale" ? "img" : "group"} aria-label={chapter === "finale" ? `${gardenFinale.imageAlt}, beneath the floral arch` : `${title} garden composition`}>
@@ -128,12 +128,12 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
           <div className="story-stage-shade" aria-hidden="true" />
           <div className="story-foreground" aria-hidden="true" />
           {chapter === "finale" && mode === "fallback" && <div className="story-finale-still-portrait"><MemoryImage moment={gardenFinale} large /></div>}
-          {mode === "loading" && <div className="story-loading" role="status"><span>Opening the garden…</span><button type="button" onClick={() => fail("visitor-choice")}>Read the story now</button></div>}
+          {mode === "loading" && <div className="story-loading" role="status"><span>Opening the garden…</span><button type="button" onClick={() => fail("visitor-choice")}>View the celebrations</button></div>}
           <p className="story-stage-caption" aria-hidden="true">{activeMoment?.eyebrow ?? (chapter === "finale" ? "Together, into forever" : "Three memories. One beautiful forever.")}</p>
         </div>
         <div ref={content} className="story-content" role="region" tabIndex={0} aria-label="Chapter content">
           <div className="story-content-inner" key={chapter}>
-            <p className="story-eyebrow">{activeMoment ? `Memory ${activeMoment.number} · ${activeMoment.eyebrow}` : chapter === "finale" ? "Forever" : "Step into our story"}</p>
+            <p className="story-eyebrow">{activeMoment ? `Memory ${activeMoment.number} · ${activeMoment.eyebrow}` : chapter === "finale" ? "Forever" : "The celebrations that followed"}</p>
             <h2 id="garden-title" ref={heading} tabIndex={-1}>{title}</h2>
             <div className="story-memory-detail">
             {activeMoment ? <div className={`story-photo-sequence ${activeMoment.secondaryImage ? "has-pair" : ""}`}>
@@ -141,10 +141,10 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
               {activeMoment.secondaryImage && <MemoryImage key={`${activeMoment.id}-family`} moment={{ ...activeMoment, image: activeMoment.secondaryImage, imageAlt: activeMoment.secondaryImageAlt ?? activeMoment.imageAlt, imageWidth: activeMoment.secondaryImageWidth!, imageHeight: activeMoment.secondaryImageHeight! }} />}
             </div> : chapter === "finale" ? <div className="story-final-portrait"><p className="story-final-names">Niketh &amp; Sirisha</p><p className="story-final-line">Every beautiful beginning has led us here</p><p className="story-final-date">18 November 2026</p></div> : <div className="story-rule" aria-hidden="true" />}
             {activeMoment && <p className="story-memory-caption">{activeMoment.caption}</p>}
-            {chapter !== "finale" && <p className="story-copy">{activeMoment?.story ?? "A flower-lit garden, three family memories, and one final moment beneath the arch. Stay a little longer."}</p>}
-            {chapter === "garden" && <button type="button" onClick={next} className="story-primary">Begin our story <ArrowRight size={16} /></button>}
+            {chapter !== "finale" && <p className="story-copy">{activeMoment?.story ?? "With our families beside us, the journey to our wedding began. Walk through Pelli Choopulu, Pasupu Danchadam, and our engagement—the celebrations that followed our yes."}</p>}
+            {chapter === "garden" && <button type="button" onClick={next} className="story-primary">Begin the journey <ArrowRight size={16} /></button>}
 
-            {mode === "fallback" && !["reduced-motion", "unsupported", "visitor-choice"].includes(reason) && <p role="status" className="story-status">The garden is resting. Your story continues here.</p>}
+            {mode === "fallback" && !["reduced-motion", "unsupported", "visitor-choice"].includes(reason) && <p role="status" className="story-status">The garden is resting. You can still explore every memory here.</p>}
             </div>
           </div>
         </div>
