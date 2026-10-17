@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, scroll, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
-import { useEffect, useRef, useSyncExternalStore, type ReactNode, type RefObject } from "react";
+import { useEffect, useSyncExternalStore, type RefObject } from "react";
 
 // Observe the existing scroll owners; never acquire or release their locks.
 // One shared subscription covers the curtain, index, Garden and photo viewer.
@@ -49,7 +49,6 @@ function subscribe(listener: () => void) {
 const serverState = () => "paused:mobile:pending";
 type ScrollOffsets = NonNullable<Parameters<typeof scroll>[1]>["offset"];
 const entryOffsets: ScrollOffsets = ["start 0.95", "start 0.7"];
-const memoryOffsets: ScrollOffsets = ["end 0.8", "end 0.2"];
 const foreverOffsets: ScrollOffsets = ["start end", "start 0.3"];
 
 function usePageProgress(target: RefObject<HTMLElement | null>, offset: ScrollOffsets) {
@@ -92,20 +91,6 @@ export function GardenEntryAtmosphere({ target }: { target: RefObject<HTMLElemen
       <motion.div aria-hidden="true" data-scroll-effect="garden-glow" style={{ y: reducedMotion ? 0 : y, opacity: reducedMotion ? 1 : opacity }} className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(236,201,144,0.2),transparent_42%),linear-gradient(135deg,rgba(255,255,255,0.04),transparent_44%,rgba(210,165,115,0.1))]" />
       <motion.div aria-hidden="true" style={{ opacity: reducedMotion ? 1 : opacity }} className="pointer-events-none absolute inset-[6px] border border-champagne/20" />
     </>
-  );
-}
-
-export function FinalMemoryRelease({ children }: { children: ReactNode }) {
-  const target = useRef<HTMLDivElement>(null);
-  const { progress, reducedMotion, size } = usePageProgress(target, memoryOffsets);
-  const scale = useTransform(progress, [0, 1], [1, size === "desktop" ? 0.98 : size === "compact" ? 1 : 0.99]);
-
-  return (
-    <div ref={target}>
-      <motion.div data-scroll-effect="final-memory" style={{ scale: reducedMotion ? 1 : scale }}>
-        {children}
-      </motion.div>
-    </div>
   );
 }
 
