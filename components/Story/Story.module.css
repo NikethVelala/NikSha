@@ -63,3 +63,10 @@
 @media(prefers-reduced-motion: reduce) {
   .story [style] { transform: none !important; opacity: 1 !important; transition: none !important; }
 }
+
+/* A quieter second voice lets each memory unfold rather than read like a caption. */
+.reflection { margin-top: 1.15rem; color: #625b52; font-size: clamp(.98rem, 1.5vw, 1.08rem); line-height: 1.85; max-width: 36rem; }
+.closingLine { margin-top: 1.5rem; padding-left: 1rem; border-left: 1px solid #b7905c8a; color: #876744; font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(1.2rem, 2.2vw, 1.5rem); font-style: italic; line-height: 1.45; }
+.finale .reflection, .finale .closingLine { max-width: 35rem; margin-left: auto; margin-right: auto; }
+.finale .closingLine { border-left: 0; padding-left: 0; }
+@media (min-width: 768px) { .chapter:not(.separation):not(.finale) { gap: 3.5rem; } }
