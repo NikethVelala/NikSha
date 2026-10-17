@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { ArrowDown, ArrowLeft, ArrowRight, X } from "lucide-react";
 import ExperienceFallback from "./ExperienceFallback";
 import MemoryImage, { preloadMemory } from "./MemoryImage";
-import { gardenMoments, type GardenChapter } from "./content";
+import { gardenMoments, gardenFinale, type GardenChapter } from "./content";
 import { portraitQuery, reducedMotionQuery, type GardenProfile } from "./runtime";
 import { useStoryModal } from "./useStoryModal";
 import { loadGardenRenderer } from "./useGardenPreparation";
@@ -91,7 +91,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
 
   const next = () => setChapter(chapter === "garden" ? "school-days" : gardenMoments[index + 1]?.id ?? "finale");
   const previous = () => setChapter(chapter === "finale" ? "something-more" : gardenMoments[index - 1]?.id ?? "garden");
-  const title = activeMoment?.title ?? (chapter === "finale" ? "Our forever is just beginning." : "The Garden of Becoming");
+  const title = activeMoment?.title ?? (chapter === "finale" ? gardenFinale.title : "The Garden of Becoming");
   return createPortal(
     <section ref={root} role="dialog" aria-modal="true" aria-labelledby="garden-title" className="story-experience" data-layout={isMobile ? "portrait" : "landscape"} data-chapter={chapter} data-journey={mode !== "fallback" && arrived !== chapter ? "travelling" : "arrived"} data-renderer={mode} data-fallback-reason={mode === "fallback" ? reason : undefined}>
       <header className="story-header">
@@ -107,30 +107,30 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
           <div className="story-stage-shade" aria-hidden="true" />
           <div className="story-foreground" aria-hidden="true" />
           {mode === "loading" && <div className="story-loading" role="status"><span>Opening the garden…</span><button type="button" onClick={() => fail("visitor-choice")}>Read the story now</button></div>}
-          <p className="story-stage-caption" aria-hidden="true">{activeMoment?.eyebrow ?? (chapter === "finale" ? "Together, into forever" : "Three memories. One beautiful beginning.")}</p>
+          <p className="story-stage-caption" aria-hidden="true">{activeMoment?.eyebrow ?? (chapter === "finale" ? "Together, into forever" : "Three memories. One beautiful forever.")}</p>
         </div>
         <div ref={content} className="story-content" role="region" tabIndex={0} aria-label="Chapter content">
           <div className="story-content-inner" key={chapter}>
             <p className="story-eyebrow">{activeMoment ? `Chapter ${activeMoment.number} · ${activeMoment.eyebrow}` : chapter === "finale" ? "Forever" : "Step into our story"}</p>
             <h2 id="garden-title" ref={heading} tabIndex={-1}>{title}</h2>
             <div className="story-memory-detail">
-            {activeMoment ? <MemoryImage key={activeMoment.id} moment={activeMoment} /> : <div className="story-rule" aria-hidden="true" />}
-            {activeMoment && <p className="story-memory-caption">{chapter === "school-days" ? "From the pages of our beginning" : chapter === "friendship" ? "A memory held between two lights" : "Held close, among the jasmine"}</p>}
-            <p className="story-copy">{activeMoment?.story ?? (chapter === "finale" ? "With grateful hearts, we begin the most beautiful chapter of our lives together." : "A flower-lit garden, three memories, and the journey that brought us here. Stay a little longer, and let us show you.")}</p>
+            {activeMoment ? <><MemoryImage key={activeMoment.id} moment={activeMoment} />{activeMoment.secondaryImage && <MemoryImage key={`${activeMoment.id}-family`} moment={{ ...activeMoment, image: activeMoment.secondaryImage, imageAlt: activeMoment.secondaryImageAlt ?? activeMoment.imageAlt }} />}</> : chapter === "finale" ? <MemoryImage key="garden-finale" moment={{ ...gardenMoments[2], image: gardenFinale.image, imageAlt: gardenFinale.imageAlt }} /> : <div className="story-rule" aria-hidden="true" />}
+            {activeMoment && <p className="story-memory-caption">{chapter === "school-days" ? "Where two families came together" : chapter === "friendship" ? "Blessed by the people we love" : "Our engagement celebration"}</p>}
+            <p className="story-copy">{activeMoment?.story ?? (chapter === "finale" ? "Every beautiful beginning has led us here. Together, we look forward to the next chapter." : "A flower-lit garden, three family memories, and one final moment beneath the arch. Stay a little longer.")}</p>
             {chapter === "garden" && <button type="button" onClick={next} className="story-primary">Begin our story <ArrowRight size={16} /></button>}
-            {chapter === "finale" && <button type="button" onClick={onContinue} className="story-primary">Continue to our memories <ArrowDown size={16} /></button>}
+            {chapter === "finale" && <button type="button" onClick={onContinue} className="story-primary">Continue to invitation <ArrowDown size={16} /></button>}
             {mode === "fallback" && !["reduced-motion", "unsupported", "visitor-choice"].includes(reason) && <p role="status" className="story-status">The garden is resting. Your story continues here.</p>}
             </div>
           </div>
         </div>
       </div>
       <footer className="story-footer">
-        <button type="button" onClick={previous} disabled={chapter === "garden"} className="story-step" aria-label="Previous chapter"><ArrowLeft size={16} /><span>Previous</span></button>
+        <button type="button" onClick={previous} disabled={chapter === "garden"} className="story-step" aria-label="Previous memory"><ArrowLeft size={16} /><span>Previous</span></button>
         <nav aria-label="Story chapters" className="story-chapters">
           {gardenMoments.map((moment) => <button key={moment.id} type="button" aria-current={chapter === moment.id ? "step" : undefined} onClick={() => setChapter(moment.id)} aria-label={moment.title}><span className="chapter-number">{moment.number}</span><span className="chapter-name">{moment.title}</span></button>)}
-          <button type="button" aria-current={chapter === "finale" ? "step" : undefined} onClick={() => setChapter("finale")} aria-label="Forever"><span className="chapter-number">IV</span><span className="chapter-name">Forever</span></button>
+          <button type="button" aria-current={chapter === "finale" ? "step" : undefined} onClick={() => setChapter("finale")} aria-label="Final arch"><span className="chapter-number">IV</span><span className="chapter-name">Final arch</span></button>
         </nav>
-        <button type="button" onClick={next} disabled={chapter === "finale"} className="story-step" aria-label="Next chapter"><span>Next</span><ArrowRight size={16} /></button>
+        <button type="button" onClick={next} disabled={chapter === "finale"} className="story-step" aria-label={chapter === "something-more" ? "Enter our forever" : "Next memory"}><span>{chapter === "something-more" ? "Enter Our Forever" : "Next Memory"}</span><ArrowRight size={16} /></button>
       </footer>
     </section>, document.body,
   );
