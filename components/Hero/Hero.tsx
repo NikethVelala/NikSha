@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { wedding } from "@/data/wedding";
 import styles from "./Hero.module.css";
+import EnvelopeOpening from "./EnvelopeOpening";
 
 const curtainImage = "/images/optimized/curtain-desktop.webp";
 const curtainMobileImage = "/images/optimized/curtain-mobile.webp";
@@ -92,7 +93,7 @@ export default function Hero() {
     // Once a guest starts exploring, the timed handoff must not move them back.
     window.addEventListener("scroll", cancelAutoScroll, { passive: true, once: true });
     window.dispatchEvent(new CustomEvent("niksha-curtain-open"));
-    const revealTimer = window.setTimeout(() => setReveal(true), reducedMotion ? 250 : 1900);
+    const revealTimer = window.setTimeout(() => setReveal(true), reducedMotion ? 50 : 1100);
     const finishTimer = window.setTimeout(() => {
       setVisible(false);
       document.body.style.overflow = "";
@@ -105,7 +106,7 @@ export default function Hero() {
       } else {
         photo?.addEventListener("load", onPhotoLoaded, { once: true });
       }
-    }, reducedMotion ? 800 : 5000);
+    }, reducedMotion ? 150 : 3400);
     return () => {
       window.clearTimeout(revealTimer);
       window.clearTimeout(finishTimer);
@@ -121,7 +122,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-[#2d160b] text-white" onClick={open} role="button" tabIndex={0} aria-label="Open the wedding invitation" onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); } }}>
+    <section className="relative h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-[#2d160b] text-white">
       <div className="absolute inset-0 bg-[#2d160b]" />
       <div className={`${styles.composition} absolute inset-0 overflow-hidden`}>
         <motion.div animate={opening ? { scale: 1.06, opacity: 1 } : { scale: 1, opacity: 0.12 }} transition={{ duration: reducedMotion ? 0.35 : 3.5, ease: [0.76, 0, 0.24, 1] }} className={`${styles.photograph} absolute inset-0`}>
@@ -139,23 +140,8 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {visible && (
-        <div className="pointer-events-auto fixed inset-0 z-[90] h-[100dvh] w-[100vw] overflow-hidden" aria-hidden="true">
-          <CurtainHalf side="left" opening={opening} reducedMotion={reducedMotion} />
-          <CurtainHalf side="right" opening={opening} reducedMotion={reducedMotion} />
-          <Tieback side="left" opening={opening} />
-          <Tieback side="right" opening={opening} />
-          {!opening && (
-            <motion.div className="pointer-events-none absolute inset-x-0 bottom-[9%] z-[115] flex justify-center px-6" initial={reducedMotion ? false : { opacity: 0, y: 10 }} animate={reducedMotion ? { opacity: 1, y: 0 } : { opacity: [0.65, 1, 0.65], y: [10, 0, 10] }} transition={reducedMotion ? { duration: 0 } : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }}>
-              <div className="rounded-full border border-[#f0d1ad]/65 bg-black/25 px-6 py-3 text-[10px] font-medium uppercase tracking-[0.3em] text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-[3px]">Tap to Open</div>
-            </motion.div>
-          )}
-          {opening && (
-            <motion.div className="pointer-events-none absolute inset-0 z-[112] bg-[radial-gradient(circle_at_50%_50%,rgba(255,232,195,0.28),transparent_30%)]" initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ duration: reducedMotion ? 0.4 : 2.6, ease: "easeOut" }} />
-          )}
-        </div>
-      )}
-      <div className="sr-only">{wedding.couple.groom} &amp; {wedding.couple.bride}. Tap anywhere to open the wedding invitation.</div>
+      {visible && <EnvelopeOpening opening={opening} onOpen={open} reducedMotion={reducedMotion} />}
+      <div className="sr-only">{wedding.couple.groom} &amp; {wedding.couple.bride}. Tap the wax seal to open the wedding invitation.</div>
     </section>
   );
 }
