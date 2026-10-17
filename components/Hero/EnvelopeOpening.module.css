@@ -37,3 +37,17 @@
 @keyframes sealHintPulse{0%,100%{opacity:.68}50%{opacity:1}}
 @media(max-width:650px){.seal{width:96px;height:96px}.letterpress{top:11%;gap:7px}.letterpress strong{font-size:clamp(15px,4.5vw,23px)}.letterpress span{font-size:8px;letter-spacing:.16em}.monogram{bottom:13%}.sealHint{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.seal:before,.sealHint{animation:none!important}.overlay[data-opening=true]{visibility:hidden!important}}
+
+
+/* Finishing pass: crisp paper seams, embossed wax and a gentle light handoff. */
+.seam{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.38;background:linear-gradient(135deg,transparent calc(50% - 1px),#fff5df 50%,transparent calc(50% + 1px));clip-path:polygon(0 100%,50% 39%,100% 100%);transition:opacity .25s ease .7s}
+.overlay[data-opening=true] .seam{opacity:0}
+.revealGlow{position:absolute;inset:-20%;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 50%,#fff1c8b0 0%,#e7b56a55 20%,transparent 60%);mix-blend-mode:screen;transition:opacity .7s ease 1.05s}
+.overlay[data-opening=true] .revealGlow{opacity:1;animation:envelopeLight 1.5s ease-out 1.05s both}
+.sealFracture{position:absolute;inset:12%;border-radius:50%;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(115deg,transparent 43%,#57320c 44%,#fce6a3 45%,transparent 46%) center/100% 100% no-repeat;clip-path:polygon(45% 0,53% 18%,42% 34%,57% 53%,46% 75%,54% 100%,40% 100%,37% 76%,48% 52%,33% 35%,45% 18%);transition:opacity .1s}
+.overlay[data-opening=true] .sealFracture{opacity:.85}
+.seal:active:not(:disabled){transform:translate(-50%,-50%) scale(.94)}
+.overlay[data-opening=true] .seal{transform:translate(-50%,-50%) scale(.8) rotate(-10deg);transition:transform .4s cubic-bezier(.2,.7,.3,1),opacity .28s ease .34s}
+.overlay[data-opening=true] .sealInner{filter:brightness(1.15)}
+@keyframes envelopeLight{0%{opacity:0}45%{opacity:.72}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.overlay[data-opening=true] .revealGlow{animation:none;opacity:0}.sealFracture{display:none}}
