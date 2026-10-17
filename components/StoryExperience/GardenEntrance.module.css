@@ -1,7 +1,19 @@
+.section {
+  position: relative;
+  padding: clamp(2rem, 5vw, 3.5rem) 1.25rem clamp(3rem, 7vw, 5rem);
+  border-top: 1px solid #b99a6066;
+  border-bottom: 1px solid #b99a6044;
+  background: linear-gradient(180deg, #e8ede2, #f0f0e6 38%, #f7f1e6);
+}
+.sectionDivider { display: flex; align-items: center; justify-content: center; gap: 1.2rem; color: #9b7d4c; }
+.sectionDivider::before, .sectionDivider::after { content: ''; width: clamp(3rem, 12vw, 8rem); height: 1px; background: #ac8c505e; }
+.sectionLabel { margin: 1.5rem auto .85rem; text-align: center; font-size: 9px; line-height: 1.8; font-weight: 500; letter-spacing: .23em; color: #546044; text-transform: uppercase; }
+@media (min-width: 640px) { .section { padding-inline: 2rem; } }
+@media (min-width: 1024px) { .section { padding-inline: 3rem; } }
 .entrance {
   position: relative;
   max-width: 64rem;
-  margin: clamp(3rem, 7vw, 6rem) auto 0;
+  margin: 0 auto;
   color: #344331;
   isolation: isolate;
 }
@@ -14,9 +26,8 @@
   font-size: clamp(1.1rem, 2vw, 1.4rem);
   font-style: italic;
   line-height: 1.65;
-  color: #76644e;
+  color: #536049;
 }
-.bridge::before { content: ''; display: block; width: 1px; height: 2.5rem; margin: 0 auto 1.4rem; background: linear-gradient(transparent, #b4935e); }
 .invitation {
   position: relative;
   display: grid;

@@ -188,8 +188,8 @@ export default function Story() {
         ))}
       </div>
       <div className={styles.closing}><MugguOrnament variant="divider" className="mx-auto h-8 w-36 text-champagne"/><p>Our next chapter is written together.</p></div>
-      <StoryExperienceEntry />
     </Section>
+    <StoryExperienceEntry />
     {preview && <StoryPhotoPreview photo={preview} onClose={closePreview} />}
     </>
   );
