@@ -55,7 +55,7 @@ export default function Hero() {
       });
     };
     const onPhotoLoaded = () => {
-      if (!hasScrolled) autoScrollTimer = window.setTimeout(handoff, 2000);
+      if (!hasScrolled) autoScrollTimer = window.setTimeout(handoff, 2600);
     };
     // Once a guest starts exploring, the timed handoff must not move them back.
     window.addEventListener("scroll", cancelAutoScroll, { passive: true, once: true });
@@ -69,11 +69,11 @@ export default function Hero() {
       // Reduced motion used to skip the portrait in the same frame as curtain removal.
       // A slow photo also gets time to appear before any automatic handoff.
       if (photo?.complete && photo.naturalWidth > 0) {
-        autoScrollTimer = window.setTimeout(handoff, reducedMotion ? 2000 : 0);
+        autoScrollTimer = window.setTimeout(handoff, reducedMotion ? 2500 : 2600);
       } else {
         photo?.addEventListener("load", onPhotoLoaded, { once: true });
       }
-    }, reducedMotion ? 150 : 3400);
+    }, reducedMotion ? 150 : 3600);
     return () => {
       window.clearTimeout(revealTimer);
       window.clearTimeout(finishTimer);
