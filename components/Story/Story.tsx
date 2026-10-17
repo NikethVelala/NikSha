@@ -149,7 +149,7 @@ export default function Story() {
     <>
     <Section id="story" className={`coastal-story bg-ivory ${styles.story}`}>
       <header className={styles.intro}>
-        <h2 className={styles.eyebrow}>Our story</h2>
+        <h2 className={styles.introTitle}>Our Story</h2>
       </header>
       <div className={styles.chapters}>
         {chapters.map((chapter, index) => (

@@ -1,5 +1,6 @@
 .story { --story-gold: #99713e; padding-top: clamp(1.75rem, 4vw, 3rem); padding-bottom: clamp(2.5rem, 6vw, 4.5rem); }
 .intro { max-width: 42rem; margin: 0 auto; text-align: center; }
+.introTitle { margin: 0; color: #8d6c42; font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 400; line-height: 1.1; }
 .eyebrow { color: #85613a; font-size: 9px; line-height: 1.8; letter-spacing: .25em; text-transform: uppercase; }
 .chapters { margin-top: 1.25rem; }
 .chapter:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
