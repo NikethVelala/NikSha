@@ -41,7 +41,7 @@ export default function StoryExperienceEntry() {
           <div aria-hidden="true" className="mx-auto flex items-center justify-center gap-3 text-champagne/80"><span className="h-px w-10 bg-champagne/45" /><MugguOrnament className="h-3.5 w-[18px]" /><span className="h-px w-10 bg-champagne/45" /></div>
           <p className="mt-5 text-[9px] uppercase tracking-[0.4em] text-champagne/80">An optional cinematic interlude</p>
           <h3 className="mt-3 font-heading text-4xl leading-none text-[#fff8e9] sm:text-5xl">Step Into <span className="italic text-champagne">Our Story</span></h3>
-          <p className="mx-auto mt-4 max-w-lg font-heading text-lg italic leading-relaxed text-[#fff8e9]/70 sm:text-xl">A flower-lit garden, three memories, and a little more of the journey that brought us here.</p>
+          <p className="mx-auto mt-4 max-w-lg font-heading text-lg italic leading-relaxed text-[#fff8e9]/70 sm:text-xl">A flower-lit garden, three family memories, and a final portrait beneath the arch.</p>
           <button ref={triggerRef} type="button" onClick={() => setProfile(getGardenProfile())} className="group mt-7 inline-flex min-h-12 items-center gap-3 rounded-full border border-champagne/70 bg-[#f8f4ee] px-6 py-3 text-[10px] font-medium uppercase tracking-[0.24em] text-[#244232] transition-all hover:-translate-y-0.5 hover:bg-[#fffaf1] hover:shadow-[0_12px_30px_rgba(5,18,11,0.28)] sm:min-h-14 sm:px-8">
             Enter the garden <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.3} />
           </button>
