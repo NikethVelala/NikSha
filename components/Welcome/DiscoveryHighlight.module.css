@@ -1,0 +1,46 @@
+.discovery { position:relative; isolation:isolate; }
+.discovery:focus-visible { outline:2px solid #9d7134; outline-offset:6px; }
+.sparkle {
+  position:absolute;
+  inset:-2px;
+  border-radius:inherit;
+  border:1px solid #f5d98d80;
+  box-shadow:0 0 12px #dcae4e24;
+  pointer-events:none;
+}
+/* Follow the pill's actual outline at any width, rather than circling its text. */
+@supports (offset-path: inset(0 round 999px)) {
+  .sparkle::before, .sparkle::after {
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    offset-path:inset(0 round 999px);
+    offset-distance:0%;
+    offset-rotate:0deg;
+    animation:goldOrbit 6s linear infinite paused;
+    pointer-events:none;
+  }
+  .sparkle::before {
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:radial-gradient(circle,#ffe4a8aa, #e4b55244 30%, transparent 70%);
+  }
+  .sparkle::after {
+    width:13px;
+    height:13px;
+    background:#fff1bb;
+    clip-path:polygon(50% 0,60% 38%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 38%);
+    filter:drop-shadow(0 0 3px #eac274);
+  }
+  .discovery[data-sparkle-active=true] .sparkle::before,
+  .discovery[data-sparkle-active=true] .sparkle::after { animation-play-state:running; }
+}
+.discovery[aria-expanded=true] .sparkle { display:none; }
+@keyframes goldOrbit { to { offset-distance:100%; } }
+@media (prefers-reduced-motion:reduce) {
+  .sparkle::before, .sparkle::after { content:none; animation:none; }
+  .discovery { transition:none; }
+  .discovery:hover { transform:none; }
+}
