@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { wedding } from "@/data/wedding";
 import styles from "./Hero.module.css";
 
@@ -43,6 +44,7 @@ export default function Hero() {
   const [visible, setVisible] = useState(true);
   const [reveal, setReveal] = useState(false);
   const reducedMotion = useReducedMotion();
+  const portraitRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -64,7 +66,25 @@ export default function Hero() {
     if (!opening) return;
     let hasScrolled = window.scrollY > 0;
     let scrollFrame = 0;
-    const cancelAutoScroll = () => { hasScrolled = true; };
+    let autoScrollTimer = 0;
+    const photo = portraitRef.current;
+    const cancelAutoScroll = () => {
+      hasScrolled = true;
+      window.clearTimeout(autoScrollTimer);
+      window.cancelAnimationFrame(scrollFrame);
+      photo?.removeEventListener("load", onPhotoLoaded);
+    };
+    const handoff = () => {
+      scrollFrame = requestAnimationFrame(() => {
+        window.removeEventListener("scroll", cancelAutoScroll);
+        if (!hasScrolled && window.scrollY === 0) {
+          document.getElementById("welcome")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+        }
+      });
+    };
+    const onPhotoLoaded = () => {
+      if (!hasScrolled) autoScrollTimer = window.setTimeout(handoff, 2000);
+    };
     // Once a guest starts exploring, the timed handoff must not move them back.
     window.addEventListener("scroll", cancelAutoScroll, { passive: true, once: true });
     window.dispatchEvent(new CustomEvent("niksha-curtain-open"));
@@ -73,16 +93,20 @@ export default function Hero() {
       setVisible(false);
       document.body.style.overflow = "";
       document.body.style.touchAction = "";
-      scrollFrame = requestAnimationFrame(() => {
-        window.removeEventListener("scroll", cancelAutoScroll);
-        if (!hasScrolled && window.scrollY === 0) {
-          document.getElementById("welcome")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
-        }
-      });
+      if (hasScrolled) return;
+      // Reduced motion used to skip the portrait in the same frame as curtain removal.
+      // A slow photo also gets time to appear before any automatic handoff.
+      if (photo?.complete && photo.naturalWidth > 0) {
+        autoScrollTimer = window.setTimeout(handoff, reducedMotion ? 2000 : 0);
+      } else {
+        photo?.addEventListener("load", onPhotoLoaded, { once: true });
+      }
     }, reducedMotion ? 800 : 5000);
     return () => {
       window.clearTimeout(revealTimer);
       window.clearTimeout(finishTimer);
+      window.clearTimeout(autoScrollTimer);
+      photo?.removeEventListener("load", onPhotoLoaded);
       window.cancelAnimationFrame(scrollFrame);
       window.removeEventListener("scroll", cancelAutoScroll);
     };
@@ -96,7 +120,9 @@ export default function Hero() {
     <section className="relative h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-[#2d160b] text-white" onClick={open} role="button" tabIndex={0} aria-label="Open the wedding invitation" onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); } }}>
       <div className="absolute inset-0 bg-[#2d160b]" />
       <div className={`${styles.composition} absolute inset-0 overflow-hidden`}>
-        <motion.div animate={opening ? { scale: 1.06, opacity: 1 } : { scale: 1, opacity: 0.12 }} transition={{ duration: reducedMotion ? 0.35 : 3.5, ease: [0.76, 0, 0.24, 1] }} className={`${styles.photograph} absolute inset-0 bg-[url('/images/optimized/hero.webp')] bg-cover bg-center`} />
+        <motion.div animate={opening ? { scale: 1.06, opacity: 1 } : { scale: 1, opacity: 0.12 }} transition={{ duration: reducedMotion ? 0.35 : 3.5, ease: [0.76, 0, 0.24, 1] }} className={`${styles.photograph} absolute inset-0`}>
+          <Image ref={portraitRef} id="welcome-portrait" src="/images/optimized/hero.webp" alt="Niketh and Sirisha exchanging rings at their engagement" fill sizes="100vw" unoptimized preload className="object-cover max-md:object-contain" />
+        </motion.div>
         <div className={`${styles.veil} absolute inset-0 bg-[radial-gradient(circle_at_50%_48%,rgba(246,213,164,0.2),transparent_32%),linear-gradient(180deg,rgba(20,8,3,0.2),rgba(20,8,3,0.5))]`} />
 
         <motion.div className={`${styles.copy} absolute inset-0 z-10 flex items-center justify-center px-6 text-center`} initial={false} animate={reveal ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }} transition={{ duration: reducedMotion ? 0.25 : 1.1, ease: [0.22, 1, 0.36, 1] }}>
