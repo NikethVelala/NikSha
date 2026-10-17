@@ -1,0 +1,95 @@
+{
+  "note": "Wonderla and mirror filenames corrected after visual inspection and user confirmation. Supplied photographs otherwise unchanged. Chapter 7 reuses /images/optimized/story-1080.webp.",
+  "images": [
+    {
+      "chapter": "01-school-days",
+      "source": "IMG_2253.PNG",
+      "output": "public/images/story/01-school-days.webp",
+      "optimized_dimensions": [
+        1600,
+        1154
+      ],
+      "bytes": 238384
+    },
+    {
+      "chapter": "02-years-between",
+      "source": "06e4f6a1-4239-4bb3-8832-89835418dea7.jpg",
+      "output": "public/images/story/02-years-between.webp",
+      "optimized_dimensions": [
+        1280,
+        853
+      ],
+      "bytes": 135276
+    },
+    {
+      "chapter": "03-ten-became-four",
+      "source": "5d320eaa-df4c-4713-8692-5bf0dc2659c5.jpg",
+      "output": "public/images/story/03-ten-became-four.webp",
+      "optimized_dimensions": [
+        720,
+        1560
+      ],
+      "bytes": 52548
+    },
+    {
+      "chapter": "04a-charminar",
+      "source": "IMG_3381_SnapseedCopy.heic",
+      "output": "public/images/story/04a-charminar.webp",
+      "optimized_dimensions": [
+        1600,
+        2133
+      ],
+      "bytes": 448960
+    },
+    {
+      "chapter": "04b-wonderla",
+      "source": "IMG_3245.jpg",
+      "output": "public/images/story/04b-wonderla.webp",
+      "optimized_dimensions": [
+        1467,
+        2200
+      ],
+      "bytes": 476312
+    },
+    {
+      "chapter": "04c-kayaking",
+      "source": "45b4189f-6e2b-4e9f-ac3f-e827d11c9af3.jpg",
+      "output": "public/images/story/04c-kayaking.webp",
+      "optimized_dimensions": [
+        1052,
+        780
+      ],
+      "bytes": 61486
+    },
+    {
+      "chapter": "06a-mirror",
+      "source": "IMG_1044.JPG",
+      "output": "public/images/story/06a-mirror.webp",
+      "optimized_dimensions": [
+        1237,
+        2200
+      ],
+      "bytes": 98676
+    },
+    {
+      "chapter": "06b-forest-road",
+      "source": "IMG_5705.heic",
+      "output": "public/images/story/06b-forest-road.webp",
+      "optimized_dimensions": [
+        1600,
+        2133
+      ],
+      "bytes": 353168
+    },
+    {
+      "chapter": "06c-stadium",
+      "source": "78c708d1-33be-42c8-8e8b-42335a8f99e9.JPG",
+      "output": "public/images/story/06c-stadium.webp",
+      "optimized_dimensions": [
+        1600,
+        2133
+      ],
+      "bytes": 768362
+    }
+  ]
+}
