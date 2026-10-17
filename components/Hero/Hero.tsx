@@ -62,17 +62,29 @@ export default function Hero() {
 
   useEffect(() => {
     if (!opening) return;
+    let hasScrolled = window.scrollY > 0;
+    let scrollFrame = 0;
+    const cancelAutoScroll = () => { hasScrolled = true; };
+    // Once a guest starts exploring, the timed handoff must not move them back.
+    window.addEventListener("scroll", cancelAutoScroll, { passive: true, once: true });
     window.dispatchEvent(new CustomEvent("niksha-curtain-open"));
     const revealTimer = window.setTimeout(() => setReveal(true), reducedMotion ? 250 : 1900);
     const finishTimer = window.setTimeout(() => {
       setVisible(false);
       document.body.style.overflow = "";
       document.body.style.touchAction = "";
-      requestAnimationFrame(() => document.getElementById("welcome")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }));
+      scrollFrame = requestAnimationFrame(() => {
+        window.removeEventListener("scroll", cancelAutoScroll);
+        if (!hasScrolled && window.scrollY === 0) {
+          document.getElementById("welcome")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+        }
+      });
     }, reducedMotion ? 800 : 5000);
     return () => {
       window.clearTimeout(revealTimer);
       window.clearTimeout(finishTimer);
+      window.cancelAnimationFrame(scrollFrame);
+      window.removeEventListener("scroll", cancelAutoScroll);
     };
   }, [opening, reducedMotion]);
 
