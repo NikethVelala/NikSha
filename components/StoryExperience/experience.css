@@ -142,3 +142,14 @@
   .story-experience[data-layout=portrait] .story-photo::after{inset:4px}
   .story-experience[data-layout=portrait] .story-memory-caption{margin:0 0 10px;font-size:14px}
 }
+
+/* Clear mobile navigation: the next action is a labelled, high-contrast button. */
+.story-experience[data-layout=portrait] .story-footer{gap:8px;padding:8px 12px max(8px,env(safe-area-inset-bottom))}
+.story-experience[data-layout=portrait] .story-step:last-child{min-height:48px;min-width:144px;border-radius:999px;background:#d6b37e;color:#14251e;padding:9px 13px;font-weight:700;letter-spacing:.03em}
+.story-experience[data-layout=portrait] .story-step:last-child span{display:inline;font-size:11px}
+.story-experience[data-layout=portrait] .story-step:last-child:disabled{background:transparent;color:#f8efdf;opacity:.3}
+.story-experience[data-layout=portrait] .story-chapters{gap:0}
+.story-experience[data-layout=portrait] .story-chapters button{min-width:26px;padding:5px 3px}
+.story-experience[data-layout=portrait] .story-step:first-child{min-width:40px;padding:7px}
+.story-experience[data-layout=portrait] .story-memory-detail>.story-photo+.story-photo{margin-top:18px}
+@media(max-width:365px){.story-experience[data-layout=portrait] .story-step:last-child{min-width:124px;padding-inline:8px}.story-experience[data-layout=portrait] .story-step:last-child span{font-size:10px}}
