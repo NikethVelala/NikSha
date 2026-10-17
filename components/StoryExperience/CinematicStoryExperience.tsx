@@ -4,7 +4,8 @@ import { Component, useCallback, useEffect, useLayoutEffect, useRef, useState, u
 import { createPortal } from "react-dom";
 import { ArrowDown, ArrowLeft, ArrowRight, X } from "lucide-react";
 import ExperienceFallback from "./ExperienceFallback";
-import MemoryImage, { preloadMemory } from "./MemoryImage";
+import GardenPhotoViewer from "./GardenPhotoViewer";
+import MemoryImage, { preloadMemory, type MemoryPhoto } from "./MemoryImage";
 import { gardenMoments, gardenFinale, type GardenChapter } from "./content";
 import { portraitQuery, reducedMotionQuery, type GardenProfile } from "./runtime";
 import { useStoryModal } from "./useStoryModal";
@@ -29,6 +30,13 @@ class RendererBoundary extends Component<{ children: ReactNode; onFailure: (reas
 
 type Props = { profile: GardenProfile; onExit: () => void; onContinue: () => void };
 export default function CinematicStoryExperience({ profile, onExit, onContinue }: Props) {
+  const [photo, setPhoto] = useState<MemoryPhoto | null>(null);
+  const photoOrigin = useRef<HTMLButtonElement | null>(null);
+  const openPhoto = (selected: MemoryPhoto, origin: HTMLButtonElement) => { photoOrigin.current = origin; setPhoto(selected); };
+  const closePhoto = useCallback(() => {
+    setPhoto(null);
+    requestAnimationFrame(() => { if (photoOrigin.current?.isConnected) photoOrigin.current.focus({ preventScroll: true }); });
+  }, []);
   const [chapter, setChapter] = useState<GardenChapter>("garden");
   const [arrived, setArrived] = useState<GardenChapter>("garden");
   const arrive = useCallback((destination: GardenChapter) => setArrived(destination), []);
@@ -114,13 +122,13 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
   };
   const title = activeMoment?.title ?? (chapter === "finale" ? gardenFinale.title : "The Garden of Becoming");
   return createPortal(
-    <section ref={root} role="dialog" aria-modal="true" aria-labelledby="garden-title" className="story-experience" data-layout={isMobile ? "portrait" : "landscape"} data-chapter={chapter} data-journey={mode !== "fallback" && arrived !== chapter ? "travelling" : "arrived"} data-renderer={mode} data-fallback-reason={mode === "fallback" ? reason : undefined}>
-      <header className="story-header">
+    <section ref={root} role="dialog" aria-modal="true" aria-labelledby="garden-title" className="story-experience" data-photo-open={Boolean(photo)} data-layout={isMobile ? "portrait" : "landscape"} data-chapter={chapter} data-journey={mode !== "fallback" && arrived !== chapter ? "travelling" : "arrived"} data-renderer={mode} data-fallback-reason={mode === "fallback" ? reason : undefined}>
+      <header inert={Boolean(photo)} className="story-header">
         <div><p className="story-eyebrow">NikSha presents</p><p className="story-wordmark">A garden of becoming</p></div>
         <button data-story-exit type="button" onClick={onExit} className="story-exit" aria-label="Exit the garden and return to the invitation"><X size={16} strokeWidth={1.25} /><span>Exit</span></button>
       </header>
-      <div className="story-body" onTouchStart={touchStart} onTouchEnd={touchEnd} onTouchCancel={() => { swipe.current = null; }}>
-        <div className="story-stage" role={chapter === "finale" ? "img" : "group"} aria-label={chapter === "finale" ? `${gardenFinale.imageAlt}, beneath the floral arch` : `${title} garden composition`}>
+      <div inert={Boolean(photo)} className="story-body" onTouchStart={touchStart} onTouchEnd={touchEnd} onTouchCancel={() => { swipe.current = null; }}>
+        <div className="story-stage" role="group" aria-label={chapter === "finale" ? `${gardenFinale.imageAlt}, beneath the floral arch` : `${title} garden composition`}>
           <ExperienceFallback chapter={chapter} />
           {mode !== "fallback" && <div className="story-canvas" aria-hidden="true"><RendererBoundary onFailure={fail}>
             <StoryGardenCanvas chapter={chapter} activeMoment={activeMoment} profile={profile} isMobile={isMobile} onReady={ready} onFailure={fail} onSelect={(moment) => setChapter(moment.id)} onArrive={arrive} />
@@ -129,6 +137,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
           <div className="story-foreground" aria-hidden="true" />
           {chapter === "finale" && mode === "fallback" && <div className="story-finale-still-portrait"><MemoryImage moment={gardenFinale} large /></div>}
           {mode === "loading" && <div className="story-loading" role="status"><span>Opening the garden…</span><button type="button" onClick={() => fail("visitor-choice")}>View the celebrations</button></div>}
+          {chapter === "finale" && <button type="button" className="story-stage-photo-open" onClick={(event) => openPhoto(gardenFinale, event.currentTarget)}>View full photograph ↗</button>}
           <p className="story-stage-caption" aria-hidden="true">{activeMoment?.eyebrow ?? (chapter === "finale" ? "Together, into forever" : "Three memories. One beautiful forever.")}</p>
         </div>
         <div ref={content} className="story-content" role="region" tabIndex={0} aria-label="Chapter content">
@@ -137,9 +146,9 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
             <h2 id="garden-title" ref={heading} tabIndex={-1}>{title}</h2>
             <div className="story-memory-detail">
             {activeMoment ? <div className={`story-photo-sequence ${activeMoment.secondaryImage ? "has-pair" : ""}`}>
-              <MemoryImage key={activeMoment.id} moment={activeMoment} />
-              {activeMoment.secondaryImage && <MemoryImage key={`${activeMoment.id}-family`} moment={{ ...activeMoment, image: activeMoment.secondaryImage, imageAlt: activeMoment.secondaryImageAlt ?? activeMoment.imageAlt, imageWidth: activeMoment.secondaryImageWidth!, imageHeight: activeMoment.secondaryImageHeight! }} />}
-            </div> : chapter === "finale" ? <div className="story-final-portrait"><p className="story-final-names">Niketh &amp; Sirisha</p><p className="story-final-line">Every beautiful beginning has led us here</p><p className="story-final-date">18 November 2026</p></div> : <div className="story-rule" aria-hidden="true" />}
+              <MemoryImage key={activeMoment.id} moment={activeMoment} onZoom={openPhoto} />
+              {activeMoment.secondaryImage && <MemoryImage key={`${activeMoment.id}-family`} moment={{ ...activeMoment, image: activeMoment.secondaryImage, imageAlt: activeMoment.secondaryImageAlt ?? activeMoment.imageAlt, imageWidth: activeMoment.secondaryImageWidth!, imageHeight: activeMoment.secondaryImageHeight! }} onZoom={openPhoto} />}
+            </div> : chapter === "finale" ? <div className="story-final-portrait"><p className="story-final-names">Niketh &amp; Sirisha</p><MemoryImage moment={gardenFinale} large onZoom={openPhoto} /><p className="story-final-line">Every beautiful beginning has led us here</p><p className="story-final-date">18 November 2026</p></div> : <div className="story-rule" aria-hidden="true" />}
             {activeMoment && <p className="story-memory-caption">{activeMoment.caption}</p>}
             {chapter !== "finale" && <p className="story-copy">{activeMoment?.story ?? "With our families beside us, the journey to our wedding began. Walk through Pelli Choopulu, Pasupu Danchadam, and our engagement—the celebrations that followed our yes."}</p>}
             {chapter === "garden" && <button type="button" onClick={next} className="story-primary">Begin the journey <ArrowRight size={16} /></button>}
@@ -149,7 +158,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
           </div>
         </div>
       </div>
-      <footer className="story-footer">
+      <footer inert={Boolean(photo)} className="story-footer">
         <button type="button" onClick={previous} disabled={chapter === "garden"} className="story-step" aria-label="Previous memory"><ArrowLeft size={16} /><span>Previous</span></button>
         <nav aria-label="Garden memories and final arch" className="story-chapters">
           <p className="story-progress">{activeMoment ? `Memory ${activeMoment.number} of III` : chapter === "finale" ? "The final arch" : "Three memories · One forever"}</p>
@@ -158,6 +167,7 @@ export default function CinematicStoryExperience({ profile, onExit, onContinue }
         </nav>
         <button type="button" onClick={chapter === "finale" ? onContinue : next} className="story-step story-next" aria-label={chapter === "finale" ? "Return to invitation" : chapter === "something-more" ? "Enter Our Forever" : "Next Memory"}><span>{chapter === "finale" ? "Return to Invitation" : chapter === "something-more" ? "Enter Our Forever" : "Next Memory"}</span>{chapter === "finale" ? <ArrowDown size={16} /> : <ArrowRight size={16} />}</button>
       </footer>
+      {photo && <GardenPhotoViewer photo={photo} onClose={closePhoto} />}
     </section>, document.body,
   );
 }
