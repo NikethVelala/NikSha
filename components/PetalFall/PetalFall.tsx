@@ -1,5 +1,7 @@
 "use client";
 
+import usePageActive from "@/components/common/usePageActive";
+import usePageReducedMotion from "@/components/common/usePageReducedMotion";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -26,12 +28,16 @@ const petals = [
 
 export default function PetalFall() {
   const [opening, setOpening] = useState(false);
+  const active = usePageActive();
+  const reducedMotion = usePageReducedMotion();
 
   useEffect(() => {
     const handleOpen = () => setOpening(true);
     window.addEventListener("niksha-curtain-open", handleOpen);
     return () => window.removeEventListener("niksha-curtain-open", handleOpen);
   }, []);
+
+  if (!active || reducedMotion) return null;
 
   return (
     <div

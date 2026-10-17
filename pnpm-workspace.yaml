@@ -1,3 +1,7 @@
 allowBuilds:
   sharp: true
   unrs-resolver: true
+
+# The ESLint dependency chain pins an older 5.0.x; keep the compatible security patch.
+overrides:
+  brace-expansion@5.0.9: 5.0.12

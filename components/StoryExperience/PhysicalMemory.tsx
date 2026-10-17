@@ -22,21 +22,19 @@ export function PhysicalMemoryLibrary({ children }: { children: ReactNode }) {
       let texture: THREE.Texture | undefined;
       let finished = false;
       const releaseImage = () => { image.onload = null; image.onerror = null; };
-      const timer = window.setTimeout(() => { finished = true; releaseImage(); image.src = ""; }, 8000);
       image.onload = () => {
         if (finished) return;
         finished = true;
-        window.clearTimeout(timer);
         texture = new THREE.Texture(image);
         texture.colorSpace = THREE.SRGBColorSpace;
         texture.needsUpdate = true;
         setPrints((current) => ({ ...current, [id]: texture }));
         releaseImage();
       };
-      image.onerror = () => { finished = true; window.clearTimeout(timer); releaseImage(); };
+      image.onerror = () => { finished = true; releaseImage(); };
       image.decoding = "async";
       image.src = source;
-      return () => { finished = true; window.clearTimeout(timer); releaseImage(); image.src = ""; texture?.dispose(); };
+      return () => { finished = true; releaseImage(); image.src = ""; texture?.dispose(); };
     });
     return () => disposers.forEach((dispose) => dispose());
   }, []);

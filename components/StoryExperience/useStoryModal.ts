@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, type RefObject } from "react";
+import { flushSync } from "react-dom";
 
 const focusable = 'button:not([disabled]), a[href], [tabindex="0"]';
 
@@ -11,6 +12,10 @@ export function useStoryModal(root: RefObject<HTMLElement | null>, onExit: () =>
     const body = document.body;
     const html = document.documentElement;
     const scrollY = window.scrollY;
+    const previousHistoryState = window.history.state;
+    let leavingThroughHistory = false;
+    // Fixed-body locking otherwise saves scrollY=0 for the current history entry.
+    window.history.replaceState({ ...previousHistoryState, nikshaModalScrollY: scrollY }, "");
     const previous = { overflow: body.style.overflow, position: body.style.position, top: body.style.top, width: body.style.width, htmlOverflow: html.style.overflow, scrollBehavior: html.style.scrollBehavior };
     const siblings = Array.from(body.children).filter((element): element is HTMLElement => element instanceof HTMLElement && element !== dialog);
     const inert = siblings.map((element) => element.inert);
@@ -35,9 +40,12 @@ export function useStoryModal(root: RefObject<HTMLElement | null>, onExit: () =>
     const containFocus = (event: FocusEvent) => {
       if (event.target instanceof Node && !dialog.contains(event.target)) dialog.querySelector<HTMLElement>(focusable)?.focus({ preventScroll: true });
     };
+    const historyNavigation = () => { leavingThroughHistory = true; flushSync(onExit); };
+    window.addEventListener("popstate", historyNavigation);
     document.addEventListener("keydown", keydown);
     document.addEventListener("focusin", containFocus);
     return () => {
+      window.removeEventListener("popstate", historyNavigation);
       document.removeEventListener("keydown", keydown);
       document.removeEventListener("focusin", containFocus);
       siblings.forEach((element, index) => { element.inert = inert[index]; });
@@ -48,6 +56,7 @@ export function useStoryModal(root: RefObject<HTMLElement | null>, onExit: () =>
       html.style.overflow = previous.htmlOverflow;
       window.scrollTo({ top: scrollY, behavior: "instant" });
       html.style.scrollBehavior = previous.scrollBehavior;
+      if (!leavingThroughHistory) window.history.replaceState(previousHistoryState, "");
     };
   }, [root, onExit]);
 }

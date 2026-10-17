@@ -24,11 +24,12 @@ export default function Navigation() {
     let frame = 0;
     const restoreHistoryPosition = (event: PopStateEvent) => {
       cancelAnimationFrame(frame);
-      const savedY = event.state?.nikshaIndexScrollY;
+      const savedY = event.state?.nikshaModalScrollY ?? event.state?.nikshaIndexScrollY;
       if (typeof savedY !== "number") return;
       frame = requestAnimationFrame(() => {
         const state = { ...window.history.state };
         delete state.nikshaIndexScrollY;
+        delete state.nikshaModalScrollY;
         window.history.replaceState(state, "");
         window.scrollTo({ top: savedY, behavior: "instant" });
       });
