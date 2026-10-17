@@ -1,0 +1,64 @@
+.entrance {
+  position: relative;
+  max-width: 64rem;
+  margin: clamp(3rem, 7vw, 6rem) auto 0;
+  color: #344331;
+  isolation: isolate;
+}
+.bridge {
+  max-width: 31rem;
+  margin: 0 auto 2.4rem;
+  padding: 0 1rem;
+  text-align: center;
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-style: italic;
+  line-height: 1.65;
+  color: #76644e;
+}
+.bridge::before { content: ''; display: block; width: 1px; height: 2.5rem; margin: 0 auto 1.4rem; background: linear-gradient(transparent, #b4935e); }
+.invitation {
+  position: relative;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  padding: 1.25rem 1.2rem 2rem;
+  border: 1px solid #bfa16a66;
+  background: radial-gradient(ellipse at 45% 25%, #fffdf7 0%, #f7f1e5 65%, #eae1ce 100%);
+  box-shadow: 0 24px 70px #51432912, inset 0 0 0 5px #fcf8f0, inset 0 0 0 6px #c5a77638;
+}
+.invitation::before, .invitation::after { content: '✧'; position: absolute; z-index: 1; top: 14px; color: #ac8a4d; font-size: 1rem; }
+.invitation::before { left: 14px; } .invitation::after { right: 14px; }
+.artwork { position: relative; width: min(100%, 420px); aspect-ratio: 420 / 455; margin: 0 auto; }
+.doorway { position: absolute; inset: 13.5% 19% 10%; overflow: hidden; border-radius: 50% 50% 0 0 / 39% 39% 0 0; background: #203c31; }
+.gardenImage { object-fit: cover; object-position: center; }
+.mist { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 42%, #d7c9942e, transparent 60%), linear-gradient(transparent 55%, #17291c66); }
+.path { position: absolute; inset: 0; width: 100%; height: 100%; }
+.arch { position: absolute; inset: 0; width: 100%; height: 97%; filter: drop-shadow(0 9px 9px #28331b20); }
+.farLight { position: absolute; left: 47%; top: 51%; width: 6px; height: 8px; border-radius: 50%; background: #ffe4a2; box-shadow: 0 0 18px 7px #edc07855; }
+.artworkCaption { position: absolute; bottom: 0; left: 0; right: 0; text-align: center; color: #8a744d; font-size: 8px; text-transform: uppercase; letter-spacing: .28em; }
+.copy { position: relative; z-index: 1; text-align: center; padding: 1.9rem 0 0; }
+.ornament { display: flex; justify-content: center; align-items: center; gap: 13px; color: #ab874d; }
+.ornament::before, .ornament::after { content: ''; height: 1px; width: 35px; background: #b99a6066; }
+.eyebrow { margin: 1.1rem 0 .8rem; font-size: 9px; font-weight: 500; line-height: 1.8; letter-spacing: .27em; text-transform: uppercase; color: #77603b; }
+.title { font-family: var(--font-heading), Georgia, serif; font-size: clamp(2.25rem, 5vw, 3.5rem); line-height: 1.04; font-weight: 400; letter-spacing: -.025em; }
+.title span { display: block; margin-top: .2rem; font-style: italic; color: #92713d; }
+.description { margin: 1.2rem auto 0; max-width: 25rem; font-family: var(--font-heading), Georgia, serif; font-size: 1.2rem; line-height: 1.55; color: #62705a; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 1.1rem; min-height: 54px; margin-top: 1.7rem; padding: 1rem 1.5rem; border: 1px solid #d4b77e; border-radius: 3px; background: #284435; box-shadow: 0 5px 0 -3px #f6efdf, 0 5px 0 -2px #ae8d54, 0 10px 24px #263d2c22; color: #fff5df; font-size: 10px; text-transform: uppercase; letter-spacing: .2em; cursor: pointer; transition: background .25s, transform .25s, box-shadow .25s; }
+.button:hover { background: #395c46; transform: translateY(-2px); box-shadow: 0 5px 0 -3px #f6efdf, 0 5px 0 -2px #ae8d54, 0 14px 28px #263d2c26; }
+.button:focus-visible { outline: 2px solid #80602c; outline-offset: 5px; }
+.note { margin-top: 1.2rem; font-size: 10px; line-height: 1.6; color: #71674f; }
+.petal { position: absolute; top: 12%; width: 4px; height: 7px; border-radius: 80% 0 80% 10%; background: #fff3d4b3; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .artwork .lanternGlow { animation: lanternBreathe 5s ease-in-out infinite alternate; }
+  .entrance:has(.button:focus-visible) .petal, .entrance:hover .petal { animation: petalsFall 10s linear infinite; }
+}
+@keyframes lanternBreathe { from { opacity: .65; } to { opacity: 1; } }
+@keyframes petalsFall { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 15% { opacity: .7; } 85% { opacity: .5; } 100% { opacity: 0; transform: translate(22px, 180px) rotate(160deg); } }
+@media (min-width: 768px) {
+  .invitation { grid-template-columns: 1fr 1fr; gap: 1.2rem; padding: 2.1rem 2.5rem 2.8rem 1.5rem; }
+  .copy { padding: 0; }
+  .eyebrow { font-size: 10px; letter-spacing: .23em; }
+  .description { font-size: 1.3rem; }
+}
+@media (prefers-reduced-motion: reduce) { .button { transition: none; } .button:hover { transform: none; } }
