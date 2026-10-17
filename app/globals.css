@@ -144,3 +144,8 @@ a:focus-visible {
     background: linear-gradient(180deg, rgba(47, 67, 59, 0.12), rgba(47, 67, 59, 0.18) 24%, #2f433b 52%);
   }
 }
+
+/* End the invitation at its entry action until the guest chooses to continue. */
+.invitation-gate-locked { padding-bottom: 24px; }
+html:has(#invitation-continuation[hidden]),
+body:has(#invitation-continuation[hidden]) { overscroll-behavior-y: none; }

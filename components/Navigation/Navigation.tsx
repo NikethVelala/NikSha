@@ -128,18 +128,30 @@ export default function Navigation() {
 
   const selectSection = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    // Finish lock cleanup before the anchor's native scroll and history action.
+    // Finish lock cleanup before scrolling and preserve Next's history state.
     flushSync(closeMenu);
     const section = document.getElementById(href.slice(1));
+    // Before discovery, later sections are outside the scrollable document.
+    // Bring guests to the invitation's entry action instead of bypassing it.
+    if (section?.closest("[hidden]")) {
+      event.preventDefault();
+      const discovery = document.getElementById("discover-our-story");
+      discovery?.focus({ preventScroll: true });
+      discovery?.scrollIntoView({ behavior: "auto", block: "center" });
+      return;
+    }
+    event.preventDefault();
+    if (window.location.hash !== href) window.history.pushState(window.history.state, "", href);
     section?.setAttribute("tabindex", "-1");
     section?.focus({ preventScroll: true });
+    section?.scrollIntoView({ behavior: "auto", block: "start" });
   };
 
   return (
     <>
       <header className={`fixed inset-x-0 top-0 z-[80] pt-[env(safe-area-inset-top)] transition-all duration-500 ${scrolled ? "border-b border-stone-200/70 bg-stone-50/90 shadow-sm backdrop-blur-md" : "bg-transparent"}`}>
         <div className="relative mx-auto flex h-16 max-w-6xl items-center justify-between px-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:h-20 sm:px-8 lg:px-12">
-          <a href="#top" onClick={closeMenu} className={`rounded-full border px-5 py-2 font-heading text-[1.45rem] leading-none tracking-wide transition-all sm:px-6 sm:py-2.5 sm:text-[1.7rem] ${scrolled ? "border-stone-300 bg-white/80 text-stone-900" : "border-white/15 bg-black/10 text-white backdrop-blur-[2px]"}`} aria-label="NikSha home">{wedding.couple.monogram}</a>
+          <a href="#top" onClick={(event) => selectSection(event, "#top")} className={`rounded-full border px-5 py-2 font-heading text-[1.45rem] leading-none tracking-wide transition-all sm:px-6 sm:py-2.5 sm:text-[1.7rem] ${scrolled ? "border-stone-300 bg-white/80 text-stone-900" : "border-white/15 bg-black/10 text-white backdrop-blur-[2px]"}`} aria-label="NikSha home">{wedding.couple.monogram}</a>
           <span className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[8px] uppercase tracking-[0.2em] transition-all duration-500 sm:text-[9px] sm:tracking-[0.25em] ${scrolled ? "translate-y-0 opacity-100 text-stone-500" : "-translate-y-1 opacity-0"}`}>18 · 11 · 2026</span>
           <button ref={triggerRef} type="button" aria-controls="invitation-index-dialog" aria-haspopup="dialog" onClick={() => setOpen(true)} className={`relative z-[90] inline-flex min-h-11 min-w-11 items-center justify-center gap-3 rounded-full border px-4 py-2 text-[9px] uppercase tracking-[0.28em] transition-all sm:min-w-0 sm:px-6 sm:text-[10px] ${scrolled || open ? "border-stone-300 bg-white/80 text-stone-800" : "border-white/15 bg-black/10 text-white backdrop-blur-[2px]"}`} aria-label={open ? "Close invitation index" : "Open invitation index"} aria-expanded={open}><span className="hidden sm:inline">Index</span>{open ? <X size={18} strokeWidth={1.25} /> : <Menu size={18} strokeWidth={1.25} />}</button>
         </div>

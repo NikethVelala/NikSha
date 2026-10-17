@@ -2,7 +2,8 @@
 
 import usePageReducedMotion from "@/components/common/usePageReducedMotion";
 
-import { useEffect, useRef } from "react";
+import { useState, type MouseEvent, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import { motion } from "framer-motion";
 import MugguOrnament from "@/components/common/MugguOrnament";
 import Section from "@/components/common/Section";
@@ -11,80 +12,25 @@ import Invitation3D from "@/components/Welcome/Invitation3D";
 import WeddingLivestream from "@/components/Welcome/WeddingLivestream";
 import { wedding } from "@/data/wedding";
 
-export default function Welcome() {
+export default function Welcome({ children }: { children: ReactNode }) {
   const reducedMotion = usePageReducedMotion();
-  const gateReleased = useRef(false);
+  const [storyUnlocked, setStoryUnlocked] = useState(false);
 
-  useEffect(() => {
-    const sectionForHash = (hash: string) => {
-      const id = hash.slice(1);
-      return ["top", "welcome", "story", "gallery", "forever"].includes(id) ? document.getElementById(id) : null;
-    };
-    const releaseForHash = () => {
-      if (sectionForHash(window.location.hash)) gateReleased.current = true;
-    };
-    const explicitNavigation = (event: MouseEvent) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
-      if (!(anchor instanceof HTMLAnchorElement) || (anchor.target && anchor.target !== "_self")) return;
-      const url = new URL(anchor.href);
-      if (url.origin === location.origin && url.pathname === location.pathname && url.search === location.search && sectionForHash(url.hash)) {
-        // Release before the browser performs its native anchor navigation.
-        gateReleased.current = true;
-      }
-    };
-    const clampStoryBoundary = () => {
-      releaseForHash();
-      if (gateReleased.current || document.body.style.position === "fixed" || document.body.style.overflow === "hidden" || document.documentElement.style.overflow === "hidden") return;
-      const section = document.getElementById("welcome");
-      if (!section) return;
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-      const maxScroll = Math.max(sectionTop, sectionTop + section.offsetHeight - window.innerHeight);
-      if (window.scrollY > maxScroll) window.scrollTo({ top: maxScroll, behavior: "instant" });
-    };
-
-    releaseForHash();
-    document.addEventListener("click", explicitNavigation, true);
-    window.addEventListener("hashchange", releaseForHash);
-    window.addEventListener("popstate", releaseForHash);
-    window.addEventListener("scroll", clampStoryBoundary, { passive: true });
-    window.addEventListener("resize", clampStoryBoundary);
-
-    // Keep an explicit deep link after the unchanged curtain's Welcome handoff.
-    const hero = document.querySelector('section[aria-label="Open the wedding invitation"]');
-    let frame = 0;
-    const openingObserver = new MutationObserver(() => {
-      if (hero?.querySelector(':scope > div.fixed[aria-hidden="true"]')) return;
-      openingObserver.disconnect();
-      frame = requestAnimationFrame(() => {
-        const section = sectionForHash(window.location.hash);
-        if (!section || document.body.style.position === "fixed") return;
-        section.setAttribute("tabindex", "-1");
-        section.focus({ preventScroll: true });
-        section.scrollIntoView({ behavior: "instant", block: "start" });
-      });
-    });
-    if (hero) openingObserver.observe(hero, { childList: true });
-    return () => {
-      document.removeEventListener("click", explicitNavigation, true);
-      window.removeEventListener("hashchange", releaseForHash);
-      window.removeEventListener("popstate", releaseForHash);
-      window.removeEventListener("scroll", clampStoryBoundary);
-      window.removeEventListener("resize", clampStoryBoundary);
-      openingObserver.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, []);
-
-  const openStory = () => {
-    gateReleased.current = true;
+  const openStory = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    // Reveal before scrolling, and retain Next's history state for Back/Forward.
+    flushSync(() => setStoryUnlocked(true));
+    if (window.location.hash !== "#story") window.history.pushState(window.history.state, "", "#story");
     const section = document.getElementById("story");
     section?.setAttribute("tabindex", "-1");
     section?.focus({ preventScroll: true });
+    section?.scrollIntoView({ behavior: reducedMotion ? "instant" : "smooth", block: "start" });
   };
 
   return (
-    <Section id="welcome" className="coastal-welcome relative overflow-hidden bg-[#f5eee2] py-7 sm:py-12">
+    <>
+    <Section id="welcome" className={`coastal-welcome relative overflow-hidden bg-[#f5eee2] py-7 sm:py-12 ${storyUnlocked ? "" : "invitation-gate-locked"}`}>
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(183,126,59,0.13),transparent_34%)]" />
       <motion.div initial={reducedMotion ? false : { opacity: 0, y: 28 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={reducedMotion ? { duration: 0 } : { duration: 1, ease: [0.22, 1, 0.36, 1] }} className="relative mx-auto max-w-xl px-3 sm:max-w-2xl sm:px-6">
         <Invitation3D>
@@ -108,8 +54,13 @@ export default function Welcome() {
         </Invitation3D>
         <Countdown compact />
         <WeddingLivestream />
-        <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20px" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.8, delay: 0.15 }} className="px-3 pb-3 pt-4 text-center sm:pb-8 sm:pt-6"><p className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#756957] sm:text-[9px]">There&apos;s more to our story</p><p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">If you&apos;d like to stay a little longer…</p><a href="#story" onClick={openStory} className="group mx-auto mt-4 flex min-h-12 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]">Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
+        <motion.div initial={reducedMotion ? false : { opacity: 0, y: 12 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20px" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.8, delay: 0.15 }} className="px-3 pb-3 pt-4 text-center sm:pb-8 sm:pt-6"><p className="text-[9px] font-medium uppercase tracking-[0.28em] text-[#756957] sm:text-[9px]">There&apos;s more to our story</p><p className="mt-1 font-heading text-lg italic text-[#5e554c] sm:text-2xl">If you&apos;d like to stay a little longer…</p><a id="discover-our-story" href="#story" aria-controls="invitation-continuation" aria-expanded={storyUnlocked} onClick={openStory} className="group mx-auto mt-4 flex min-h-12 w-full max-w-sm items-center justify-center gap-3 rounded-full border-2 border-[#b58a52] bg-[#174f3b] px-6 py-3.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[#fbf5e8] shadow-[0_10px_28px_rgba(23,79,59,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#123f30] active:translate-y-0 sm:mt-6 sm:min-h-16 sm:max-w-md sm:text-xs sm:tracking-[0.28em]">Discover Our Story <span aria-hidden="true" className="text-base transition-transform duration-300 group-hover:translate-y-1 sm:text-lg">↓</span></a></motion.div>
       </motion.div>
     </Section>
+    {/* A native document boundary avoids overshoot and corrective scroll jumps. */}
+    <div id="invitation-continuation" hidden={!storyUnlocked} inert={!storyUnlocked}>
+      {children}
+    </div>
+    </>
   );
 }
