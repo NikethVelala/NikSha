@@ -1,38 +1,46 @@
+@property --niksha-beam-angle {
+  syntax:"<angle>";
+  initial-value:0deg;
+  inherits:true;
+}
 .discovery { position:relative; isolation:isolate; }
-.discovery:focus-visible { outline:2px solid #9d7134; outline-offset:8px; }
+.discovery:focus-visible { outline:2px solid #9d7134; outline-offset:9px; }
+/* The mask removes the entire face: only this 3px perimeter can shine.
+   CSS border-radius follows the pill exactly, including its straight sides. */
 .sparkle {
   position:absolute;
-  inset:-4px;
+  inset:-5px;
   border-radius:inherit;
-  border:1px solid #f5d98d80;
-  box-shadow:0 0 14px #dcae4e30;
+  filter:drop-shadow(0 0 3px #eec468bb);
+  animation:perimeterBeam 4.5s linear infinite paused;
   pointer-events:none;
 }
-/* Nested lengths share one moving head, building a long, fading gold tail.
-   Native rounded rectangles follow the actual button at every viewport width. */
-.trail {
+.sparkle::before {
+  content:'';
   position:absolute;
   inset:0;
-  overflow:visible;
   border-radius:inherit;
-  filter:drop-shadow(0 0 3px #ffd16d) drop-shadow(0 0 7px #e8b34d88);
+  padding:3px;
+  background:conic-gradient(from var(--niksha-beam-angle),
+    transparent 0deg 215deg,
+    #b78a2c22 235deg,
+    #e7b34b66 270deg,
+    #f8cc6ec9 305deg,
+    #ffe6a4 335deg,
+    #fff8df 352deg,
+    transparent 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
   pointer-events:none;
 }
-.trail rect {
-  width:calc(100% - 6px);
-  height:calc(100% - 6px);
-  stroke-linecap:round;
-  animation:goldSnake 4.5s linear infinite paused;
-}
-.discovery[data-sparkle-active=true] .trail rect { animation-play-state:running; }
+.discovery[data-sparkle-active=true] .sparkle { animation-play-state:running; }
 .discovery[aria-expanded=true] .sparkle { display:none; }
-@keyframes goldSnake {
-  from { stroke-dashoffset:var(--trail-length); }
-  to { stroke-dashoffset:var(--trail-end); }
-}
+@keyframes perimeterBeam { to { --niksha-beam-angle:360deg; } }
 @media (prefers-reduced-motion:reduce) {
-  .trail { display:none; }
-  .trail rect { animation:none; }
+  .sparkle { animation:none; filter:none; }
+  .sparkle::before { background:linear-gradient(110deg,#b68c4580,#fff1bf,#b68c4580); }
   .discovery { transition:none; }
   .discovery:hover { transform:none; }
 }
