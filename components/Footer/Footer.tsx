@@ -27,7 +27,7 @@ export default function Footer() {
           transition={reducedMotion ? { duration: 0 } : { duration: 0.9 }}
           className="relative mx-auto max-w-4xl text-center"
         >
-          <p className="text-[10px] uppercase tracking-[0.45em] text-champagne sm:text-xs">Chapter IV · Forever</p>
+          <p className="text-[10px] uppercase tracking-[0.45em] text-champagne sm:text-xs">Chapter III · Forever</p>
           <div aria-hidden="true" className="mx-auto mt-7 flex h-6 w-20 items-center"><span className="h-px w-full bg-champagne/35" /></div>
 
           <p className="mt-9 font-heading text-2xl italic text-ivory/65 sm:text-3xl">And so, our forever begins.</p>
