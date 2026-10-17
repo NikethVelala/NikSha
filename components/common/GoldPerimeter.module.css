@@ -3,14 +3,14 @@
   initial-value:0deg;
   inherits:true;
 }
-.discovery { position:relative; isolation:isolate; }
-.discovery:focus-visible { outline:2px solid #9d7134; outline-offset:9px; }
+.control { position:relative; isolation:isolate; }
+.control:focus-visible { outline:2px solid #9d7134; outline-offset:9px; }
 /* The mask removes the entire face: only this 3px perimeter can shine.
    CSS border-radius follows the pill exactly, including its straight sides. */
 .sparkle {
   position:absolute;
   inset:-5px;
-  border-radius:inherit;
+  border-radius:calc(var(--beam-radius, 999px) + 4px);
   filter:drop-shadow(0 0 3px #eec468bb);
   animation:perimeterBeam 4.5s linear infinite paused;
   pointer-events:none;
@@ -35,12 +35,12 @@
   mask-composite:exclude;
   pointer-events:none;
 }
-.discovery[data-sparkle-active=true] .sparkle { animation-play-state:running; }
-.discovery[aria-expanded=true] .sparkle { display:none; }
+.control[data-sparkle-active=true] .sparkle { animation-play-state:running; }
+.control[aria-expanded=true] .sparkle { display:none; }
 @keyframes perimeterBeam { to { --niksha-beam-angle:360deg; } }
 @media (prefers-reduced-motion:reduce) {
   .sparkle { animation:none; filter:none; }
   .sparkle::before { background:linear-gradient(110deg,#b68c4580,#fff1bf,#b68c4580); }
-  .discovery { transition:none; }
-  .discovery:hover { transform:none; }
+  .control { transition:none; }
+  .control:hover { transform:none; }
 }
