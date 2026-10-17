@@ -18,7 +18,7 @@
 .image { display: block; width: 100%; height: auto; }
 .photograph figcaption { margin-top: .7rem; color: #806745; font-size: 9px; line-height: 1.6; letter-spacing: .12em; text-align: center; }
 .call { max-width: 225px; margin: 0 auto; }
-.call .image { filter: grayscale(1); }
+.call .image { filter: none; }
 .hyderabad { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem .85rem; align-items: start; }
 .hyderabad .photograph:nth-child(2) { margin-top: 1.4rem; }
 .hyderabad .photograph:last-child { grid-column: 1 / -1; width: 95%; justify-self: center; }
@@ -36,7 +36,7 @@
 .distance > p { position: absolute; bottom: 0; width: 100%; font-family: var(--font-cormorant), Georgia,serif; font-size: 1.1rem; font-style: italic; color: #79644b; text-align: center; }
 .finale .heading { text-align: center; }
 .finale .marker { justify-content: center; }
-.finale .composition { max-width: 390px; }
+.finale .composition { max-width: 980px; }
 .yes { text-align: center; margin-top: 1.8rem; }
 .yes p { font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(2.5rem,6vw,4rem); font-style: italic; color: #765530; line-height: 1.1; }
 .yes span { display: block; margin-top: 1rem; color: #85613a; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; }
@@ -57,7 +57,7 @@
   .distance { height: 240px; }
   .cityLeft { left: 3%; }
   .cityRight { right: 3%; }
-  .finale .composition { margin-top: 2rem; }
+  .finale .composition { margin: 2.5rem auto 0; max-width: 980px; }
   .together { gap: 1.3rem; }
 }
 @media(prefers-reduced-motion: reduce) {
@@ -70,3 +70,12 @@
 .finale .reflection, .finale .closingLine { max-width: 35rem; margin-left: auto; margin-right: auto; }
 .finale .closingLine { border-left: 0; padding-left: 0; }
 @media (min-width: 768px) { .chapter:not(.separation):not(.finale) { gap: 3.5rem; } }
+
+/* The final photograph is the visual climax, not a small gallery portrait. */
+.finale { padding-top: clamp(3rem, 8vw, 7rem); }
+.finale .composition { width: min(100%, 980px); }
+.finale .photograph { max-width: 100%; }
+.finale .frame { padding: clamp(5px, 1vw, 12px); border-color: #b7905c99; box-shadow: 0 22px 60px -32px #49372388; }
+.finale .image { display: block; width: 100%; height: auto; max-height: min(85svh, 1100px); object-fit: contain; background: #fffaf0; }
+.finale .yes { margin-top: clamp(2rem, 5vw, 4rem); }
+@media (max-width: 767px) { .finale .composition { width: calc(100% + 1rem); margin-left: -.5rem; } .finale .image { max-height: none; } }
