@@ -1,5 +1,8 @@
 "use client";
 
+import { useInView } from "framer-motion";
+import usePageReducedMotion from "@/components/common/usePageReducedMotion";
+import beam from "@/components/common/GoldPerimeter.module.css";
 import MugguOrnament from "@/components/common/MugguOrnament";
 import { ArrowRight } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
@@ -14,6 +17,8 @@ export default function StoryExperienceEntry() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const entryRef = useRef<HTMLDivElement>(null);
   useGardenPreparation(entryRef);
+  const triggerVisible = useInView(triggerRef, { amount: 0.2 });
+  const reducedMotion = usePageReducedMotion();
 
   const close = useCallback(() => {
     setProfile(null);
@@ -45,7 +50,8 @@ export default function StoryExperienceEntry() {
             <p className={styles.eyebrow}>The Garden of Becoming</p>
             <h2 id="garden-entry-title" className={styles.title}>The Road to <span>Our Wedding</span></h2>
             <p className={styles.description}>Two families. Three celebrations.<br />A beautiful beginning to forever.</p>
-            <button ref={triggerRef} type="button" onClick={() => setProfile(getGardenProfile())} className={styles.button}>
+            <button ref={triggerRef} data-sparkle-active={triggerVisible && !profile && !reducedMotion} aria-haspopup="dialog" aria-expanded={Boolean(profile)} type="button" onClick={() => setProfile(getGardenProfile())} className={`${styles.button} ${beam.control}`}>
+              <span aria-hidden="true" className={beam.sparkle} />
               Enter Our Garden <ArrowRight className="h-4 w-4" strokeWidth={1.3} />
             </button>
             <p className={styles.note}>Explore our celebrations · Return at any time</p>
