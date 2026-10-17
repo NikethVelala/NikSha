@@ -14,7 +14,7 @@
 .copy { margin-top: 1rem; color: #665e55; font-family: var(--font-cormorant), Georgia, serif; font-size: 1.25rem; line-height: 1.5; }
 .composition { max-width: 42rem; margin: 1.6rem auto 0; }
 .photograph { min-width: 0; margin: 0; }
-.frame { padding: 5px; border: 1px solid #b7905c55; background: #fffaf0; box-shadow: 0 12px 30px -22px #49372366; }
+.frame { position: relative; padding: 5px; border: 1px solid #b7905c55; background: #fffaf0; box-shadow: 0 12px 30px -22px #49372366; }
 .image { display: block; width: 100%; height: auto; }
 .photograph figcaption { margin-top: .7rem; color: #806745; font-size: 9px; line-height: 1.6; letter-spacing: .12em; text-align: center; }
 .call { max-width: 225px; margin: 0 auto; }
@@ -95,3 +95,9 @@
 @media(min-width: 768px) { .chapterBridge { top: -3.9rem; height: 46px; } }
 
 .threadDrawing { display: block; width: 100%; height: 100%; }
+
+.previewOpen { position: absolute; inset: 0; width: 100%; height: 100%; min-width: 44px; min-height: 44px; display: flex; align-items: flex-end; justify-content: center; padding: 14px 8px; background: transparent; cursor: zoom-in; }
+.previewOpen span { padding: 8px 12px; border: 1px solid #e0c69888; border-radius: 24px; color: #fff7e7; background: #10241de8; font-size: 10px; line-height: 1.4; box-shadow: 0 2px 8px #0003; }
+.previewOpen:disabled { visibility: hidden; }
+.previewOpen:focus-visible { outline: 2px solid #99713e; outline-offset: -5px; }
+.previewHost { position: fixed; inset: 0; z-index: 220; height: 100dvh; }

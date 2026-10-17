@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { useCallback, useRef, useState } from "react";
+import StoryPhotoPreview from "./StoryPhotoPreview";
+import type { MemoryPhoto } from "@/components/StoryExperience/MemoryImage";
 import styles from "./Story.module.css";
 import { motion } from "framer-motion";
 import Section from "@/components/common/Section";
@@ -88,19 +91,22 @@ const photographs: Record<string, Photograph> = {
   proposal: { src: "/images/optimized/story-2400.webp", width: 2400, height: 3600, alt: "Niketh on one knee proposing to Sirisha beneath a floral arch", caption: "A question. A promise. A lifetime." },
 };
 
-function StoryPhotograph({ name, compact = false, order = 0 }: { name: string; compact?: boolean; order?: number }) {
+function StoryPhotograph({ name, compact = false, order = 0, onPreview }: { name: string; compact?: boolean; order?: number; onPreview: (photo: Photograph, origin: HTMLButtonElement) => void }) {
   const reducedMotion = usePageReducedMotion();
   const photo = photographs[name];
+  const [inView, setInView] = useState(false);
   return (
     <motion.figure initial={reducedMotion ? false : { opacity: 0, y: compact ? 12 : 0 }}
       animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
       whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.12 }}
       transition={{ duration: reducedMotion ? 0 : 0.8, delay: reducedMotion ? 0 : order * 0.12 }}
+      onViewportEnter={() => setInView(true)}
       className={`${styles.photograph} ${name === "03-ten-became-four" ? styles.call : ""}`}>
       <div className={styles.frame}>
         <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height}
           sizes={name === "proposal" ? "(min-width: 1100px) 980px, (min-width: 768px) calc(100vw - 96px), calc(100vw - 24px)" : compact ? "(min-width: 768px) 300px, 44vw" : "(min-width: 768px) 640px, calc(100vw - 40px)"}
           loading="lazy" className={styles.image} />
+        <button type="button" disabled={!inView} className={styles.previewOpen} aria-label={`View full photograph: ${photo.alt}`} onClick={(event) => onPreview(photo, event.currentTarget)}><span>View full photo ↗</span></button>
       </div>
       <figcaption>{photo.caption}</figcaption>
     </motion.figure>
@@ -129,7 +135,18 @@ function DistanceScene() {
 
 export default function Story() {
   const reducedMotion = usePageReducedMotion();
+  const [preview, setPreview] = useState<MemoryPhoto | null>(null);
+  const previewOrigin = useRef<HTMLButtonElement | null>(null);
+  const openPreview = (photo: Photograph, origin: HTMLButtonElement) => {
+    previewOrigin.current = origin;
+    setPreview({ image: photo.src, imageAlt: photo.alt, imageWidth: photo.width, imageHeight: photo.height });
+  };
+  const closePreview = useCallback(() => {
+    setPreview(null);
+    requestAnimationFrame(() => { if (previewOrigin.current?.isConnected) previewOrigin.current.focus({ preventScroll: true }); });
+  }, []);
   return (
+    <>
     <Section id="story" className={`coastal-story bg-ivory ${styles.story}`}>
       <motion.header initial={reducedMotion ? false : { opacity: 0, y: 18 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
         whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: reducedMotion ? 0 : 0.7 }} className={styles.intro}>
@@ -162,7 +179,7 @@ export default function Story() {
                 whileInView={{ opacity: 1, clipPath: "inset(0% 0 0% 0)", scale: 1 }} viewport={{ once: true, amount: index === 6 ? 0.18 : 0.08 }}
                 transition={{ duration: reducedMotion ? 0 : index === 6 ? 1.5 : 0.8, ease: [0.22, 1, 0.36, 1] }}
                 className={`${styles.composition} ${index === 3 ? styles.hyderabad : ""} ${index === 5 ? styles.together : ""}`}>
-                {chapter.photos.map((name, i) => <StoryPhotograph key={name} name={name} order={i} compact={(index === 3 && i < 2) || index === 5} />)}
+                {chapter.photos.map((name, i) => <StoryPhotograph key={name} name={name} order={i} compact={(index === 3 && i < 2) || index === 5} onPreview={openPreview} />)}
               </motion.div>
             )}
             {index === 6 && <motion.div initial={reducedMotion ? false : { opacity: 0, y: 16 }} animate={reducedMotion ? { opacity: 1, y: 0 } : undefined}
@@ -173,5 +190,7 @@ export default function Story() {
       <div className={styles.closing}><MugguOrnament variant="divider" className="mx-auto h-8 w-36 text-champagne"/><p>Our next chapter is written together.</p></div>
       <StoryExperienceEntry />
     </Section>
+    {preview && <StoryPhotoPreview photo={preview} onClose={closePreview} />}
+    </>
   );
 }
